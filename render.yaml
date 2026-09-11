@@ -13,14 +13,14 @@ services:
     runtime: node
     plan: free
     branch: master
-    # install the whole workspace (locks the lockfile), generate the Prisma
-    # client, then build the server with tsc into server/dist
+    # install the whole workspace (locks the lockfile), apply pending
+    # migrations (idempotent — no-op when already applied), generate the
+    # Prisma client, then build the server with tsc into server/dist
     buildCommand: >-
       pnpm install --frozen-lockfile &&
+      pnpm --filter fundpath-server exec prisma migrate deploy &&
       pnpm --filter fundpath-server exec prisma generate &&
       pnpm --filter fundpath-server build
-    # runs after a successful build, before the new version accepts traffic
-    preDeployCommand: pnpm --filter fundpath-server exec prisma migrate deploy
     startCommand: node server/dist/index.js
     # runs ONCE, after the service's first successful deploy — creates the
     # seed data (opportunities, test accounts, demo applicant)
