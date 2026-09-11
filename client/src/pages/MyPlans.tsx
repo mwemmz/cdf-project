@@ -64,7 +64,7 @@ export default function MyPlans() {
               )}
             </div>
 
-            <dl className="mt-3 grid grid-cols-3 gap-2 text-sm">
+            <dl className="mt-3 grid grid-cols-3 gap-2 text-xs sm:text-sm">
               <div>
                 <dt className="text-xs text-slate-400">Requested</dt>
                 <dd className="font-medium">{fmtZmk(p.amountRequested)}</dd>

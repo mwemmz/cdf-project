@@ -69,7 +69,7 @@ export default function BusinessPlanDetail() {
         <h2 className="mt-5 font-semibold text-slate-900">Target market</h2>
         <p className="mt-1 whitespace-pre-line text-slate-700">{plan.targetMarket}</p>
 
-        <div className="mt-5 grid grid-cols-3 gap-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             { label: 'Startup costs', value: fmtZmk(plan.startupCosts) },
             { label: 'Year-1 revenue', value: fmtZmk(plan.revenueProjection) },
