@@ -1,0 +1,59 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Deploy: Dashboard -> "New +" -> Blueprint (point at this repo, branch master)
+# The two services are anchored at the repo root and scoped with `pnpm --filter`.
+# Set DATABASE_URL / CLIENT_URL / VITE_API_BASE in the Dashboard after creating.
+
+services:
+  # ---------------------------------------------------------------------------
+  # Backend API — Render Web Service
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: fundpath-api
+    runtime: node
+    plan: free
+    branch: master
+    # install the whole workspace (locks the lockfile), generate the Prisma
+    # client, then build the server with tsc into server/dist
+    buildCommand: >-
+      pnpm install --frozen-lockfile &&
+      pnpm --filter fundpath-server exec prisma generate &&
+      pnpm --filter fundpath-server build
+    # runs after a successful build, before the new version accepts traffic
+    preDeployCommand: pnpm --filter fundpath-server exec prisma migrate deploy
+    startCommand: node server/dist/index.js
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false # set in Dashboard to your Neon URL (sslmode=require)
+      - key: CLIENT_URL
+        sync: false # set in Dashboard to the static site URL, e.g. https://fundpath-web.onrender.com
+
+  # ---------------------------------------------------------------------------
+  # Frontend — Render Static Site (built with Vite)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: fundpath-web
+    runtime: static
+    branch: master
+    buildCommand: >-
+      pnpm install --frozen-lockfile &&
+      pnpm --filter fundpath-client build
+    staticPublishPath: client/dist
+    envVars:
+      - key: VITE_API_BASE
+        sync: false # set in Dashboard to https://fundpath-api.onrender.com/api
+    # SPA fallback: serve index.html for every non-asset path so react-router
+    # deep links don't 404 (assets are served directly because they exist)
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
