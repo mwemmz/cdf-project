@@ -22,6 +22,9 @@ services:
     # runs after a successful build, before the new version accepts traffic
     preDeployCommand: pnpm --filter fundpath-server exec prisma migrate deploy
     startCommand: node server/dist/index.js
+    # runs ONCE, after the service's first successful deploy — creates the
+    # seed data (opportunities, test accounts, demo applicant)
+    initialDeployHook: pnpm --filter fundpath-server seed
     envVars:
       - key: JWT_SECRET
         generateValue: true
