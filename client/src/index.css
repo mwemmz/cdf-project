@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-50 text-slate-900;
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-slate-50 font-sans text-slate-800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-brand-950;
+  }
+
+  /* Caret + focus defaults */
+  input,
+  textarea,
+  select {
+    caret-color: #178158;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2b9e74;
+    outline-offset: 2px;
+  }
+
+  /* Themed scrollbar (Chromium / WebKit) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    background-color: #cbd5e1;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+  }
+}
+
+@layer utilities {
+  /* Financial figures: keep digits aligned and steady */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
 }
