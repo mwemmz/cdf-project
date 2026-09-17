@@ -7,6 +7,7 @@ import { asyncHandler } from '../../utils/asyncHandler';
 import { getSummary, listApplications } from './admin.controller';
 import {
   listAdvisors as listAdminAdvisors,
+  listAdvisorsQuerySchema,
   setAdvisorVerification,
   setAdvisorVerificationSchema,
 } from './admin-advisors.controller';
@@ -44,7 +45,7 @@ router.get(
 );
 
 // Every advisor, unverified included, pending first.
-router.get('/advisors', asyncHandler(listAdminAdvisors));
+router.get('/advisors', validateQuery(listAdvisorsQuerySchema), asyncHandler(listAdminAdvisors));
 
 // Verify or unverify an advisor. Idempotent.
 router.patch(
