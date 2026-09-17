@@ -30,3 +30,18 @@ export function validateParams(schema: ZodSchema) {
     next();
   };
 }
+
+export function validateQuery(schema: ZodSchema) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.query);
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid query',
+        details: result.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
+      });
+    }
+    Object.assign(req.query, result.data);
+    next();
+  };
+}

@@ -1,7 +1,10 @@
 import { Router } from 'express';
+import { z } from 'zod';
+import { ApplicationStatus } from '@prisma/client';
 import { requireAuth, requireRole } from '../../middleware/auth';
+import { validateQuery } from '../../middleware/validate';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { getSummary } from './admin.controller';
+import { getSummary, listApplications } from './admin.controller';
 
 const router = Router();
 
@@ -20,5 +23,12 @@ router.get(
 
 // Platform summary powering the dashboard.
 router.get('/summary', asyncHandler(getSummary));
+
+// Full application queue across all applicants, optionally filtered by stage.
+router.get(
+  '/applications',
+  validateQuery(z.object({ status: z.nativeEnum(ApplicationStatus).optional() })),
+  asyncHandler(listApplications),
+);
 
 export default router;

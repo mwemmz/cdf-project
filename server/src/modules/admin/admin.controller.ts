@@ -59,3 +59,21 @@ export async function getSummary(_req: Request, res: Response) {
     },
   });
 }
+
+// The admin's queue: every application on the platform, from every applicant —
+// unlike the applicant-facing list, which scopes to the signed-in user.
+export async function listApplications(req: Request, res: Response) {
+  const status = req.query.status as ApplicationStatus | undefined;
+
+  const applications = await prisma.application.findMany({
+    where: status ? { status } : undefined,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      applicant: { select: { name: true, email: true } },
+      opportunity: { select: { constituencyName: true, category: true } },
+      businessPlan: { select: { amountRequested: true } },
+    },
+  });
+
+  res.json({ success: true, data: applications });
+}
