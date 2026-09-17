@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ApplicationStatus, Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
-import { assertTransition } from './applicationFlow';
+import { APPLICATION_TRANSITIONS, assertTransition } from './applicationFlow';
 
 const applicationInclude = {
   opportunity: true,
@@ -56,7 +56,13 @@ export async function getApplication(req: Request, res: Response) {
   const isOwner = application.applicantId === req.auth!.userId;
   const isAdmin = req.auth!.role === 'ADMIN';
   if (!isOwner && !isAdmin) throw forbidden('You do not have access to this application');
-  res.json({ success: true, data: application });
+  res.json({
+    success: true,
+    data: {
+      ...application,
+      allowedTransitions: APPLICATION_TRANSITIONS[application.status],
+    },
+  });
 }
 
 export async function updateApplicationStatus(req: Request, res: Response) {

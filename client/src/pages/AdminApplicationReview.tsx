@@ -26,19 +26,8 @@ interface ApplicationDetail {
     feasibilityScore: { score: number; category: string; recommendations: string | null } | null;
   };
   repayments: Repayment[];
+  allowedTransitions: ApplicationStatus[];
 }
-
-// Mirrors the server's APPLICATION_TRANSITIONS so the UI only ever offers
-// buttons the backend will accept.
-const TRANSITIONS: Record<ApplicationStatus, ApplicationStatus[]> = {
-  SUBMITTED: ['UNDER_REVIEW'],
-  UNDER_REVIEW: ['APPROVED', 'REJECTED'],
-  APPROVED: ['REJECTED', 'DISBURSED'],
-  REJECTED: [],
-  DISBURSED: ['REPAYING'],
-  REPAYING: ['CLOSED'],
-  CLOSED: [],
-};
 
 const stageLabels: Record<ApplicationStatus, string> = {
   SUBMITTED: 'Submitted',
@@ -100,7 +89,7 @@ export default function AdminApplicationReview() {
 
   const repaid = application.repayments.reduce((sum, r) => sum + r.amount, 0);
   const balance = Math.max((application.amountDisbursed ?? 0) - repaid, 0);
-  const nextStages = TRANSITIONS[application.status];
+  const nextStages = application.allowedTransitions;
   const score = application.businessPlan.feasibilityScore;
 
   return (

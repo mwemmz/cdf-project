@@ -121,5 +121,6 @@ describe('admin application review actions', () => {
     assert.equal(data.businessPlan.feasibilityScore.recommendations, score.recommendations);
     assert.equal(data.opportunity.constituencyName, 'Mandevu');
     assert.deepEqual(data.repayments, []);
+    assert.deepEqual(data.allowedTransitions, [ApplicationStatus.UNDER_REVIEW]);
   });
 });
