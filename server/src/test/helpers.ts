@@ -58,7 +58,12 @@ export async function createOpportunity(data?: {
   });
 }
 
-export async function createPlanWithScore(applicantId: string, opportunityId: string, amountRequested = 10_000) {
+export async function createPlanWithScore(
+  applicantId: string,
+  opportunityId: string,
+  amountRequested = 10_000,
+  category = 'High',
+) {
   const plan = await prisma.businessPlan.create({
     data: {
       applicantId,
@@ -74,7 +79,7 @@ export async function createPlanWithScore(applicantId: string, opportunityId: st
     data: {
       businessPlanId: plan.id,
       score: 72,
-      category: 'High',
+      category,
       recommendations: 'Proceed with caution on feed costs',
     },
   });

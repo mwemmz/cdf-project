@@ -10,7 +10,10 @@ export async function getSummary(_req: Request, res: Response) {
     select: {
       status: true,
       amountDisbursed: true,
-      businessPlan: { select: { amountRequested: true } },
+      businessPlan: {
+        select: { amountRequested: true, feasibilityScore: { select: { category: true } } },
+      },
+      opportunity: { select: { constituencyName: true } },
       repayments: { select: { amount: true } },
     },
   });
@@ -40,6 +43,25 @@ export async function getSummary(_req: Request, res: Response) {
     prisma.opportunity.count(),
   ]);
 
+  // Feasibility distribution over plans that actually have an application —
+  // scored plans that were never submitted don't appear on the dashboard.
+  const feasibility: Record<string, number> = { High: 0, Medium: 0, Low: 0 };
+
+  // Demand is reported per constituency using the opportunity's public name,
+  // so the chart labels match what applicants saw when they applied.
+  const demandCounts = new Map<string, number>();
+
+  for (const application of applications) {
+    const category = application.businessPlan.feasibilityScore?.category;
+    if (category) feasibility[category] = (feasibility[category] ?? 0) + 1;
+    const constituency = application.opportunity.constituencyName;
+    demandCounts.set(constituency, (demandCounts.get(constituency) ?? 0) + 1);
+  }
+
+  const demandByConstituency = [...demandCounts.entries()]
+    .map(([constituencyName, count]) => ({ constituencyName, applications: count }))
+    .sort((a, b) => b.applications - a.applications || a.constituencyName.localeCompare(b.constituencyName));
+
   // Reuses the shared repayment summary so the admin's outstanding figure can
   // never disagree with an applicant's own balance calculation.
   const repayment = computeRepaymentSummary(disbursed, repaid);
@@ -56,6 +78,8 @@ export async function getSummary(_req: Request, res: Response) {
       },
       advisorsAwaitingVerification,
       opportunities,
+      feasibility,
+      demandByConstituency,
     },
   });
 }

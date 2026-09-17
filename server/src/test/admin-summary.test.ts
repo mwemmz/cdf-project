@@ -47,6 +47,10 @@ describe('admin summary endpoint', () => {
     assert.equal(data.money.outstanding, 0);
     assert.equal(data.advisorsAwaitingVerification, 0);
     assert.equal(data.opportunities, 0);
+    assert.equal(data.feasibility.High, 0);
+    assert.equal(data.feasibility.Medium, 0);
+    assert.equal(data.feasibility.Low, 0);
+    assert.deepEqual(data.demandByConstituency, []);
   });
 
   it('aggregates are computed from stored data, not guessed', async () => {
@@ -62,10 +66,10 @@ describe('admin summary endpoint', () => {
       data: { status: ApplicationStatus.REPAYING, amountDisbursed: 10_000 },
     });
 
-    const a2 = await createPlanWithScore(applicant.id, opportunity.id, 25_000);
+    const a2 = await createPlanWithScore(applicant.id, opportunity.id, 25_000, 'Medium');
     await createApplication(applicant.id, opportunity.id, a2.plan.id, ApplicationStatus.SUBMITTED);
 
-    const a3 = await createPlanWithScore(applicant.id, opportunity.id, 15_000);
+    const a3 = await createPlanWithScore(applicant.id, opportunity.id, 15_000, 'Low');
     const app3 = await createApplication(applicant.id, opportunity.id, a3.plan.id, ApplicationStatus.REJECTED);
 
     const res = await request(app).get('/api/admin/summary').set(auth(token));
@@ -86,6 +90,22 @@ describe('admin summary endpoint', () => {
     const res2 = await request(app).get('/api/admin/summary').set(auth(token));
     assert.equal(res2.body.data.opportunities, 2);
     assert.equal(res2.body.data.advisorsAwaitingVerification, 0);
+
+    // Feasibility distribution counts applications by their plan's score category.
+    assert.deepEqual(res2.body.data.feasibility, { High: 1, Medium: 1, Low: 1 });
+
+    // Demand is counted per constituency, most-demanded first.
+    const otherOpportunity = await createOpportunity({ constituencyName: 'Kanyama' });
+    const a4 = await createPlanWithScore(applicant.id, otherOpportunity.id, 8_000);
+    await createApplication(applicant.id, otherOpportunity.id, a4.plan.id, ApplicationStatus.SUBMITTED);
+
+    const res3 = await request(app).get('/api/admin/summary').set(auth(token));
+    assert.equal(res3.body.data.applications.total, 4);
+    assert.deepEqual(res3.body.data.feasibility, { High: 2, Medium: 1, Low: 1 });
+    assert.deepEqual(res3.body.data.demandByConstituency, [
+      { constituencyName: 'Mandevu', applications: 3 },
+      { constituencyName: 'Kanyama', applications: 1 },
+    ]);
   });
 
   it('amounts never go below zero, even with over-repayment', async () => flooredAmountTest());
