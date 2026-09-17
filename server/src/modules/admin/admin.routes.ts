@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireAuth, requireRole } from '../../middleware/auth';
 import { asyncHandler } from '../../utils/asyncHandler';
+import { getSummary } from './admin.controller';
 
 const router = Router();
 
@@ -16,5 +17,8 @@ router.get(
     res.json({ success: true, data: { area: 'admin' } });
   }),
 );
+
+// Platform summary powering the dashboard.
+router.get('/summary', asyncHandler(getSummary));
 
 export default router;
