@@ -15,6 +15,7 @@
     "dev:client": "pnpm --filter fundpath-client dev",
     "seed": "pnpm --filter fundpath-server seed",
     "migrate:deploy": "pnpm --filter fundpath-server prisma:migrate",
-    "prisma:generate": "pnpm --filter fundpath-server prisma:generate"
+    "prisma:generate": "pnpm --filter fundpath-server prisma:generate",
+    "test": "pnpm --filter fundpath-server test"
   }
 }
