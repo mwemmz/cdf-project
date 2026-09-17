@@ -44,6 +44,15 @@ async function main() {
     },
   });
 
+  const advisor3 = await prisma.user.create({
+    data: {
+      name: 'Kasonde Mwansa',
+      email: 'advisor3@fundpath.zm',
+      passwordHash: await bcrypt.hash('Advisor@123', 10),
+      role: Role.ADVISOR,
+    },
+  });
+
   const applicant = await prisma.user.create({
     data: {
       name: 'Thandiwe Phiri',
@@ -53,7 +62,7 @@ async function main() {
     },
   });
 
-  console.log('Seeding advisor profiles (verified for testing)...');
+  console.log('Seeding advisor profiles (two verified, one pending verification)...');
   await prisma.advisorProfile.create({
     data: {
       userId: advisor1.id,
@@ -70,6 +79,15 @@ async function main() {
       bio: 'Market researcher specialising in feasibility studies and financial modelling for agribusiness ventures.',
       pricePerSession: 300,
       verified: true,
+    },
+  });
+  await prisma.advisorProfile.create({
+    data: {
+      userId: advisor3.id,
+      specialty: 'marketing',
+      bio: 'Growth and marketing strategist for market vendors and informal traders looking to formalise.',
+      pricePerSession: 200,
+      verified: false,
     },
   });
 
@@ -224,7 +242,8 @@ async function main() {
   console.log('Test accounts:');
   console.log('  Admin:     admin@fundpath.zm / Admin@123');
   console.log('  Advisor 1: advisor1@fundpath.zm / Advisor@123');
-  console.log('  Advisor 2: advisor2@fundpath.zm / Advisor@123');
+  console.log('  Advisor 2: advisor2@fundpath.zm / Advisor@123 (verified)');
+  console.log('  Advisor 3: advisor3@fundpath.zm / Advisor@123 (pending verification)');
   console.log('  Applicant: applicant@fundpath.zm / Applicant@123');
 }
 

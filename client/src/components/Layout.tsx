@@ -55,6 +55,9 @@ export default function Layout() {
                 <NavLink to="/bookings" className={desktopNavLinkClass}>Bookings</NavLink>
               </>
             )}
+            {user?.role === 'ADMIN' && (
+              <NavLink to="/admin" className={desktopNavLinkClass}>Admin</NavLink>
+            )}
           </nav>
 
           {/* Desktop user info */}
@@ -139,6 +142,9 @@ export default function Layout() {
                 <NavLink to="/advisors/me" className={navLinkClass} onClick={closeMobile}>My Profile</NavLink>
                 <NavLink to="/bookings" className={navLinkClass} onClick={closeMobile}>Bookings</NavLink>
               </>
+            )}
+            {user?.role === 'ADMIN' && (
+              <NavLink to="/admin" className={navLinkClass} onClick={closeMobile}>Admin</NavLink>
             )}
           </nav>
 
