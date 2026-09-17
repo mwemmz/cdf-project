@@ -2,9 +2,15 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { ApplicationStatus } from '@prisma/client';
 import { requireAuth, requireRole } from '../../middleware/auth';
-import { validateQuery } from '../../middleware/validate';
+import { validateQuery, validateParams, validateBody } from '../../middleware/validate';
 import { asyncHandler } from '../../utils/asyncHandler';
 import { getSummary, listApplications } from './admin.controller';
+import {
+  listAdvisors as listAdminAdvisors,
+  setAdvisorVerification,
+  setAdvisorVerificationSchema,
+} from './admin-advisors.controller';
+import { idParamSchema } from '../businessPlans/businessPlans.validation';
 
 const router = Router();
 
@@ -29,6 +35,17 @@ router.get(
   '/applications',
   validateQuery(z.object({ status: z.nativeEnum(ApplicationStatus).optional() })),
   asyncHandler(listApplications),
+);
+
+// Every advisor, unverified included, pending first.
+router.get('/advisors', asyncHandler(listAdminAdvisors));
+
+// Verify or unverify an advisor. Idempotent.
+router.patch(
+  '/advisors/:id/verify',
+  validateParams(idParamSchema),
+  validateBody(setAdvisorVerificationSchema),
+  asyncHandler(setAdvisorVerification),
 );
 
 export default router;

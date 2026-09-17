@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { fmtDate, fmtZmk } from '../lib/format';
 import type { ApplicationStatus } from '../lib/types';
@@ -85,6 +86,9 @@ export default function AdminApplications() {
                 <th className="px-4 py-3">Disbursed</th>
                 <th className="px-4 py-3">Stage</th>
                 <th className="px-4 py-3">Submitted</th>
+                <th className="px-4 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -108,6 +112,14 @@ export default function AdminApplications() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-slate-500">{fmtDate(row.createdAt)}</td>
+                  <td className="px-4 py-3 text-right">
+                    <Link
+                      to={`/admin/applications/${row.id}`}
+                      className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
+                    >
+                      Review
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
