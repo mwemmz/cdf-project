@@ -88,9 +88,17 @@ export async function getSummary(_req: Request, res: Response) {
 // unlike the applicant-facing list, which scopes to the signed-in user.
 export async function listApplications(req: Request, res: Response) {
   const status = req.query.status as ApplicationStatus | undefined;
+  const opportunityId = req.query.opportunityId as string | undefined;
+  const limit = req.query.limit as number | undefined;
+  const offset = req.query.offset as number | undefined;
 
   const applications = await prisma.application.findMany({
-    where: status ? { status } : undefined,
+    where: {
+      ...(status ? { status } : {}),
+      ...(opportunityId ? { opportunityId } : {}),
+    },
+    skip: offset,
+    take: limit,
     orderBy: { createdAt: 'desc' },
     include: {
       applicant: { select: { name: true, email: true } },
