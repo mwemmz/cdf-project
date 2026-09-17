@@ -34,7 +34,7 @@ export default function AdminAdvisors() {
     setBusyId(advisor.id);
     setActionError(null);
     try {
-      await api(`/admin/advisors/${advisor.id}/verify`, { method: 'PATCH', body: { verified } });
+      await api(`/admin/advisors/${advisor.id}/verification`, { method: 'PATCH', body: { verified } });
       load();
     } catch (e) {
       setActionError((e as Error).message);
