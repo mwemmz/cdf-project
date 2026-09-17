@@ -39,7 +39,14 @@ router.get('/summary', asyncHandler(getSummary));
 // Full application queue across all applicants, optionally filtered by stage.
 router.get(
   '/applications',
-  validateQuery(z.object({ status: z.nativeEnum(ApplicationStatus).optional() })),
+  validateQuery(
+    z.object({
+      status: z.nativeEnum(ApplicationStatus).optional(),
+      opportunityId: z.string().min(1).optional(),
+      limit: z.coerce.number().int().nonnegative().optional(),
+      offset: z.coerce.number().int().nonnegative().optional(),
+    }),
+  ),
   asyncHandler(listApplications),
 );
 
