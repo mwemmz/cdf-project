@@ -20,6 +20,7 @@ import Storefront from './pages/Storefront';
 import Marketplace from './pages/Marketplace';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminApplications from './pages/AdminApplications';
+import AdminApplicationReview from './pages/AdminApplicationReview';
 import AdminAdvisors from './pages/AdminAdvisors';
 import AdminOpportunities from './pages/AdminOpportunities';
 
@@ -112,6 +113,7 @@ export default function App() {
             >
               <Route index element={<AdminDashboard />} />
               <Route path="applications" element={<AdminApplications />} />
+              <Route path="applications/:applicationId" element={<AdminApplicationReview />} />
               <Route path="advisors" element={<AdminAdvisors />} />
               <Route path="opportunities" element={<AdminOpportunities />} />
             </Route>
