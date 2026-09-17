@@ -5,6 +5,7 @@ import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 import authRoutes from './modules/auth/auth.routes';
+import adminRoutes from './modules/admin/admin.routes';
 import opportunityRoutes from './modules/opportunities/opportunities.routes';
 import businessPlanRoutes from './modules/businessPlans/businessPlans.routes';
 import advisorRoutes from './modules/advisors/advisors.routes';
@@ -37,6 +38,7 @@ export function createApp(): Application {
   app.use('/api', apiLimiter);
 
   app.use('/api/auth', authRoutes);
+  app.use('/api/admin', adminRoutes);
   app.use('/api/opportunities', opportunityRoutes);
   app.use('/api/business-plans', businessPlanRoutes);
   app.use('/api/advisors', advisorRoutes);
