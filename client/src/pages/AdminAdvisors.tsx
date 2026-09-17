@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
+import { fmtDate, fmtZmk } from '../lib/format';
 
 interface AdminAdvisor {
   id: string;
@@ -111,8 +112,10 @@ function AdvisorRow({
           </div>
           <p className="text-sm text-slate-500">{advisor.user.email}</p>
           <p className="mt-1 text-sm text-slate-600">
-            {advisor.specialty} · {advisor.pricePerSession} ZMW per session
+            {advisor.specialty} · {fmtZmk(advisor.pricePerSession)} ZMW per session · member since{' '}
+            {fmtDate(advisor.user.createdAt)}
           </p>
+          {advisor.bio && <p className="mt-1 max-w-2xl text-sm text-slate-600">{advisor.bio}</p>}
         </div>
         <button
           type="button"
