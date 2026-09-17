@@ -10,6 +10,12 @@ import {
   setAdvisorVerification,
   setAdvisorVerificationSchema,
 } from './admin-advisors.controller';
+import {
+  createOpportunity,
+  updateOpportunity,
+  createOpportunitySchema,
+  updateOpportunitySchema,
+} from './admin-opportunities.controller';
 import { idParamSchema } from '../businessPlans/businessPlans.validation';
 
 const router = Router();
@@ -46,6 +52,21 @@ router.patch(
   validateParams(idParamSchema),
   validateBody(setAdvisorVerificationSchema),
   asyncHandler(setAdvisorVerification),
+);
+
+// Create a new opportunity.
+router.post(
+  '/opportunities',
+  validateBody(createOpportunitySchema),
+  asyncHandler(createOpportunity),
+);
+
+// Edit an existing opportunity.
+router.patch(
+  '/opportunities/:id',
+  validateParams(idParamSchema),
+  validateBody(updateOpportunitySchema),
+  asyncHandler(updateOpportunity),
 );
 
 export default router;
