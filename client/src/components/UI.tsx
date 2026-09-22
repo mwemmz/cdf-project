@@ -130,3 +130,45 @@ export function PrimaryButton({
     </button>
   );
 }
+
+const PLACEHOLDERS: Record<string, string> = {
+  poultry: '/placeholders/poultry.svg',
+  feed: '/placeholders/feed.svg',
+  eggs: '/placeholders/eggs.svg',
+  vegetables: '/placeholders/vegetables.svg',
+  honey: '/placeholders/honey.svg',
+  bakery: '/placeholders/bakery.svg',
+  crafts: '/placeholders/crafts.svg',
+  tailoring: '/placeholders/tailoring.svg',
+  retail: '/placeholders/retail.svg',
+  livestock: '/placeholders/livestock.svg',
+};
+
+export function placeholderFor(name: string): string {
+  const key = Object.keys(PLACEHOLDERS).find((k) => name.toLowerCase().includes(k));
+  return key ? PLACEHOLDERS[key] : '/placeholders/product.svg';
+}
+
+export function ProductImage({
+  name,
+  src,
+  className = '',
+}: {
+  name: string;
+  src?: string | null;
+  className?: string;
+}) {
+  const fallback = placeholderFor(name);
+  return (
+    <img
+      src={src ?? fallback}
+      alt={name}
+      loading="lazy"
+      className={className}
+      onError={(e) => {
+        const el = e.currentTarget;
+        if (el.getAttribute('src') !== fallback) el.src = fallback;
+      }}
+    />
+  );
+}

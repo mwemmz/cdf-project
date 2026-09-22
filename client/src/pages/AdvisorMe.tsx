@@ -83,6 +83,7 @@ export default function AdvisorMe() {
             <option value="business_plans">Business Plans</option>
             <option value="feasibility">Feasibility</option>
             <option value="accounting">Accounting</option>
+            <option value="marketing">Marketing</option>
           </FieldSelect>
           <FieldArea
             label="Bio"

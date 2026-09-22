@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import type { Product } from '../lib/types';
 import { fmtZmk } from '../lib/format';
-import { Card, ErrorNote, Loading, PageHeader } from '../components/UI';
+import { Card, ErrorNote, Loading, PageHeader, ProductImage } from '../components/UI';
 
 export default function Marketplace() {
   const [products, setProducts] = useState<Product[] | null>(null);
@@ -34,13 +34,7 @@ export default function Marketplace() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => (
           <Card key={p.id} className="flex flex-col">
-            {p.imageUrl ? (
-              <img src={p.imageUrl} alt={p.name} className="mb-3 h-44 w-full rounded-lg object-cover" />
-            ) : (
-              <div className="mb-3 flex h-44 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
-                No image
-              </div>
-            )}
+            <ProductImage name={p.name} src={p.imageUrl} className="mb-3 h-44 w-full rounded-lg object-cover" />
             <h2 className="font-semibold text-slate-900">{p.name}</h2>
             <p className="mt-1 flex-1 text-sm text-slate-600">{p.description}</p>
             <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">

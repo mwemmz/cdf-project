@@ -10,12 +10,27 @@ export default function MyPlans() {
   const navigate = useNavigate();
   const [plans, setPlans] = useState<BusinessPlan[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<string | null>(null);
 
   useEffect(() => {
     api<BusinessPlan[]>('/business-plans/mine')
       .then(setPlans)
       .catch((err) => setError((err as Error).message));
   }, []);
+
+  const submitApplication = async (planId: string) => {
+    setSubmitting(planId);
+    setError(null);
+    try {
+      await api('/applications', { method: 'POST', body: { businessPlanId: planId } });
+      const updated = await api<BusinessPlan[]>('/business-plans/mine');
+      setPlans(updated);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setSubmitting(null);
+    }
+  };
 
   if (error) return <ErrorNote message={error} />;
   if (!plans) return <Loading />;
@@ -89,9 +104,14 @@ export default function MyPlans() {
                 </span>
               )}
               {p.feasibilityScore && !p.application && (
-                <Link to="/applications" className="text-sm font-medium text-brand-600 underline">
-                  Submit as application →
-                </Link>
+                <button
+                  type="button"
+                  disabled={submitting !== null}
+                  onClick={() => submitApplication(p.id)}
+                  className="text-sm font-medium text-brand-600 underline disabled:opacity-60"
+                >
+                  {submitting === p.id ? 'Submitting…' : 'Submit as application'}
+                </button>
               )}
             </div>
           </Card>

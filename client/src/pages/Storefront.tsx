@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import type { Product } from '../lib/types';
 import { fmtZmk } from '../lib/format';
-import { Card, ErrorNote, Field, FieldArea, Loading, PageHeader, PrimaryButton } from '../components/UI';
+import { Card, ErrorNote, Field, FieldArea, Loading, PageHeader, PrimaryButton, ProductImage } from '../components/UI';
 
 interface UpsertForm {
   name: string;
@@ -112,9 +112,7 @@ export default function Storefront() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => (
           <Card key={p.id}>
-            {p.imageUrl && (
-              <img src={p.imageUrl} alt={p.name} className="mb-3 h-40 w-full rounded-lg object-cover" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-            )}
+            <ProductImage name={p.name} src={p.imageUrl} className="mb-3 h-40 w-full rounded-lg object-cover" />
             <h2 className="font-semibold text-slate-900">{p.name}</h2>
             <p className="mt-1 text-sm text-slate-600 line-clamp-3">{p.description}</p>
             <div className="mt-3 flex items-center justify-between">
