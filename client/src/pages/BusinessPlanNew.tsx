@@ -31,6 +31,7 @@ export default function BusinessPlanNew() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -40,7 +41,7 @@ export default function BusinessPlanNew() {
     if (!opportunityId) return;
     api<Opportunity>(`/opportunities/${opportunityId}`)
       .then(setOpportunity)
-      .catch(() => setOpportunity(null));
+      .catch((err) => setLoadError((err as Error).message));
   }, [opportunityId]);
 
   const set = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -121,6 +122,7 @@ export default function BusinessPlanNew() {
   if (!opportunityId) {
     return <ErrorNote message="Choose an opportunity first — browse /opportunities and click 'Start an application'." />;
   }
+  if (loadError) return <ErrorNote message={loadError} />;
   if (!opportunity) return <Loading />;
 
   const progress = ((step + 1) / STEPS.length) * 100;

@@ -5,6 +5,7 @@ import { badRequest, forbidden, notFound } from '../../utils/errors';
 import { assertTransition } from './applicationFlow';
 
 const applicationInclude = {
+  applicant: { select: { id: true, name: true, email: true } },
   opportunity: true,
   businessPlan: { include: { feasibilityScore: true } },
   repayments: { orderBy: { date: 'desc' } },

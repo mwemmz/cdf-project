@@ -21,6 +21,7 @@ export default function ApplicationDetail() {
   const { id } = useParams<{ id: string }>();
   const [application, setApplication] = useState<Application | null>(null);
   const [repayments, setRepayments] = useState<RepaymentsData | null>(null);
+  const [repaymentsError, setRepaymentsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ amount: '', date: '', note: '' });
   const [saving, setSaving] = useState(false);
@@ -30,8 +31,14 @@ export default function ApplicationDetail() {
       .then(setApplication)
       .catch((err) => setError((err as Error).message));
     api<RepaymentsData>(`/repayments/application/${id}`)
-      .then(setRepayments)
-      .catch(() => setRepayments(null));
+      .then((data) => {
+        setRepayments(data);
+        setRepaymentsError(null);
+      })
+      .catch((err) => {
+        setRepayments(null);
+        setRepaymentsError((err as Error).message);
+      });
   };
 
   useEffect(load, [id]);
@@ -132,6 +139,10 @@ export default function ApplicationDetail() {
 
       <Card className="mt-4">
         <h2 className="font-semibold text-slate-900">Repayments</h2>
+
+        {repaymentsError && (
+          <div className="mt-3"><ErrorNote message={repaymentsError} /></div>
+        )}
 
         {summary && (
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">

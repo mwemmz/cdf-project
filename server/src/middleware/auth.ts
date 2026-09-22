@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import type { Role, User } from '@prisma/client';
 import { verifyToken } from '../lib/jwt';
 import { prisma } from '../lib/prisma';
-import { unauthorized } from '../utils/errors';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
