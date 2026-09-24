@@ -13,11 +13,15 @@ import BusinessPlanDetail from './pages/BusinessPlanDetail';
 import Advisors from './pages/Advisors';
 import AdvisorDetail from './pages/AdvisorDetail';
 import AdvisorMe from './pages/AdvisorMe';
+import AdvisorDashboard from './pages/AdvisorDashboard';
+import AdvisorPlanEdit from './pages/AdvisorPlanEdit';
 import Bookings from './pages/Bookings';
 import Applications from './pages/Applications';
 import ApplicationDetail from './pages/ApplicationDetail';
 import Storefront from './pages/Storefront';
 import Marketplace from './pages/Marketplace';
+import SuccessStories from './pages/SuccessStories';
+import Resources from './pages/Resources';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminApplications from './pages/AdminApplications';
 import AdminApplicationReview from './pages/AdminApplicationReview';
@@ -34,6 +38,8 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/success-stories" element={<SuccessStories />} />
+            <Route path="/resources" element={<Resources />} />
             <Route path="/opportunities" element={<Opportunities />} />
             <Route path="/advisors" element={<Advisors />} />
             <Route path="/advisors/:id" element={<AdvisorDetail />} />
@@ -43,6 +49,22 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['ADVISOR']}>
                   <AdvisorMe />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/advisor/dashboard"
+              element={
+                <ProtectedRoute roles={['ADVISOR']}>
+                  <AdvisorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/advisor/plans/:id"
+              element={
+                <ProtectedRoute roles={['ADVISOR']}>
+                  <AdvisorPlanEdit />
                 </ProtectedRoute>
               }
             />

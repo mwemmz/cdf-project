@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `block rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
@@ -40,6 +41,8 @@ export default function Layout() {
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink to="/marketplace" className={desktopNavLinkClass}>Marketplace</NavLink>
             <NavLink to="/opportunities" className={desktopNavLinkClass}>Opportunities</NavLink>
+            <NavLink to="/success-stories" className={desktopNavLinkClass}>Success Stories</NavLink>
+            <NavLink to="/resources" className={desktopNavLinkClass}>Resources</NavLink>
             {user?.role === 'APPLICANT' && (
               <>
                 <NavLink to="/plans" className={desktopNavLinkClass}>My Plans</NavLink>
@@ -51,6 +54,7 @@ export default function Layout() {
             )}
             {user?.role === 'ADVISOR' && (
               <>
+                <NavLink to="/advisor/dashboard" className={desktopNavLinkClass}>Dashboard</NavLink>
                 <NavLink to="/advisors/me" className={desktopNavLinkClass}>My Profile</NavLink>
                 <NavLink to="/bookings" className={desktopNavLinkClass}>Bookings</NavLink>
               </>
@@ -64,6 +68,7 @@ export default function Layout() {
           <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <>
+                <NotificationBell />
                 <div className="text-right">
                   <div className="text-sm font-medium text-white">{user.name}</div>
                   <div className="text-xs text-white/40">Logged in as {user.role.toLowerCase()}</div>
@@ -118,16 +123,21 @@ export default function Layout() {
         <div className="flex h-full flex-col overflow-y-auto p-4">
           <div className="mb-4 flex items-center justify-between px-2">
             <span className="font-display text-lg font-semibold tracking-tight text-white">Menu</span>
-            <button onClick={closeMobile} className="rounded-lg p-2 text-white/50 transition hover:text-white">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-1">
+              <NotificationBell variant="mobile" />
+              <button onClick={closeMobile} className="rounded-lg p-2 text-white/50 transition hover:text-white">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <nav className="flex flex-col gap-1">
             <NavLink to="/marketplace" className={navLinkClass} onClick={closeMobile}>Marketplace</NavLink>
             <NavLink to="/opportunities" className={navLinkClass} onClick={closeMobile}>Opportunities</NavLink>
+            <NavLink to="/success-stories" className={navLinkClass} onClick={closeMobile}>Success Stories</NavLink>
+            <NavLink to="/resources" className={navLinkClass} onClick={closeMobile}>Resources</NavLink>
             {user?.role === 'APPLICANT' && (
               <>
                 <NavLink to="/plans" className={navLinkClass} onClick={closeMobile}>My Plans</NavLink>
@@ -139,6 +149,7 @@ export default function Layout() {
             )}
             {user?.role === 'ADVISOR' && (
               <>
+                <NavLink to="/advisor/dashboard" className={navLinkClass} onClick={closeMobile}>Dashboard</NavLink>
                 <NavLink to="/advisors/me" className={navLinkClass} onClick={closeMobile}>My Profile</NavLink>
                 <NavLink to="/bookings" className={navLinkClass} onClick={closeMobile}>Bookings</NavLink>
               </>

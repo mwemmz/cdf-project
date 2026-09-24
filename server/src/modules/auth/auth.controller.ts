@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../../lib/prisma';
 import { signToken } from '../../lib/jwt';
 import { badRequest, conflict, unauthorized } from '../../utils/errors';
+import { ensureRepaymentReminders } from '../repayments/repaymentReminder';
 
 function serializeUser(user: {
   id: string;
@@ -40,6 +41,9 @@ export async function login(req: Request, res: Response) {
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) throw unauthorized('Invalid email or password');
+
+  // On-login check: surface any repayments due within 7 days / overdue.
+  await ensureRepaymentReminders(user.id).catch(() => undefined);
 
   const token = signToken({ userId: user.id, role: user.role });
   res.json({

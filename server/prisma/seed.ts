@@ -22,11 +22,17 @@ interface PipelineApplicant {
   amountRequested: number;
   status: ApplicationStatus;
   amountDisbursed?: number;
+  disbursedAt?: string;
+  linkedAdvisorEmail?: string;
   repayments?: RepaymentInput[];
 }
 
 async function main() {
   console.log('Clearing existing data...');
+  await prisma.message.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.resource.deleteMany();
   await prisma.product.deleteMany();
   await prisma.repayment.deleteMany();
   await prisma.application.deleteMany();
@@ -206,6 +212,8 @@ async function main() {
       amountRequested: 95000,
       status: ApplicationStatus.DISBURSED,
       amountDisbursed: 95000,
+      disbursedAt: '2026-06-01',
+      linkedAdvisorEmail: 'advisor1@fundpath.zm',
       repayments: [
         { amount: 20000, date: '2026-08-01', note: 'First quarterly repayment' },
         { amount: 15000, date: '2026-09-01', note: 'Second quarterly repayment' },
@@ -237,9 +245,11 @@ async function main() {
       amountRequested: 145000,
       status: ApplicationStatus.REPAYING,
       amountDisbursed: 145000,
+      disbursedAt: '2026-05-15',
+      linkedAdvisorEmail: 'advisor1@fundpath.zm',
       repayments: [
         { amount: 40000, date: '2026-07-15', note: 'First repayment' },
-        { amount: 30000, date: '2026-09-15', note: 'Second repayment' },
+        { amount: 35000, date: '2026-09-15', note: 'Second repayment' },
       ],
     },
     {
@@ -255,6 +265,8 @@ async function main() {
       amountRequested: 60000,
       status: ApplicationStatus.CLOSED,
       amountDisbursed: 60000,
+      disbursedAt: '2026-03-01',
+      linkedAdvisorEmail: 'advisor2@fundpath.zm',
       repayments: [
         { amount: 30000, date: '2026-05-01', note: 'First half repaid' },
         { amount: 30000, date: '2026-06-01', note: 'Loan fully repaid' },
@@ -312,20 +324,34 @@ async function main() {
       amountRequested: 110000,
       status: ApplicationStatus.DISBURSED,
       amountDisbursed: 110000,
+      disbursedAt: '2026-08-01',
     },
   ];
 
   const applicantByEmail = new Map(applicants.map((applicant) => [applicant.email, applicant]));
+  const advisorByEmail = new Map([
+    ['advisor1@fundpath.zm', advisor1],
+    ['advisor2@fundpath.zm', advisor2],
+    ['advisor3@fundpath.zm', advisor3],
+  ]);
+
+  const addMonths = (date: Date, months: number) => {
+    const next = new Date(date);
+    next.setMonth(next.getMonth() + months);
+    return next;
+  };
 
   for (const item of pipeline) {
     const applicant = applicantByEmail.get(item.email);
     if (!applicant) throw new Error(`Missing seeded applicant for ${item.email}`);
     const opportunity = opportunities[item.opportunityName];
+    const linkedAdvisor = item.linkedAdvisorEmail ? advisorByEmail.get(item.linkedAdvisorEmail) : undefined;
 
     const plan = await prisma.businessPlan.create({
       data: {
         applicantId: applicant.id,
         opportunityId: opportunity.id,
+        advisorId: linkedAdvisor?.id ?? null,
         businessIdea: item.businessIdea,
         targetMarket: item.targetMarket,
         startupCosts: item.startupCosts,
@@ -359,6 +385,8 @@ async function main() {
         businessPlanId: plan.id,
         status: item.status,
         amountDisbursed: item.amountDisbursed ?? null,
+        disbursedAt: item.disbursedAt ? new Date(item.disbursedAt) : null,
+        repaymentDueDate: item.disbursedAt ? addMonths(new Date(item.disbursedAt), 12) : null,
       },
     });
 
@@ -434,35 +462,156 @@ async function main() {
   }
 
   console.log('Seeding bookings...');
-  await Promise.all([
-    prisma.booking.create({
-      data: {
-        applicantId: applicantByEmail.get('applicant@fundpath.zm')!.id,
-        advisorId: advisor1.id,
-        status: BookingStatus.PAID,
-        price: 250,
-        note: 'Session to review my poultry business plan.',
+  const bookingA = await prisma.booking.create({
+    data: {
+      applicantId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+      advisorId: advisor1.id,
+      status: BookingStatus.PAID,
+      price: 250,
+      note: 'Session to review my poultry business plan.',
+    },
+  });
+  await prisma.booking.create({
+    data: {
+      applicantId: applicantByEmail.get('mwamba@fundpath.zm')!.id,
+      advisorId: advisor2.id,
+      status: BookingStatus.PENDING,
+      price: 300,
+      note: 'Feasibility review of my bakery revenue projections.',
+    },
+  });
+  await prisma.booking.create({
+    data: {
+      applicantId: applicantByEmail.get('natasha@fundpath.zm')!.id,
+      advisorId: advisor1.id,
+      status: BookingStatus.PENDING,
+      price: 250,
+      note: 'Structuring repayment of my market-garden loan.',
+    },
+  });
+  const bookingD = await prisma.booking.create({
+    data: {
+      applicantId: applicantByEmail.get('joseph@fundpath.zm')!.id,
+      advisorId: advisor2.id,
+      status: BookingStatus.PAID,
+      price: 300,
+      note: 'Post-repayment review of my crafts workshop.',
+    },
+  });
+
+  console.log('Seeding reviews...');
+  await prisma.review.create({
+    data: {
+      bookingId: bookingA.id,
+      applicantId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+      advisorId: advisor1.id,
+      rating: 5,
+      comment:
+        'Mulenga tightened my cost assumptions and helped me restructure the poultry plan. Funding approved two weeks later.',
+    },
+  });
+  await prisma.review.create({
+    data: {
+      bookingId: bookingD.id,
+      applicantId: applicantByEmail.get('joseph@fundpath.zm')!.id,
+      advisorId: advisor2.id,
+      rating: 4,
+      comment: 'Solid financial modelling session. Would have liked more time on the export side of the plan.',
+    },
+  });
+
+  console.log('Seeding booking chat messages...');
+  await prisma.message.createMany({
+    data: [
+      {
+        bookingId: bookingA.id,
+        senderId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+        content: 'Hi Mulenga, I have uploaded my poultry plan. Could you look at the feed-cost assumptions before our session?',
       },
-    }),
-    prisma.booking.create({
-      data: {
-        applicantId: applicantByEmail.get('mwamba@fundpath.zm')!.id,
-        advisorId: advisor2.id,
-        status: BookingStatus.PENDING,
-        price: 300,
-        note: 'Feasibility review of my bakery revenue projections.',
+      {
+        bookingId: bookingA.id,
+        senderId: advisor1.id,
+        content: 'Thanks Thandiwe. I reviewed it — your feed cost per bird looks about 15% low. I will bring a corrected model to the session.',
       },
-    }),
-    prisma.booking.create({
-      data: {
-        applicantId: applicantByEmail.get('natasha@fundpath.zm')!.id,
-        advisorId: advisor1.id,
-        status: BookingStatus.PENDING,
-        price: 250,
-        note: 'Structuring repayment of my market-garden loan.',
+      {
+        bookingId: bookingA.id,
+        senderId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+        content: 'That would be great, thank you. See you Thursday at 10:00.',
       },
-    }),
-  ]);
+      {
+        bookingId: bookingA.id,
+        senderId: advisor1.id,
+        content: 'Perfect. Bring your latest supplier quotes and we will finalise the numbers.',
+      },
+    ],
+  });
+
+  console.log('Seeding notifications...');
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+        type: 'APPLICATION_STATUS',
+        message: 'Your application for Lusaka Central has been disbursed. Repayment schedule is now available.',
+      },
+      {
+        userId: applicantByEmail.get('applicant@fundpath.zm')!.id,
+        type: 'NEW_MESSAGE',
+        message: 'Mulenga Banda replied in your chat for the poultry business plan session.',
+      },
+      {
+        userId: applicantByEmail.get('chiko@fundpath.zm')!.id,
+        type: 'REPAYMENT_DUE',
+        message: 'Your first repayment for Choma Central is now due. Log a repayment to stay on track.',
+      },
+      {
+        userId: advisor1.id,
+        type: 'NEW_REVIEW',
+        message: 'Thandiwe Phiri left you a 5-star review.',
+      },
+      {
+        userId: advisor1.id,
+        type: 'NEW_MESSAGE',
+        message: 'You have a new message from Thandiwe Phiri about your upcoming session.',
+      },
+    ],
+  });
+
+  console.log('Seeding resource library...');
+  await prisma.resource.createMany({
+    data: [
+      {
+        title: 'How to write a CDF business plan that scores well',
+        category: 'Business plans',
+        content:
+          'A strong CDF business plan answers three questions: what you will sell, who will buy it, and how the money adds up.\n\n1. Be specific about your product or service — "fresh vegetables" beats "farming".\n2. Name your target market and how many customers you realistically expect each week.\n3. List startup costs line by line, then show how projected revenue covers them and repays the loan.\n4. Keep your revenue projection honest — over-optimistic numbers reduce your feasibility score.\n5. Explain how the CDF loan changes your business, not just what you will buy.',
+      },
+      {
+        title: 'Understanding your feasibility score',
+        category: 'Feasibility',
+        content:
+          'Your feasibility score is a 0–100 signal of how ready your plan is for funding. It weighs your requested amount against the opportunity limit, the gap between startup costs and revenue, and how clearly you describe your market.\n\nA higher score means fewer risks for the committee. If your score is low, the recommendations on the plan page tell you exactly what to improve — usually market detail and revenue realism.',
+      },
+      {
+        title: 'Repaying your CDF loan: staying on track',
+        category: 'Repayments',
+        content:
+          'Repayments are spread evenly across 12 months. Your dashboard shows how much you should have repaid by today, based on your disbursement date.\n\nIf the bar turns red you are behind schedule. Log every repayment as soon as you make it, and talk to your advisor early if you expect a slow month. Consistent partial repayments protect your standing better than missed full ones.',
+      },
+      {
+        title: 'Marketing on a small budget',
+        category: 'Marketing',
+        content:
+          'You do not need a big budget to find customers.\n\n• List your products on the FundPath marketplace so funded businesses and buyers can find you.\n• Use WhatsApp status and community groups — post a photo and price daily.\n• Partner with two or three nearby shops to stock your product on commission.\n• Ask every satisfied customer for one referral; word of mouth is free and converts best.',
+      },
+      {
+        title: 'Working with an advisor',
+        category: 'Advisors',
+        content:
+          'Advisors are experienced business people who review your plan and financials. Book a session when you need a second opinion on costs, pricing or growth.\n\nBefore the session, upload your latest numbers and write down your top three questions. After the session, leave a review — it helps other applicants choose the right advisor and holds everyone to a high standard.',
+      },
+    ],
+  });
 
   console.log('Seed complete.');
   console.log('-----------------------------------');

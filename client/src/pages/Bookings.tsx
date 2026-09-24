@@ -5,6 +5,9 @@ import { fmtDateTime, fmtZmk } from '../lib/format';
 import { BOOKING_COLORS, BOOKING_LABELS } from '../lib/status';
 import { useAuth } from '../context/AuthContext';
 import { Card, ErrorNote, Loading, PageHeader, PrimaryButton } from '../components/UI';
+import ChatThread from '../components/ChatThread';
+import ReviewForm from '../components/ReviewForm';
+import { Stars } from '../components/Stars';
 
 export default function Bookings() {
   const { user } = useAuth();
@@ -75,6 +78,23 @@ export default function Bookings() {
                   )}
                 </div>
               </div>
+              {b.status === 'PAID' && <ChatThread bookingId={b.id} otherName={other?.name ?? 'their account'} />}
+
+              {b.status === 'PAID' && b.review && (
+                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-800">
+                      {isAdvisor ? 'Client review' : 'Your review'}
+                    </span>
+                    <Stars value={b.review.rating} />
+                  </div>
+                  {b.review.comment && <p className="mt-2 text-sm text-slate-600">{b.review.comment}</p>}
+                </div>
+              )}
+
+              {b.status === 'PAID' && !isAdvisor && !b.review && (
+                <ReviewForm bookingId={b.id} onDone={load} />
+              )}
             </Card>
           );
         })}

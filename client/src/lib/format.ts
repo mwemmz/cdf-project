@@ -21,6 +21,10 @@ export function fmtDateTime(value: string | Date): string {
   });
 }
 
+export function fmtTime(value: string | Date): string {
+  return new Date(value).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
 export function fmtPct(value: number): string {
   return `${value.toFixed(1)}%`;
 }

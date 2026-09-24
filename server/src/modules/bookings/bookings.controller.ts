@@ -13,6 +13,7 @@ const bookingInclude = {
       advisorProfile: true,
     },
   },
+  review: true,
 };
 
 export async function createBooking(req: Request, res: Response) {
@@ -56,6 +57,7 @@ export async function listMyBookings(req: Request, res: Response) {
     include: {
       advisor: { select: { id: true, name: true, email: true, advisorProfile: true } },
       applicant: { select: { id: true, name: true, email: true } },
+      review: true,
     },
     orderBy: { createdAt: 'desc' },
   });

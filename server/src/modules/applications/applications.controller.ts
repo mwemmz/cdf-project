@@ -1,8 +1,17 @@
 import { Request, Response } from 'express';
-import { ApplicationStatus, Prisma } from '@prisma/client';
+import { ApplicationStatus, NotificationType, Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
 import { assertTransition } from './applicationFlow';
+import { notify } from '../notifications/notificationsLib';
+
+const REPAYMENT_TERM_MONTHS = 12;
+
+function addMonths(date: Date, months: number): Date {
+  const next = new Date(date);
+  next.setMonth(next.getMonth() + months);
+  return next;
+}
 
 const applicationInclude = {
   applicant: { select: { id: true, name: true, email: true } },
@@ -81,6 +90,11 @@ export async function updateApplicationStatus(req: Request, res: Response) {
     const disbursed = amountDisbursed ?? application.businessPlan.amountRequested;
     if (disbursed <= 0) throw badRequest('Amount disbursed must be greater than 0');
     data.amountDisbursed = disbursed;
+    if (!application.disbursedAt) {
+      const now = new Date();
+      data.disbursedAt = now;
+      data.repaymentDueDate = addMonths(now, REPAYMENT_TERM_MONTHS);
+    }
   }
   if (status === ApplicationStatus.REPAYING && !application.amountDisbursed) {
     data.amountDisbursed = application.businessPlan.amountRequested;
@@ -91,6 +105,14 @@ export async function updateApplicationStatus(req: Request, res: Response) {
     data,
     include: applicationInclude,
   });
+
+  if (application.status !== status) {
+    await notify(
+      application.applicantId,
+      NotificationType.APPLICATION_STATUS,
+      `Your application status changed: ${application.status.replace(/_/g, ' ')} → ${status.replace(/_/g, ' ')}.`,
+    );
+  }
 
   res.json({ success: true, data: updated });
 }

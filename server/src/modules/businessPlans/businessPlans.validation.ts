@@ -9,6 +9,8 @@ export const createBusinessPlanSchema = z.object({
   amountRequested: z.number().positive('Amount requested must be greater than 0'),
 });
 
+export const updateBusinessPlanSchema = createBusinessPlanSchema.omit({ opportunityId: true }).partial();
+
 export const idParamSchema = z.object({
   id: z.string().min(1),
 });

@@ -13,6 +13,11 @@ import bookingRoutes from './modules/bookings/bookings.routes';
 import applicationRoutes from './modules/applications/applications.routes';
 import repaymentRoutes from './modules/repayments/repayments.routes';
 import productRoutes from './modules/products/products.routes';
+import messageRoutes from './modules/messages/messages.routes';
+import notificationRoutes from './modules/notifications/notifications.routes';
+import reviewRoutes from './modules/reviews/reviews.routes';
+import showcaseRoutes from './modules/showcase/showcase.routes';
+import resourceRoutes from './modules/resources/resources.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -46,6 +51,11 @@ export function createApp(): Application {
   app.use('/api/applications', applicationRoutes);
   app.use('/api/repayments', repaymentRoutes);
   app.use('/api/products', productRoutes);
+  app.use('/api/messages', messageRoutes);
+  app.use('/api/notifications', notificationRoutes);
+  app.use('/api/reviews', reviewRoutes);
+  app.use('/api/showcase', showcaseRoutes);
+  app.use('/api/resources', resourceRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

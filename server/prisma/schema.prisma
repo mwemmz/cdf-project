@@ -49,12 +49,15 @@ model User {
   role         Role     @default(APPLICANT)
   createdAt    DateTime @default(now())
 
-  advisorProfile AdvisorProfile?
-  businessPlans  BusinessPlan[]
-  applications   Application[]
-  bookingsAsApplicant Booking[] @relation("BookingsAsApplicant")
-  bookingsAsAdvisor   Booking[] @relation("BookingsAsAdvisor")
-  products       Product[]
+  advisorProfile      AdvisorProfile?
+  businessPlans       BusinessPlan[]
+  plansAsAdvisor      BusinessPlan[]  @relation("PlansAsAdvisor")
+  applications        Application[]
+  bookingsAsApplicant Booking[]       @relation("BookingsAsApplicant")
+  bookingsAsAdvisor   Booking[]       @relation("BookingsAsAdvisor")
+  products            Product[]
+  messagesSent        Message[]
+  notifications       Notification[]
 
   @@map("users")
 }
@@ -64,12 +67,12 @@ model User {
 // ---------------------------------------------------------------------------
 
 model AdvisorProfile {
-  id             String  @id @default(cuid())
-  userId         String  @unique
-  specialty      String
-  bio            String
+  id              String  @id @default(cuid())
+  userId          String  @unique
+  specialty       String
+  bio             String
   pricePerSession Float
-  verified       Boolean @default(false)
+  verified        Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -102,6 +105,7 @@ model BusinessPlan {
   id                String   @id @default(cuid())
   applicantId       String
   opportunityId     String
+  advisorId         String?
   businessIdea      String
   targetMarket      String
   startupCosts      Float
@@ -109,12 +113,14 @@ model BusinessPlan {
   amountRequested   Float
   createdAt         DateTime @default(now())
 
-  applicant        User             @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  opportunity      Opportunity      @relation(fields: [opportunityId], references: [id])
+  applicant        User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  opportunity      Opportunity       @relation(fields: [opportunityId], references: [id])
+  advisor          User?             @relation("PlansAsAdvisor", fields: [advisorId], references: [id], onDelete: SetNull)
   feasibilityScore FeasibilityScore?
   application      Application?
 
   @@index([applicantId])
+  @@index([advisorId])
   @@map("business_plans")
 }
 
@@ -148,6 +154,9 @@ model Booking {
   applicant User @relation("BookingsAsApplicant", fields: [applicantId], references: [id], onDelete: Cascade)
   advisor   User @relation("BookingsAsAdvisor", fields: [advisorId], references: [id])
 
+  messages Message[]
+  review   Review?
+
   @@map("bookings")
 }
 
@@ -156,18 +165,20 @@ model Booking {
 // ---------------------------------------------------------------------------
 
 model Application {
-  id              String            @id @default(cuid())
-  applicantId     String
-  opportunityId   String
-  businessPlanId  String            @unique
-  status          ApplicationStatus @default(SUBMITTED)
-  amountDisbursed Float?
-  createdAt       DateTime          @default(now())
+  id               String            @id @default(cuid())
+  applicantId      String
+  opportunityId    String
+  businessPlanId   String            @unique
+  status           ApplicationStatus @default(SUBMITTED)
+  amountDisbursed  Float?
+  disbursedAt      DateTime?
+  repaymentDueDate DateTime?
+  createdAt        DateTime          @default(now())
 
-  applicant   User         @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  opportunity Opportunity  @relation(fields: [opportunityId], references: [id])
+  applicant    User         @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  opportunity  Opportunity  @relation(fields: [opportunityId], references: [id])
   businessPlan BusinessPlan @relation(fields: [businessPlanId], references: [id])
-  repayments  Repayment[]
+  repayments   Repayment[]
 
   @@index([applicantId])
   @@index([status])
@@ -193,7 +204,7 @@ model Repayment {
 // ---------------------------------------------------------------------------
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   applicantId String
   name        String
   description String
@@ -205,4 +216,73 @@ model Product {
 
   @@index([applicantId])
   @@map("products")
+}
+
+// ---------------------------------------------------------------------------
+// Ecosystem: chat, reviews, notifications, resources
+// ---------------------------------------------------------------------------
+
+// Chat thread tied to a booking. Unlocked once the booking status is PAID.
+model Message {
+  id        String   @id @default(cuid())
+  bookingId String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  sender  User    @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@map("messages")
+}
+
+// One review per booking, left by the applicant after the session is paid.
+model Review {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  applicantId String
+  advisorId   String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([advisorId])
+  @@map("reviews")
+}
+
+enum NotificationType {
+  FEASIBILITY_READY
+  NEW_MESSAGE
+  REPAYMENT_DUE
+  APPLICATION_STATUS
+  NEW_REVIEW
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  message   String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model Resource {
+  id        String   @id @default(cuid())
+  title     String
+  category  String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([category])
+  @@map("resources")
 }

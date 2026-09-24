@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { ApplicationStatus } from '@prisma/client';
+import { ApplicationStatus, NotificationType } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
 import { computeRepaymentSummary, isRepaymentEligible } from './repaymentSummary';
+import { computeRepaymentSchedule } from './repaymentSchedule';
+import { notify } from '../notifications/notificationsLib';
 
 export async function addRepayment(req: Request, res: Response) {
   const { applicationId, amount, date, note } = req.body;
@@ -35,6 +37,11 @@ export async function addRepayment(req: Request, res: Response) {
       where: { id: application.id },
       data: { status: ApplicationStatus.REPAYING },
     });
+    await notify(
+      application.applicantId,
+      NotificationType.APPLICATION_STATUS,
+      'Your first repayment was logged — your application is now Repaying.',
+    );
   }
 
   // Fully repaid -> mark Closed.
@@ -44,6 +51,11 @@ export async function addRepayment(req: Request, res: Response) {
       where: { id: application.id },
       data: { status: ApplicationStatus.CLOSED },
     });
+    await notify(
+      application.applicantId,
+      NotificationType.APPLICATION_STATUS,
+      'Congratulations — your loan is fully repaid and the application is now Closed.',
+    );
   }
 
   res.status(201).json({ success: true, data: { repayment, status: updatedApplication.status } });
@@ -74,9 +86,17 @@ export async function getRepaymentsForApplication(req: Request, res: Response) {
         status: application.status,
         amountDisbursed: totals.totalDisbursed,
         constituency: application.opportunity.constituencyName,
+        disbursedAt: application.disbursedAt,
+        repaymentDueDate: application.repaymentDueDate,
       },
       repayments: application.repayments,
       summary: computeRepaymentSummary(totals.totalDisbursed, totals.totalRepaid),
+      schedule: computeRepaymentSchedule(
+        totals.totalDisbursed,
+        totals.totalRepaid,
+        application.disbursedAt,
+        application.repaymentDueDate,
+      ),
     },
   });
 }

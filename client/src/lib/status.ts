@@ -34,6 +34,7 @@ export const SPECIALTY_LABELS: Record<string, string> = {
   business_plans: 'Business Plans',
   feasibility: 'Feasibility',
   accounting: 'Accounting',
+  marketing: 'Marketing',
 };
 
 export const FEASIBILITY_COLORS: Record<string, string> = {

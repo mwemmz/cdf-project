@@ -11,6 +11,22 @@ Delivered as one cohesive full-stack slice covering two developers' scope:
 - **Dev 2 — marketplace & transactions:** advisor marketplace & bookings, applications/loan
   tracking, repayments, and the public storefront.
 
+An **ecosystem layer** connects the two sides so the platform feels like one product:
+
+- **Chat** — once a booking is paid, the applicant and advisor get a private thread.
+- **Notifications** — an in-app bell with unread counts (feasibility ready, status changes, new
+  messages, new reviews, repayment reminders).
+- **Repayment reminders & progress bar** — a 12-month straight-line schedule, an on-track/behind
+  progress bar, and reminders when a payment is due within 7 days or overdue.
+- **Advisor ratings** — applicants review a paid session; public 1–5 star averages on the
+  marketplace and advisor pages.
+- **Advisor dashboard** — advisors see their clients, plan scores and pipeline at a glance.
+- **Advisor business tools** — co-edit a linked client's plan (with automatic re-scoring and a
+  notification) plus a break-even calculator.
+- **Success stories** — a public showcase of funded businesses at least 50% repaid, linking to
+  their marketplace storefront.
+- **Resource library** — short, filterable guides for applicants and funded businesses.
+
 Admin dashboard, review/approval UI, analytics/charts, and deployment config are intentionally
 **out of scope** (built by a separate Admin/Analytics developer on top of these endpoints).
 
@@ -45,7 +61,8 @@ Admin dashboard, review/approval UI, analytics/charts, and deployment config are
 │       ├── middleware/     # auth (JWT + roles), validation, error handling
 │       ├── lib/            # prisma client, jwt helpers
 │       └── modules/        # auth, opportunities, businessPlans, feasibility,
-│                           # advisors, bookings, applications, repayments, products
+│                           # advisors, bookings, applications, repayments, products,
+│                           # messages, notifications, reviews, showcase, resources
 └── README.md
 ```
 
@@ -117,6 +134,10 @@ Visit http://localhost:5173.
 | --------------- | -------------------------------------------------------- |
 | `VITE_API_BASE` | API base URL. Defaults to `/api` (uses the Vite proxy)   |
 
+The ecosystem features add **no new environment variables** — chat, notifications, reminders,
+reviews, the advisor dashboard/tools, success stories and the resource library all run on the
+existing database and config.
+
 ## Seeded test accounts
 
 | Role      | Email                   | Password       |
@@ -126,9 +147,11 @@ Visit http://localhost:5173.
 | Advisor 2 | advisor2@fundpath.zm    | Advisor@123    |
 | Applicant | applicant@fundpath.zm   | Applicant@123  |
 
-The seed also creates 6 CDF opportunities, two **verified** advisor profiles (so the marketplace
-is testable — real verification is the Admin developer's job), a demo applicant whose application
-is already **Disbursed** with two repayments and two storefront products, and one paid booking.
+The seed also creates 8 CDF opportunities, three advisor profiles (two **verified** so the
+marketplace is testable — real verification is the Admin developer's job), a full application
+pipeline across every status, demo storefront products, paid and pending bookings with a chat
+thread and reviews, sample notifications, and a 5-article resource library. Two funded
+businesses (one repaying, one closed) qualify for the public **Success stories** page.
 
 ## API conventions
 
@@ -169,6 +192,21 @@ is already **Disbursed** with two repayments and two storefront products, and on
 | `POST /api/products`                 | applicant*  | Create listing *(needs Disbursed+)        |
 | `PATCH /api/products/:id`            | owner*      | Edit listing                              |
 | `DELETE /api/products/:id`           | owner*      | Delete listing                            |
+| `GET /api/messages/:bookingId`       | participants| Booking chat thread *(needs PAID)*        |
+| `POST /api/messages/:bookingId`      | participants| Send a chat message *(needs PAID)*        |
+| `GET /api/notifications`             | any auth    | My notifications (newest first)           |
+| `GET /api/notifications/unread-count`| any auth    | Unread notification count                 |
+| `POST /api/notifications/:id/read`   | owner       | Mark one notification read                |
+| `POST /api/notifications/read-all`   | any auth    | Mark all my notifications read            |
+| `POST /api/reviews`                  | applicant   | Review a paid booking (one per booking)   |
+| `GET /api/reviews/advisor/:advisorId`| public      | Advisor average rating + reviews          |
+| `GET /api/advisors/me/clients`       | advisor     | My clients, scores and pipeline           |
+| `PATCH /api/business-plans/:id`      | owner/linked advisor/admin | Edit plan (re-scores)        |
+| `POST /api/business-plans/:id/advisor`| owner      | Link an advisor to my plan               |
+| `DELETE /api/business-plans/:id/advisor`| owner    | Unlink the advisor from my plan          |
+| `GET /api/showcase`                  | public      | Success stories (funded, ≥50% repaid)     |
+| `GET /api/resources`                 | public      | Resource library (`?category=`)           |
+| `GET /api/resources/:id`             | public      | Resource detail                           |
 
 ## Feasibility scoring rules (0–100)
 

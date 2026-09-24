@@ -1,10 +1,11 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../lib/api';
-import type { AdvisorProfile, Booking } from '../lib/types';
-import { fmtZmk } from '../lib/format';
+import type { AdvisorProfile, AdvisorReviews, Booking } from '../lib/types';
+import { fmtDate, fmtZmk } from '../lib/format';
 import { SPECIALTY_LABELS } from '../lib/status';
 import { Card, ErrorNote, FieldArea, Loading, PrimaryButton } from '../components/UI';
+import { Stars } from '../components/Stars';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdvisorDetail() {
@@ -12,6 +13,7 @@ export default function AdvisorDetail() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [advisor, setAdvisor] = useState<AdvisorProfile | null>(null);
+  const [reviews, setReviews] = useState<AdvisorReviews | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [booking, setBooking] = useState(false);
@@ -22,6 +24,13 @@ export default function AdvisorDetail() {
       .then(setAdvisor)
       .catch((err) => setError((err as Error).message));
   }, [id]);
+
+  useEffect(() => {
+    if (!advisor?.user?.id) return;
+    api<AdvisorReviews>(`/reviews/advisor/${advisor.user.id}`)
+      .then(setReviews)
+      .catch(() => undefined);
+  }, [advisor?.user?.id]);
 
   const book = async (e: FormEvent) => {
     e.preventDefault();
@@ -62,9 +71,35 @@ export default function AdvisorDetail() {
             <div className="text-xs text-slate-500">per session</div>
           </div>
         </div>
+        <div className="mt-3 flex items-center gap-2">
+          <Stars value={advisor.rating?.average ?? 0} size="md" />
+          <span className="text-sm text-slate-600">
+            {advisor.rating && advisor.rating.count > 0
+              ? `${advisor.rating.average.toFixed(1)} · ${advisor.rating.count} review${advisor.rating.count === 1 ? '' : 's'}`
+              : 'No reviews yet'}
+          </span>
+        </div>
         <p className="mt-4 whitespace-pre-line text-slate-700">{advisor.bio}</p>
         <p className="mt-3 text-sm text-slate-500">Contact: {advisor.user?.email}</p>
       </Card>
+
+      {reviews && reviews.reviews.length > 0 && (
+        <Card className="mt-4">
+          <h2 className="font-semibold text-slate-900">Reviews</h2>
+          <ul className="mt-3 divide-y divide-slate-100">
+            {reviews.reviews.map((r) => (
+              <li key={r.id} className="py-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-slate-800">{r.applicantName ?? 'Applicant'}</span>
+                  <Stars value={r.rating} />
+                </div>
+                {r.comment && <p className="mt-1 text-sm text-slate-600">{r.comment}</p>}
+                <p className="mt-1 text-xs text-slate-400">{fmtDate(r.createdAt)}</p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
 
       <Card className="mt-4">
         <h2 className="font-semibold text-slate-900">Book a session</h2>

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import type { Product } from '../lib/types';
 import { fmtZmk } from '../lib/format';
 import { Card, ErrorNote, Loading, PageHeader, ProductImage } from '../components/UI';
 
 export default function Marketplace() {
+  const [params] = useSearchParams();
+  const seller = params.get('seller');
   const [products, setProducts] = useState<Product[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
@@ -19,6 +22,8 @@ export default function Marketplace() {
   if (!products) return <Loading />;
 
   const toggle = (id: string) => setRevealed((r) => ({ ...r, [id]: !r[id] }));
+  const visible = seller ? products.filter((p) => p.applicantId === seller) : products;
+  const sellerName = seller ? products.find((p) => p.applicantId === seller)?.applicant?.name : null;
 
   return (
     <div>
@@ -27,12 +32,24 @@ export default function Marketplace() {
         subtitle="Products from CDF-funded businesses across Zambia. Browse freely — no account needed."
       />
 
-      {products.length === 0 && (
+      {seller && (
+        <div className="mb-4 flex items-center justify-between rounded-xl border border-brand-200 bg-brand-50 px-4 py-3">
+          <span className="text-sm text-brand-800">
+            Showing the storefront{sellerName ? ` for ${sellerName}` : ''} — {visible.length} product
+            {visible.length === 1 ? '' : 's'}.
+          </span>
+          <Link to="/marketplace" className="text-sm font-medium text-brand-700 underline">
+            View all
+          </Link>
+        </div>
+      )}
+
+      {visible.length === 0 && (
         <Card><p className="text-slate-500">No products on the marketplace yet. Check back soon.</p></Card>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((p) => (
+        {visible.map((p) => (
           <Card key={p.id} className="flex flex-col">
             <ProductImage name={p.name} src={p.imageUrl} className="mb-3 h-44 w-full rounded-lg object-cover" />
             <h2 className="font-semibold text-slate-900">{p.name}</h2>

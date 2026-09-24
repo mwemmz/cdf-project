@@ -5,6 +5,7 @@ import type {
   Application,
   Repayment,
   RepaymentSummary,
+  RepaymentSchedule,
 } from '../lib/types';
 import { fmtDate, fmtPct, fmtZmk } from '../lib/format';
 import { APPLICATION_COLORS, APPLICATION_LABELS, FEASIBILITY_COLORS } from '../lib/status';
@@ -12,9 +13,17 @@ import { ApplicationTracker } from '../components/ApplicationTracker';
 import { Card, ErrorNote, Field, FieldArea, Loading, PageHeader, PrimaryButton } from '../components/UI';
 
 interface RepaymentsData {
-  application: { id: string; status: string; amountDisbursed: number; constituency: string };
+  application: {
+    id: string;
+    status: string;
+    amountDisbursed: number;
+    constituency: string;
+    disbursedAt: string | null;
+    repaymentDueDate: string | null;
+  };
   repayments: Repayment[];
   summary: RepaymentSummary;
+  schedule: RepaymentSchedule | null;
 }
 
 export default function ApplicationDetail() {
@@ -157,6 +166,52 @@ export default function ApplicationDetail() {
                 <div className="font-semibold text-slate-900">{s.value}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {repayments?.schedule && (
+          <div className="mt-4 rounded-lg border border-slate-200 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-slate-700">Repayment progress</span>
+              <span
+                className={`rounded px-2 py-0.5 text-xs font-semibold ${
+                  repayments.schedule.onTrack ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700'
+                }`}
+              >
+                {repayments.schedule.onTrack ? 'On track' : 'Behind schedule'}
+              </span>
+            </div>
+            <div className="relative mt-3 h-3 w-full overflow-hidden rounded-full bg-slate-200">
+              <div
+                className={`h-full rounded-full ${repayments.schedule.onTrack ? 'bg-brand-500' : 'bg-copper-500'}`}
+                style={{ width: `${Math.min(100, summary?.repaymentPercentage ?? 0)}%` }}
+              />
+              {repayments.schedule.expectedPercentage > 0 && repayments.schedule.expectedPercentage < 100 && (
+                <div
+                  className="absolute top-0 h-full w-0.5 bg-slate-700"
+                  style={{ left: `${repayments.schedule.expectedPercentage}%` }}
+                  title="Expected by now"
+                />
+              )}
+            </div>
+            <div className="mt-2 flex justify-between text-xs text-slate-500">
+              <span>Repaid {fmtPct(summary?.repaymentPercentage ?? 0)}</span>
+              <span>Expected by now {fmtPct(repayments.schedule.expectedPercentage)}</span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+              <div>
+                <div className="text-xs text-slate-400">Monthly payment</div>
+                <div className="font-medium">{fmtZmk(repayments.schedule.monthlyPayment)}</div>
+              </div>
+              <div>
+                <div className="text-xs text-slate-400">Term</div>
+                <div className="font-medium">{repayments.schedule.termMonths} months</div>
+              </div>
+              <div>
+                <div className="text-xs text-slate-400">Final due date</div>
+                <div className="font-medium">{fmtDate(repayments.schedule.dueDate)}</div>
+              </div>
+            </div>
           </div>
         )}
 

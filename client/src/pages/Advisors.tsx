@@ -5,6 +5,7 @@ import type { AdvisorProfile } from '../lib/types';
 import { fmtZmk } from '../lib/format';
 import { SPECIALTY_LABELS } from '../lib/status';
 import { Card, ErrorNote, Loading, PageHeader } from '../components/UI';
+import { Stars } from '../components/Stars';
 
 export default function Advisors() {
   const [advisors, setAdvisors] = useState<AdvisorProfile[] | null>(null);
@@ -45,6 +46,12 @@ export default function Advisors() {
               <div className="text-right">
                 <div className="font-semibold text-slate-900">{fmtZmk(a.pricePerSession)}</div>
                 <div className="text-xs text-slate-500">per session</div>
+                {a.rating && a.rating.count > 0 && (
+                  <div className="mt-1 flex items-center justify-end gap-1">
+                    <Stars value={a.rating.average} />
+                    <span className="text-xs text-slate-500">({a.rating.count})</span>
+                  </div>
+                )}
               </div>
             </div>
             <p className="mt-2 line-clamp-3 text-sm text-slate-600">{a.bio}</p>

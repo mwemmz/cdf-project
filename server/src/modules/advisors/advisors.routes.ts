@@ -7,6 +7,7 @@ import {
   getMyProfile,
   listAdvisors,
   getAdvisor,
+  getMyClients,
 } from './advisors.controller';
 import { createAdvisorProfileSchema } from './advisors.validation';
 import { idParamSchema } from '../businessPlans/businessPlans.validation';
@@ -15,6 +16,7 @@ const router = Router();
 
 router.get('/', asyncHandler(listAdvisors));
 router.get('/me', requireAuth, requireRole('ADVISOR'), asyncHandler(getMyProfile));
+router.get('/me/clients', requireAuth, requireRole('ADVISOR'), asyncHandler(getMyClients));
 router.get('/:id', validateParams(idParamSchema), asyncHandler(getAdvisor));
 router.post(
   '/profile',
