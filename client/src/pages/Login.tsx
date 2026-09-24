@@ -4,6 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import { requestLogin } from '../lib/auth';
 import { Card, Field, PrimaryButton } from '../components/UI';
 
+const TEST_ACCOUNTS = [
+  { role: 'Admin', email: 'admin@fundpath.zm', password: 'Admin@123' },
+  { role: 'Applicant', email: 'applicant@fundpath.zm', password: 'Applicant@123' },
+  { role: 'Advisor', email: 'advisor1@fundpath.zm', password: 'Advisor@123' },
+];
+
 export default function Login() {
   const { refresh } = useAuth();
   const navigate = useNavigate();
@@ -56,6 +62,30 @@ export default function Login() {
             Log in
           </PrimaryButton>
         </form>
+        <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Test accounts — click to fill</p>
+          <ul className="mt-2 space-y-2">
+            {TEST_ACCOUNTS.map((acc) => (
+              <li key={acc.role} className="flex items-center justify-between gap-2 text-sm">
+                <div className="min-w-0">
+                  <p className="font-medium text-slate-700">{acc.role}</p>
+                  <p className="truncate text-xs text-slate-500">{acc.email}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail(acc.email);
+                    setPassword(acc.password);
+                    setError(null);
+                  }}
+                  className="shrink-0 rounded-md border border-brand-200 bg-white px-3 py-1 text-xs font-medium text-brand-600 hover:bg-brand-50"
+                >
+                  Use
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         <p className="mt-4 text-sm text-slate-500">
           No account?{' '}
           <Link to="/register" className="text-brand-600 underline">
