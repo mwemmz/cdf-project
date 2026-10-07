@@ -49,6 +49,29 @@ describe('admin advisor verification queue', () => {
     assert.equal(ids.indexOf(pendingProfile.id) < ids.indexOf(verifiedProfile.id), true, 'pending advisors come first');
   });
 
+  it('allows filtering advisors by verification state and rejects invalid filter values', async () => {
+    const { token: adminToken } = await createUser('ADMIN', 'Admin A');
+    const { profile: verifiedProfile } = await createAdvisorWithProfile('Verified Vera', true);
+    const { profile: pendingProfile } = await createAdvisorWithProfile('Pending Pat', false);
+
+    const pendingOnly = await request(app).get('/api/admin/advisors?verified=false').set(auth(adminToken));
+    assert.equal(pendingOnly.status, 200);
+    assert.deepEqual(
+      (pendingOnly.body.data as Array<{ id: string }>).map((advisor) => advisor.id),
+      [pendingProfile.id],
+    );
+
+    const verifiedOnly = await request(app).get('/api/admin/advisors?verified=true').set(auth(adminToken));
+    assert.equal(verifiedOnly.status, 200);
+    assert.deepEqual(
+      (verifiedOnly.body.data as Array<{ id: string }>).map((advisor) => advisor.id),
+      [verifiedProfile.id],
+    );
+
+    const invalidFilter = await request(app).get('/api/admin/advisors?verified=maybe').set(auth(adminToken));
+    assert.equal(invalidFilter.status, 400);
+  });
+
   it('verifying an advisor makes them appear in the public marketplace; unverifying removes them', async () => {
     const { token: adminToken } = await createUser('ADMIN', 'Admin A');
     const { profile } = await createAdvisorWithProfile('Round Trip Rita', false);

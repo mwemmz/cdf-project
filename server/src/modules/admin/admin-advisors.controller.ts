@@ -3,8 +3,17 @@ import { z } from 'zod';
 import { prisma } from '../../lib/prisma';
 import { notFound } from '../../utils/errors';
 
-export async function listAdvisors(_req: Request, res: Response) {
+export const listAdvisorsQuerySchema = z.object({
+  verified: z
+    .enum(['true', 'false'])
+    .transform((value) => value === 'true')
+    .optional(),
+});
+
+export async function listAdvisors(req: Request, res: Response) {
+  const verified = req.query.verified as boolean | undefined;
   const advisors = await prisma.advisorProfile.findMany({
+    where: verified === undefined ? undefined : { verified },
     // Unlike the public marketplace, the admin sees EVERY advisor — including
     // the unverified ones nobody else can see. Unverified first, so the
     // verification queue is always at the top.
