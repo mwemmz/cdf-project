@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { Role } from '../lib/types';
 
@@ -11,13 +11,15 @@ export function ProtectedRoute({
   roles?: Role[];
 }) {
   const { user, loaded } = useAuth();
+  const location = useLocation();
 
   if (!loaded) {
     return <div className="p-8 text-center text-slate-500">Loading…</div>;
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    const next = encodeURIComponent(`${location.pathname}${location.search}${location.hash}`);
+    return <Navigate to={`/login?next=${next}`} replace />;
   }
 
   if (roles && !roles.includes(user.role)) {
