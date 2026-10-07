@@ -12,7 +12,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "seed": "tsx prisma/seed.ts",
-    "test": "node --env-file=.env.test node_modules/prisma/build/index.js migrate deploy && node --env-file=.env.test --import tsx --test --test-concurrency=1 \"src/test/**/*.test.ts\""
+    "test": "DOTENV_CONFIG_PATH=.env.test node -r dotenv/config node_modules/prisma/build/index.js migrate deploy && DOTENV_CONFIG_PATH=.env.test node -r dotenv/config --import tsx --test --test-concurrency=1 \"src/test/**/*.test.ts\""
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
