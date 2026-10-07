@@ -82,6 +82,51 @@ describe('admin application queue', () => {
     assert.equal(rows[0].businessPlan.amountRequested, 12_000);
   });
 
+  it('an opportunity filter narrows the queue', async () => {
+    const { token } = await createUser('ADMIN', 'Admin A');
+    const { user: applicant } = await createUser('APPLICANT', 'Applicant A');
+    const firstOpportunity = await createOpportunity({ constituencyName: 'Mandevu' });
+    const secondOpportunity = await createOpportunity({ constituencyName: 'Lusaka Central' });
+
+    const p1 = await createPlanWithScore(applicant.id, firstOpportunity.id, 8_000);
+    await createApplication(applicant.id, firstOpportunity.id, p1.plan.id, ApplicationStatus.SUBMITTED);
+    const p2 = await createPlanWithScore(applicant.id, secondOpportunity.id, 12_000);
+    await createApplication(applicant.id, secondOpportunity.id, p2.plan.id, ApplicationStatus.APPROVED);
+
+    const res = await request(app)
+      .get('/api/admin/applications')
+      .query({ opportunityId: secondOpportunity.id })
+      .set(auth(token));
+
+    assert.equal(res.status, 200);
+    const rows = res.body.data;
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].opportunity.constituencyName, 'Lusaka Central');
+  });
+
+  it('limit and offset paginate the queue', async () => {
+    const { token } = await createUser('ADMIN', 'Admin A');
+    const { user: applicant } = await createUser('APPLICANT', 'Applicant A');
+    const opportunity = await createOpportunity();
+
+    const p1 = await createPlanWithScore(applicant.id, opportunity.id, 8_000);
+    await createApplication(applicant.id, opportunity.id, p1.plan.id, ApplicationStatus.SUBMITTED);
+    const p2 = await createPlanWithScore(applicant.id, opportunity.id, 12_000);
+    await createApplication(applicant.id, opportunity.id, p2.plan.id, ApplicationStatus.APPROVED);
+    const p3 = await createPlanWithScore(applicant.id, opportunity.id, 15_000);
+    await createApplication(applicant.id, opportunity.id, p3.plan.id, ApplicationStatus.REJECTED);
+
+    const res = await request(app)
+      .get('/api/admin/applications')
+      .query({ offset: 1, limit: 1 })
+      .set(auth(token));
+
+    assert.equal(res.status, 200);
+    const rows = res.body.data;
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].businessPlan.amountRequested, 12_000);
+  });
+
   it('an unknown stage is rejected', async () => {
     const { token } = await createUser('ADMIN', 'Admin A');
     const res = await request(app)
