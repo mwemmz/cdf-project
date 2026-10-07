@@ -48,7 +48,7 @@ router.get('/advisors', asyncHandler(listAdminAdvisors));
 
 // Verify or unverify an advisor. Idempotent.
 router.patch(
-  '/advisors/:id/verify',
+  '/advisors/:id/verification',
   validateParams(idParamSchema),
   validateBody(setAdvisorVerificationSchema),
   asyncHandler(setAdvisorVerification),

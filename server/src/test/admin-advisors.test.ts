@@ -54,7 +54,7 @@ describe('admin advisor verification queue', () => {
     const { profile } = await createAdvisorWithProfile('Round Trip Rita', false);
 
     const verify = await request(app)
-      .patch(`/api/admin/advisors/${profile.id}/verify`)
+      .patch(`/api/admin/advisors/${profile.id}/verification`)
       .set(auth(adminToken))
       .send({ verified: true });
     assert.equal(verify.status, 200);
@@ -64,7 +64,7 @@ describe('admin advisor verification queue', () => {
     assert.ok(publicAfterVerify.body.data.some((a: { id: string }) => a.id === profile.id));
 
     const unverify = await request(app)
-      .patch(`/api/admin/advisors/${profile.id}/verify`)
+      .patch(`/api/admin/advisors/${profile.id}/verification`)
       .set(auth(adminToken))
       .send({ verified: false });
     assert.equal(unverify.status, 200);
@@ -80,7 +80,7 @@ describe('admin advisor verification queue', () => {
 
     for (let i = 0; i < 2; i++) {
       const res = await request(app)
-        .patch(`/api/admin/advisors/${profile.id}/verify`)
+        .patch(`/api/admin/advisors/${profile.id}/verification`)
         .set(auth(adminToken))
         .send({ verified: true });
       assert.equal(res.status, 200);
@@ -99,10 +99,10 @@ describe('admin advisor verification queue', () => {
     const applicantList = await request(app).get('/api/admin/advisors').set(auth(applicantToken));
     assert.equal(applicantList.status, 403);
 
-    const noTokenVerify = await request(app).patch('/api/admin/advisors/some-id/verify').send({ verified: true });
+    const noTokenVerify = await request(app).patch('/api/admin/advisors/some-id/verification').send({ verified: true });
     assert.equal(noTokenVerify.status, 401);
     const applicantVerify = await request(app)
-      .patch('/api/admin/advisors/some-id/verify')
+      .patch('/api/admin/advisors/some-id/verification')
       .set(auth(applicantToken))
       .send({ verified: true });
     assert.equal(applicantVerify.status, 403);
@@ -112,13 +112,13 @@ describe('admin advisor verification queue', () => {
     const { token: adminToken } = await createUser('ADMIN', 'Admin A');
 
     const missing = await request(app)
-      .patch('/api/admin/advisors/does-not-exist/verify')
+      .patch('/api/admin/advisors/does-not-exist/verification')
       .set(auth(adminToken))
       .send({ verified: true });
     assert.equal(missing.status, 404);
 
     const badBody = await request(app)
-      .patch(`/api/admin/advisors/${(await createAdvisorWithProfile('Bad Body Bea', false)).profile.id}/verify`)
+      .patch(`/api/admin/advisors/${(await createAdvisorWithProfile('Bad Body Bea', false)).profile.id}/verification`)
       .set(auth(adminToken))
       .send({ verified: 'yes' });
     assert.equal(badBody.status, 400);
