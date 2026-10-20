@@ -27,8 +27,10 @@ An **ecosystem layer** connects the two sides so the platform feels like one pro
   their marketplace storefront.
 - **Resource library** — short, filterable guides for applicants and funded businesses.
 
-Admin dashboard, review/approval UI, analytics/charts, and deployment config are intentionally
-**out of scope** (built by a separate Admin/Analytics developer on top of these endpoints).
+- **Admin & analytics** — an `/admin` area (ADMIN role only): dashboard with pipeline, money and
+  feasibility charts (inline SVG, no chart library), a cross-applicant review queue with legal
+  status transitions, advisor verification (unverified advisors included), and opportunity
+  create/edit. Spec: [`docs/specs/dev3-admin-dashboard.md`](./docs/specs/dev3-admin-dashboard.md).
 
 ## Tech stack
 
@@ -148,7 +150,7 @@ existing database and config.
 | Applicant | applicant@fundpath.zm   | Applicant@123  |
 
 The seed also creates 8 CDF opportunities, three advisor profiles (two **verified** so the
-marketplace is testable — real verification is the Admin developer's job), a full application
+marketplace is testable — admins verify the rest from the admin area), a full application
 pipeline across every status, demo storefront products, paid and pending bookings with a chat
 thread and reviews, sample notifications, and a 5-article resource library. Two funded
 businesses (one repaying, one closed) qualify for the public **Success stories** page.
@@ -184,7 +186,7 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 | `POST /api/applications`             | applicant   | Submit scored plan as application          |
 | `GET /api/applications/mine`         | applicant   | My applications (pipeline, repayments)    |
 | `GET /api/applications/:id`          | owner/admin | Application detail                         |
-| `PATCH /api/applications/:id/status` | **admin**   | Status pipeline (Admin team hooks in here) |
+| `PATCH /api/applications/:id/status` | **admin**   | Status pipeline (used by the admin review screen) |
 | `POST /api/repayments`               | applicant   | Log a repayment (auto-advances pipeline)  |
 | `GET /api/repayments/application/:id`| owner/admin | Repayment history + balance summary       |
 | `GET /api/products`                  | public      | Marketplace products (all sellers)        |
@@ -207,6 +209,12 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 | `GET /api/showcase`                  | public      | Success stories (funded, ≥50% repaid)     |
 | `GET /api/resources`                 | public      | Resource library (`?category=`)           |
 | `GET /api/resources/:id`             | public      | Resource detail                           |
+| `GET /api/admin/summary`             | **admin**   | Dashboard totals, money, stage and category counts |
+| `GET /api/admin/applications`        | **admin**   | All applications (`?status=`), newest first |
+| `GET /api/admin/advisors`            | **admin**   | All advisors incl. unverified, pending first |
+| `PATCH /api/admin/advisors/:id/verify`| **admin**  | Verify / unverify (idempotent)            |
+| `POST /api/admin/opportunities`      | **admin**   | Create an opportunity                     |
+| `PATCH /api/admin/opportunities/:id` | **admin**   | Edit an opportunity                       |
 
 ## Feasibility scoring rules (0–100)
 
@@ -269,9 +277,9 @@ Procfile — just the blueprint and a few env vars.
 - The blueprint skips **health checks** (paid-plan feature); `/health` still exists for
   manual checks.
 
-## Notes for the Admin/Analytics developer
+## Tests
 
-- Reuse the `{ success, data | error }` envelope and the endpoints above.
-- Admin actions (review/approve applications, verify advisors, manage opportunities) plug into the
-  existing `PATCH /api/applications/:id/status` and the `verified` / role fields.
-- Charts/analytics have no dependencies in this slice and consume the same payloads.
+Server tests (node:test + supertest) drive the Express app over HTTP against a separate Postgres
+database. Point `server/.env.test` at an empty database, then run `pnpm test` from the repo root;
+it applies migrations and runs `server/src/test/**/*.test.ts`. There is no client test harness —
+the admin UI is checked manually with the seeded admin account.

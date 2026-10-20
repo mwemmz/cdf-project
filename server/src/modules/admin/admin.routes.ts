@@ -24,8 +24,7 @@ const router = Router();
 // authenticated admin, so no admin endpoint can forget to gate itself.
 router.use(requireAuth, requireRole('ADMIN'));
 
-// Namespace probe — proves the guard end to end. Real endpoints arrive in
-// later tickets (summary, applications, advisors, opportunities).
+// Namespace probe — proves the guard end to end.
 router.get(
   '/ping',
   asyncHandler(async (_req, res) => {

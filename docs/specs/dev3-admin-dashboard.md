@@ -259,7 +259,7 @@ navigation, and are refused if they navigate to an admin URL directly.
     the profile fields and the owning user's name, email, and registration date, with an
     optional filter for verification state, and ordered so that advisors awaiting
     verification come first.
-14. `PATCH /api/admin/advisors/:id/verification` takes a required boolean and sets the
+14. `PATCH /api/admin/advisors/:id/verify` takes a required boolean and sets the
     profile's verification state, returning the updated profile. It is idempotent, so
     repeating the same action is harmless. An unknown profile identifier is a not-found
     response.
