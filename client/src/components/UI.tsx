@@ -27,7 +27,11 @@ export function Alert({ kind, children }: { kind: 'error' | 'success' | 'info'; 
     success: 'border-emerald-200 bg-emerald-50 text-emerald-800',
     info: 'border-sky-200 bg-sky-50 text-sky-800',
   }[kind];
-  return <div className={`rounded-xl border px-4 py-3 text-sm ${styles}`}>{children}</div>;
+  return (
+    <div role={kind === 'error' ? 'alert' : 'status'} className={`alert-enter rounded-xl border px-4 py-3 text-sm ${styles}`}>
+      {children}
+    </div>
+  );
 }
 
 export function Loading() {
@@ -122,10 +126,18 @@ export function PrimaryButton({
     <button
       {...props}
       disabled={loading || props.disabled}
-      className={`rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 active:bg-brand-800 active:transition-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-600 ${
+      aria-busy={loading || undefined}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 active:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand-600 ${
         props.className ?? ''
       }`}
     >
+      {loading && (
+        <span
+          aria-hidden="true"
+          className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40"
+          style={{ borderTopColor: '#ffffff' }}
+        />
+      )}
       {loading ? 'Working…' : children}
     </button>
   );

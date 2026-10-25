@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const tabs = [
   { to: '/admin', label: 'Dashboard', end: true },
@@ -8,6 +8,7 @@ const tabs = [
 ];
 
 export default function AdminLayout() {
+  const { pathname } = useLocation();
   return (
     <div>
       <div className="mb-6">
@@ -32,7 +33,9 @@ export default function AdminLayout() {
         ))}
       </nav>
 
-      <Outlet />
+      <div key={pathname} className="page-enter">
+        <Outlet />
+      </div>
     </div>
   );
 }

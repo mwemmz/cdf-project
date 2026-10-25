@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 
@@ -16,6 +16,8 @@ const desktopNavLinkClass = ({ isActive }: { isActive: boolean }) =>
 export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const pageKey = pathname.startsWith('/admin') ? 'admin' : pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
@@ -186,7 +188,10 @@ export default function Layout() {
       </div>
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-        <Outlet />
+        {/* Keyed so each page eases in; the admin area keys on itself so its sub-nav stays put. */}
+        <div key={pageKey} className="page-enter">
+          <Outlet />
+        </div>
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400">

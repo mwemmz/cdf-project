@@ -30,6 +30,36 @@
     outline-offset: 2px;
   }
 
+  /* Buttons: every button and brand-filled link gets the same smooth feel,
+     including the many that are styled inline on individual pages. */
+  button,
+  [role='button'],
+  a[class*='bg-brand'] {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  button:not(:disabled),
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  /* Press feedback */
+  button:not(:disabled):active,
+  [role='button']:active,
+  a[class*='bg-brand']:active {
+    transform: scale(0.97);
+    transition-duration: 60ms;
+  }
+
+  /* Filled brand buttons lift slightly on hover */
+  button[class*='bg-brand-']:not(:disabled):hover,
+  a[class*='bg-brand-']:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -6px rgb(23 129 88 / 0.5);
+  }
+
   /* Themed scrollbar (Chromium / WebKit) */
   ::-webkit-scrollbar {
     width: 10px;
@@ -53,5 +83,57 @@
   /* Financial figures: keep digits aligned and steady */
   .tnum {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ---- Motion -------------------------------------------------------------- */
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-enter {
+  animation: page-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.alert-enter {
+  animation: pop-in 200ms ease-out both;
+}
+
+/* Respect the system "reduce motion" setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  button:not(:disabled):active,
+  [role='button']:active,
+  a[class*='bg-brand']:active,
+  button[class*='bg-brand-']:not(:disabled):hover,
+  a[class*='bg-brand-']:hover {
+    transform: none;
   }
 }
