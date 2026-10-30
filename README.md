@@ -1,8 +1,10 @@
 # FundPath — CDF Loan-to-Repayment Platform
 
 FundPath helps Zambian applicants apply for Constituency Development Fund (CDF) opportunities:
-build and score a business plan, book sessions with verified advisors, track a loan through
-disbursement and repayment, and sell products on a storefront once funded.
+build and score a business plan, book sessions with verified advisors, track an application
+through the council's decision, and plan and log repayment if a loan is granted. FundPath is
+**not the lender**: the council and CDF Committee decide and disburse. See
+[`docs/business-model.md`](./docs/business-model.md).
 
 Delivered as one cohesive full-stack slice covering two developers' scope:
 
@@ -235,7 +237,8 @@ Submitted -> Under Review -> Approved -> Disbursed -> Repaying -> Closed
 ```
 
 - Transition validation lives in `server/src/modules/applications/applicationFlow.ts`.
-- Setting an application to **Disbursed** stores `amountDisbursed` (admin endpoint).
+- The council and CDF Committee make the decisions; an administrator records them here.
+- Setting an application to **Disbursed** records the amount the council paid out (`amountDisbursed`, admin endpoint).
 - Logging a repayment auto-advances Disbursed → Repaying, and closes the loan when fully repaid.
 
 ## Deploying to Render (backend + frontend)
