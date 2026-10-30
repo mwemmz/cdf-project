@@ -53,7 +53,7 @@ const FEATURES = [
   {
     key: 'storefront',
     title: 'Open a storefront',
-    body: 'Once disbursed, list products on the public marketplace.',
+    body: 'If the council disburses your loan, list products on the public marketplace.',
   },
   {
     key: 'cdf',
@@ -79,8 +79,8 @@ export default function Home() {
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
             FundPath connects applicants to Constituency Development Fund opportunities, helps
-            them build business plans, pairs them with verified advisors, and tracks loans
-            through disbursement and repayment.
+            them build business plans, pairs them with verified advisors, and helps them plan
+            repayment. We are not the lender: the council and CDF Committee decide and disburse.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link

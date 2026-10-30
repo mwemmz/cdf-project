@@ -91,7 +91,7 @@ export default function ApplicationDetail() {
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm text-slate-500">
             Submitted {fmtDate(application.createdAt)} ·{' '}
-            {application.amountDisbursed != null ? `Disbursed ${fmtZmk(application.amountDisbursed)}` : 'Not yet disbursed'}
+            {application.amountDisbursed != null ? `Disbursed ${fmtZmk(application.amountDisbursed)}` : 'Not yet disbursed by the council'}
           </div>
           <span className={`rounded px-2 py-1 text-xs font-semibold ${APPLICATION_COLORS[application.status]}`}>
             {APPLICATION_LABELS[application.status]}
@@ -136,7 +136,7 @@ export default function ApplicationDetail() {
             <div>
               <div className="font-semibold text-slate-900">Storefront unlocked</div>
               <div className="text-sm text-slate-600">
-                Your loan is disbursed — you can now sell your products on the public marketplace.
+                The council has disbursed your loan — you can now sell your products on the public marketplace.
               </div>
             </div>
             <Link to="/storefront" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
@@ -250,7 +250,7 @@ export default function ApplicationDetail() {
 
         {!canRepay && application.status !== 'REJECTED' && (
           <p className="mt-3 text-sm text-slate-500">
-            Repayments unlock once the application is disbursed.
+            Repayments unlock once the council has disbursed your loan.
           </p>
         )}
 
