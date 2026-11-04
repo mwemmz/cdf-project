@@ -1,4 +1,4 @@
-import { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { ReactNode, useState, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 const fieldBase =
   'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-500 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500';
@@ -184,16 +184,22 @@ export function ProductImage({
   className?: string;
 }) {
   const fallback = placeholderFor(name);
+  // A placeholder can be upgraded by dropping a .webp with the same name next to the .svg in public/placeholders.
+  // Order tried: real photo (src) -> .webp placeholder -> .svg placeholder.
+  const chain = [
+    src && !src.startsWith('/placeholders/') ? src : null,
+    (src?.startsWith('/placeholders/') ? src : fallback).replace(/\.svg$/, '.webp'),
+    src?.startsWith('/placeholders/') ? src : fallback,
+    fallback,
+  ].filter((v, i, arr): v is string => !!v && arr.indexOf(v) === i);
+  const [step, setStep] = useState(0);
   return (
     <img
-      src={src ?? fallback}
+      src={chain[Math.min(step, chain.length - 1)]}
       alt={name}
       loading="lazy"
       className={className}
-      onError={(e) => {
-        const el = e.currentTarget;
-        if (el.getAttribute('src') !== fallback) el.src = fallback;
-      }}
+      onError={() => setStep((n) => Math.min(n + 1, chain.length - 1))}
     />
   );
 }
