@@ -72,14 +72,9 @@ export default function Home() {
 
   return (
     <div>
-      <section className="relative overflow-hidden rounded-3xl bg-brand-950 p-8 text-white shadow-pop md:p-12">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-cover bg-[position:80%_45%] bg-no-repeat"
-          style={{ backgroundImage: "url('/images/vault.webp')" }}
-        />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/90 to-brand-950/40" />
-        <div className="relative max-w-2xl">
+      <section className="overflow-hidden rounded-3xl bg-brand-950 p-8 text-white shadow-pop md:p-12">
+        <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between">
+        <div className="max-w-2xl flex-1">
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl">
             CDF loans, guided from idea to repayment
           </h1>
@@ -102,6 +97,34 @@ export default function Home() {
               Shop the marketplace
             </Link>
           </div>
+          <p className="mt-6 max-w-xl text-xs leading-relaxed text-white/50">
+            Rate and terms follow the draft CDF Guidelines (2025). Confirm the final terms with your CDF committee.
+          </p>
+        </div>
+
+        <div
+          className="relative aspect-[1438/2576] w-full max-w-[300px] shrink-0 overflow-hidden rounded-2xl bg-cover bg-center shadow-pop md:max-w-[320px]"
+          style={{ backgroundImage: "url('/images/vault.webp')" }}
+          role="img"
+          aria-label="An open safe holding a stack of cash"
+        >
+          <div className="absolute left-[32.7%] top-[10.5%] flex h-[22%] w-[59.4%] flex-col justify-center rounded-xl border border-white/10 bg-black/45 px-4 text-white backdrop-blur-sm">
+            <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wider text-white/70">
+              <span>Interest</span>
+              <span className="text-sm">%</span>
+            </div>
+            <div className="mt-1 text-xl font-bold leading-tight">5% simple</div>
+            <div className="text-[11px] text-white/70">on CDF empowerment loans</div>
+          </div>
+          <div className="absolute left-[8%] top-[66.7%] flex h-[22.1%] w-[68.8%] flex-col justify-center rounded-xl border border-white/10 bg-black/45 px-4 text-white backdrop-blur-sm">
+            <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wider text-white/70">
+              <span>Term</span>
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor"><circle cx="12" cy="12" r="9" /><path strokeLinecap="round" d="M12 7v5l3 2" /></svg>
+            </div>
+            <div className="mt-1 text-xl font-bold leading-tight">12 to 36 months</div>
+            <div className="text-[11px] text-white/70">set by the size of your loan</div>
+          </div>
+        </div>
         </div>
       </section>
 
