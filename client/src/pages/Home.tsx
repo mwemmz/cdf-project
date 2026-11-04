@@ -72,8 +72,14 @@ export default function Home() {
 
   return (
     <div>
-      <section className="rounded-3xl bg-brand-950 p-8 text-white shadow-pop md:p-12">
-        <div className="max-w-2xl">
+      <section className="relative overflow-hidden rounded-3xl bg-brand-950 p-8 text-white shadow-pop md:p-12">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-cover bg-[position:80%_45%] bg-no-repeat"
+          style={{ backgroundImage: "url('/images/vault.webp')" }}
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/90 to-brand-950/40" />
+        <div className="relative max-w-2xl">
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl">
             CDF loans, guided from idea to repayment
           </h1>
