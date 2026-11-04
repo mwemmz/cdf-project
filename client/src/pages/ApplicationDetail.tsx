@@ -86,7 +86,7 @@ export default function ApplicationDetail() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        image={{ src: '/images/repayment.webp', pos: '50% 40%' }} title="Application details" subtitle={`${application.opportunity?.constituencyName} · ${application.opportunity?.category}`}
+        image={{ src: '/images/repayment.webp', portrait: true }} title="Application details" subtitle={`${application.opportunity?.constituencyName} · ${application.opportunity?.category}`}
       />
 
       <Card>

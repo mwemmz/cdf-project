@@ -23,7 +23,7 @@ export default function Applications() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/repayment.webp', pos: '50% 62%' }} title="My applications & loan tracking" subtitle="Follow each application through the pipeline." />
+        image={{ src: '/images/repayment.webp', portrait: true }} title="My applications & loan tracking" subtitle="Follow each application through the pipeline." />
 
       {applications.length === 0 && (
         <Card>

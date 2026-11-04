@@ -11,31 +11,41 @@ export type HeaderImage = {
   tone?: 'light' | 'dark';
   /** mirror the picture so its subject sits on the right */
   flip?: boolean;
+  /** tall picture: shown whole as a framed panel on the right instead of a faded backdrop */
+  portrait?: boolean;
 };
 
 function HeaderBackdrop({ image }: { image: HeaderImage }) {
   const [loaded, setLoaded] = useState(false);
   const light = image.tone === 'light';
+  const fade = 'linear-gradient(to right, transparent 0%, black 55%)';
+  const img = (
+    <img
+      src={image.src}
+      alt=""
+      aria-hidden="true"
+      onLoad={() => setLoaded(true)}
+      ref={(el) => {
+        if (el?.complete && !loaded) setLoaded(true);
+      }}
+      className={`h-full w-full object-cover transition-opacity duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'} ${image.flip ? '-scale-x-100' : ''}`}
+    />
+  );
   return (
     <>
-      <img
-        src={image.src}
-        alt=""
-        aria-hidden="true"
-        onLoad={() => setLoaded(true)}
-        ref={(el) => {
-          if (el?.complete && !loaded) setLoaded(true);
-        }}
-        className={`print:hidden absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'} ${image.flip ? '-scale-x-100' : ''}`}
-        style={{ objectPosition: image.pos ?? 'center' }}
-      />
+      {image.portrait ? (
+        <div className="print:hidden absolute inset-y-4 right-4 aspect-[9/16] overflow-hidden rounded-xl shadow-pop ring-1 ring-white/20">{img}</div>
+      ) : (
+        <div
+          className="print:hidden absolute inset-y-0 right-0 aspect-video"
+          style={{ maskImage: fade, WebkitMaskImage: fade }}
+        >
+          {img}
+        </div>
+      )}
       <div
         aria-hidden="true"
-        className={
-          light
-            ? 'print:hidden absolute inset-0 bg-gradient-to-r from-[#f1e7d6] via-[#f1e7d6]/85 to-[#f1e7d6]/45 md:via-[#f1e7d6]/55 md:to-transparent'
-            : 'print:hidden absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/65 to-slate-950/20'
-        }
+        className={`print:hidden absolute inset-0 md:hidden ${light ? 'bg-[#f1e7d6]/70' : 'bg-slate-950/60'}`}
       />
     </>
   );
@@ -55,9 +65,9 @@ export function PageHeader({
   if (image) {
     const light = image.tone === 'light';
     return (
-      <div className="relative mb-6 overflow-hidden rounded-2xl bg-slate-900 shadow-card print:bg-white print:shadow-none">
+      <div className={`relative mb-6 overflow-hidden rounded-2xl shadow-card print:bg-white print:shadow-none ${image.tone === 'light' ? 'bg-[#f1e7d6]' : 'bg-[#0f1a17]'}`}>
         <HeaderBackdrop image={image} />
-        <div className="relative flex min-h-[170px] items-center justify-between gap-4 p-6 md:min-h-[210px] md:p-10">
+        <div className="relative flex min-h-[220px] items-center justify-between gap-4 p-6 md:min-h-[300px] md:p-10">
           <div className="min-w-0 max-w-xl">
             <h1 className={`font-display text-2xl font-bold tracking-tight md:text-3xl ${light ? 'text-slate-900' : 'text-white print:text-slate-900'}`}>{title}</h1>
             {subtitle && (
