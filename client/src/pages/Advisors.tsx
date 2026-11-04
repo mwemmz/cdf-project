@@ -31,9 +31,9 @@ export default function Advisors() {
   return (
     <div>
       <PageHeader
+        image={{ src: '/images/advisors.webp', pos: '50% 50%' }}
         title="Advisors"
         subtitle="Verified advisors who help you shape a plan the CDF committee and bank can say yes to. Sessions are paid per booking."
-        image={{ src: '/images/advisors.webp', alt: 'Two speech bubbles facing each other with a checkmark between them', pos: '50% 55%' }}
       />
 
       {advisors.length === 0 && (

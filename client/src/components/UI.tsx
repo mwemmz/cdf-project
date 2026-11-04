@@ -1,16 +1,45 @@
-import { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { ReactNode, useState, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 const fieldBase =
   'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400';
 
 export type HeaderImage = {
   src: string;
-  alt: string;
-  /** banner: heading sits on the picture. strip: heading above, picture below. */
-  mode?: 'banner' | 'strip';
-  /** CSS object-position, e.g. "50% 60%" */
+  /** CSS object-position for the crop, e.g. "70% 55%" */
   pos?: string;
+  /** light: dark text on a warm scrim (picture has empty light space on the left). dark: white text on a charcoal scrim. */
+  tone?: 'light' | 'dark';
+  /** mirror the picture so its subject sits on the right */
+  flip?: boolean;
 };
+
+function HeaderBackdrop({ image }: { image: HeaderImage }) {
+  const [loaded, setLoaded] = useState(false);
+  const light = image.tone === 'light';
+  return (
+    <>
+      <img
+        src={image.src}
+        alt=""
+        aria-hidden="true"
+        onLoad={() => setLoaded(true)}
+        ref={(el) => {
+          if (el?.complete && !loaded) setLoaded(true);
+        }}
+        className={`print:hidden absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'} ${image.flip ? '-scale-x-100' : ''}`}
+        style={{ objectPosition: image.pos ?? 'center' }}
+      />
+      <div
+        aria-hidden="true"
+        className={
+          light
+            ? 'print:hidden absolute inset-0 bg-gradient-to-r from-[#f1e7d6] via-[#f1e7d6]/85 to-[#f1e7d6]/45 md:via-[#f1e7d6]/55 md:to-transparent'
+            : 'print:hidden absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/65 to-slate-950/20'
+        }
+      />
+    </>
+  );
+}
 
 export function PageHeader({
   title,
@@ -23,15 +52,17 @@ export function PageHeader({
   action?: ReactNode;
   image?: HeaderImage;
 }) {
-  if (image && image.mode === 'banner') {
+  if (image) {
+    const light = image.tone === 'light';
     return (
-      <div className="relative mb-6 overflow-hidden rounded-2xl border border-slate-200 shadow-card">
-        <img src={image.src} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: image.pos ?? 'right center' }} />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#f1e7d6] via-[#f1e7d6]/80 to-transparent md:via-[#f1e7d6]/50" />
-        <div className="relative flex min-h-[200px] items-center justify-between gap-4 p-6 md:min-h-[240px] md:p-10">
-          <div className="min-w-0 max-w-md">
-            <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">{title}</h1>
-            {subtitle && <p className="mt-2 text-sm leading-relaxed text-slate-700">{subtitle}</p>}
+      <div className="relative mb-6 overflow-hidden rounded-2xl bg-slate-900 shadow-card print:bg-white print:shadow-none">
+        <HeaderBackdrop image={image} />
+        <div className="relative flex min-h-[170px] items-center justify-between gap-4 p-6 md:min-h-[210px] md:p-10">
+          <div className="min-w-0 max-w-xl">
+            <h1 className={`font-display text-2xl font-bold tracking-tight md:text-3xl ${light ? 'text-slate-900' : 'text-white print:text-slate-900'}`}>{title}</h1>
+            {subtitle && (
+              <p className={`mt-2 text-sm leading-relaxed ${light ? 'text-slate-700' : 'text-white/80 print:text-slate-600'}`}>{subtitle}</p>
+            )}
           </div>
           {action && <div className="shrink-0">{action}</div>}
         </div>
@@ -39,23 +70,13 @@ export function PageHeader({
     );
   }
   return (
-    <>
-      <div className={`${image ? 'mb-4' : 'mb-6'} flex items-start justify-between gap-4`}>
-        <div className="min-w-0">
-          <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-          {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
-        </div>
-        {action && <div className="shrink-0">{action}</div>}
+    <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="min-w-0">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
+        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
       </div>
-      {image && (
-        <img
-          src={image.src}
-          alt={image.alt}
-          className="mb-6 h-40 w-full rounded-2xl border border-slate-200 object-cover shadow-card md:h-56"
-          style={{ objectPosition: image.pos ?? 'center' }}
-        />
-      )}
-    </>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
   );
 }
 

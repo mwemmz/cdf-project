@@ -44,6 +44,7 @@ export default function Bookings() {
   return (
     <div>
       <PageHeader
+        image={{ src: '/images/advisors.webp', pos: '50% 35%', flip: true }}
         title="My bookings"
         subtitle={isAdvisor ? 'Sessions booked with you.' : 'Your advisor sessions.'}
       />

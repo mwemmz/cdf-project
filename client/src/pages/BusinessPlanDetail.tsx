@@ -77,9 +77,9 @@ export default function BusinessPlanDetail() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
+        image={{ src: '/images/score.webp', pos: '50% 72%' }}
         title="Business plan summary"
         subtitle={`Created ${fmtDate(plan.createdAt)}`}
-        image={{ src: '/images/score.webp', alt: 'A gauge with its needle in the green zone', pos: '50% 68%' }}
         action={
           <button
             onClick={() => window.print()}

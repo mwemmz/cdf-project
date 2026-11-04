@@ -130,7 +130,7 @@ export default function BusinessPlanNew() {
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
-        image={{ src: '/images/plan-builder.webp', alt: '', mode: 'banner', pos: '75% 55%' }}
+        image={{ src: '/images/plan-builder.webp', pos: '70% 55%', tone: 'light' }}
         title="Build your business plan"
         subtitle={`For ${opportunity.constituencyName} (${opportunity.category}) — pool ${fmtZmk(opportunity.amountAvailable)}, deadline ${fmtDate(opportunity.deadline)}`}
       />
