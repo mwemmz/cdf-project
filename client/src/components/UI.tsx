@@ -17,7 +17,7 @@ export type HeaderImage = {
 
 function HeaderBackdrop({ image }: { image: HeaderImage }) {
   const [loaded, setLoaded] = useState(false);
-  const light = image.tone === 'light';
+  const light = image.tone !== 'dark';
   const fade = 'linear-gradient(to right, transparent 0%, black 55%)';
   const img = (
     <img
@@ -63,9 +63,9 @@ export function PageHeader({
   image?: HeaderImage;
 }) {
   if (image) {
-    const light = image.tone === 'light';
+    const light = image.tone !== 'dark';
     return (
-      <div className={`relative mb-6 overflow-hidden rounded-2xl shadow-card print:bg-white print:shadow-none ${image.tone === 'light' ? 'bg-[#f1e7d6]' : 'bg-[#0f1a17]'}`}>
+      <div className={`relative mb-6 overflow-hidden rounded-2xl shadow-card print:bg-white print:shadow-none ${image.tone !== 'dark' ? 'bg-[#f1e7d6]' : 'bg-[#14181c]'}`}>
         <HeaderBackdrop image={image} />
         <div className="relative flex min-h-[220px] items-center justify-between gap-4 p-6 md:min-h-[300px] md:p-10">
           <div className="min-w-0 max-w-xl">

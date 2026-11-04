@@ -144,9 +144,9 @@ export default function Home() {
       </section>
 
       {!user && (
-        <section className="relative mt-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-card">
+        <section className="relative mt-8 overflow-hidden rounded-2xl border border-[#2a3137] bg-[#14181c] shadow-card">
           <img src="/images/cta.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-          <div aria-hidden="true" className="absolute inset-0 bg-slate-900/70 md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-slate-900/55" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[#14181c]/70 md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-[#14181c]/60" />
           <div className="relative flex min-h-[260px] items-center p-6 md:justify-end md:p-10">
             <div className="max-w-md md:w-[48%]">
               <h2 className="font-display text-xl font-bold tracking-tight text-white md:text-2xl">

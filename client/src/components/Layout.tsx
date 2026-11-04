@@ -304,7 +304,7 @@ export default function Layout() {
         </div>
       </main>
 
-      <footer className="print:hidden border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400">
+      <footer className="print:hidden border-t border-slate-200/70 bg-white/50 py-6 text-center text-xs text-slate-400">
         <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand-500" />
         FundPath — CDF loan-to-repayment platform for Zambia. School project build.
       </footer>
