@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+import { sceneFor } from './SceneAside';
 
 const IMG = {
   vault: '/images/vault-key.webp',
@@ -33,9 +34,10 @@ export function backdropFor(pathname: string): string {
 export default function PageBackdrop() {
   const { pathname } = useLocation();
   const src = backdropFor(pathname);
+  const soft = sceneFor(pathname)?.ambient ?? false;
   return (
     <div aria-hidden="true" className="print:hidden pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#ece9e4]">
-      <img key={src} src={src} alt="" className="backdrop-in absolute inset-0 h-full w-full object-cover" />
+      <img key={src} src={src} alt="" className={`backdrop-in absolute inset-0 h-full w-full object-cover ${soft ? 'scale-105 blur-[6px]' : ''}`} />
       <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#14181c]/35 to-transparent" />
     </div>
   );
