@@ -1,3 +1,4 @@
+import paymentRoutes from './modules/payments/payments.routes';
 import express, { Application } from 'express';
 import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
@@ -52,6 +53,7 @@ export function createApp(): Application {
   app.use('/api/repayments', repaymentRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/messages', messageRoutes);
+  app.use('/api/payments', paymentRoutes);
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/reviews', reviewRoutes);
   app.use('/api/showcase', showcaseRoutes);

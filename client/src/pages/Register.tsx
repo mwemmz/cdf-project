@@ -31,7 +31,7 @@ export default function Register() {
         role: form.role as 'APPLICANT' | 'ADVISOR',
       });
       await refresh();
-      navigate('/');
+      navigate(form.role === 'ADVISOR' ? '/advisors/me' : '/');
     } catch (err) {
       setError((err as Error).message);
     } finally {

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { BookingStatus } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
+import { recordAdvisorSession } from '../payments/payments.controller';
 
 const bookingInclude = {
   applicant: { select: { id: true, name: true, email: true } },
@@ -78,10 +79,15 @@ export async function markBookingPaid(req: Request, res: Response) {
     throw badRequest('This booking is already marked as paid');
   }
 
-  const updated = await prisma.booking.update({
-    where: { id: booking.id },
-    data: { status: BookingStatus.PAID },
-    include: bookingInclude,
+  // Simulated: marking paid also records the platform commission.
+  const updated = await prisma.$transaction(async (tx) => {
+    const paid = await tx.booking.update({
+      where: { id: booking.id },
+      data: { status: BookingStatus.PAID },
+      include: bookingInclude,
+    });
+    await recordAdvisorSession(tx, booking);
+    return paid;
   });
 
   res.json({ success: true, data: updated });

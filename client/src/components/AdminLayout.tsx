@@ -5,6 +5,7 @@ const tabs = [
   { to: '/admin/applications', label: 'Applications', end: false },
   { to: '/admin/advisors', label: 'Advisors', end: false },
   { to: '/admin/opportunities', label: 'Opportunities', end: false },
+  { to: '/admin/revenue', label: 'Revenue', end: false },
 ];
 
 export default function AdminLayout() {

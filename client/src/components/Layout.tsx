@@ -51,6 +51,7 @@ export default function Layout() {
                 <NavLink to="/applications" className={desktopNavLinkClass}>My Applications</NavLink>
                 <NavLink to="/advisors" className={desktopNavLinkClass}>Advisors</NavLink>
                 <NavLink to="/bookings" className={desktopNavLinkClass}>Bookings</NavLink>
+                <NavLink to="/messages" className={desktopNavLinkClass}>Messages</NavLink>
                 <NavLink to="/storefront" className={desktopNavLinkClass}>Storefront</NavLink>
               </>
             )}
@@ -59,6 +60,7 @@ export default function Layout() {
                 <NavLink to="/advisor/dashboard" className={desktopNavLinkClass}>Dashboard</NavLink>
                 <NavLink to="/advisors/me" className={desktopNavLinkClass}>My Profile</NavLink>
                 <NavLink to="/bookings" className={desktopNavLinkClass}>Bookings</NavLink>
+                <NavLink to="/messages" className={desktopNavLinkClass}>Messages</NavLink>
               </>
             )}
             {user?.role === 'ADMIN' && (
@@ -146,6 +148,7 @@ export default function Layout() {
                 <NavLink to="/applications" className={navLinkClass} onClick={closeMobile}>My Applications</NavLink>
                 <NavLink to="/advisors" className={navLinkClass} onClick={closeMobile}>Advisors</NavLink>
                 <NavLink to="/bookings" className={navLinkClass} onClick={closeMobile}>Bookings</NavLink>
+                <NavLink to="/messages" className={navLinkClass} onClick={closeMobile}>Messages</NavLink>
                 <NavLink to="/storefront" className={navLinkClass} onClick={closeMobile}>Storefront</NavLink>
               </>
             )}
@@ -154,6 +157,7 @@ export default function Layout() {
                 <NavLink to="/advisor/dashboard" className={navLinkClass} onClick={closeMobile}>Dashboard</NavLink>
                 <NavLink to="/advisors/me" className={navLinkClass} onClick={closeMobile}>My Profile</NavLink>
                 <NavLink to="/bookings" className={navLinkClass} onClick={closeMobile}>Bookings</NavLink>
+                <NavLink to="/messages" className={navLinkClass} onClick={closeMobile}>Messages</NavLink>
               </>
             )}
             {user?.role === 'ADMIN' && (

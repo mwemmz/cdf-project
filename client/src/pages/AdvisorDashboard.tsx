@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import type { AdvisorClient, AdvisorClientsData } from '../lib/types';
+import type { AdvisorClient, AdvisorClientsData, AdvisorProfile } from '../lib/types';
 import { APPLICATION_COLORS, APPLICATION_LABELS } from '../lib/status';
 import { Card, ErrorNote, Loading, PageHeader, PrimaryButton } from '../components/UI';
 import BreakEvenCalculator from '../components/BreakEvenCalculator';
@@ -17,6 +17,14 @@ export default function AdvisorDashboard() {
   const [data, setData] = useState<AdvisorClientsData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  // undefined = still loading, null = no profile saved yet.
+  const [profile, setProfile] = useState<AdvisorProfile | null | undefined>(undefined);
+
+  useEffect(() => {
+    api<AdvisorProfile>('/advisors/me')
+      .then(setProfile)
+      .catch(() => setProfile(null));
+  }, []);
 
   const load = () => {
     api<AdvisorClientsData>('/advisors/me/clients')
@@ -70,6 +78,18 @@ export default function AdvisorDashboard() {
         title="Advisor dashboard"
         subtitle="Your clients, their plans, and a quick break-even tool."
       />
+
+      {profile === null && (
+        <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          You have no advisor profile yet, so applicants cannot see you.{' '}
+          <Link to="/advisors/me" className="font-semibold underline">Create your profile</Link>.
+        </div>
+      )}
+      {profile && !profile.verified && (
+        <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Your profile is waiting for admin verification. You will appear in the advisor list once an admin approves it.
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {statCards.map((s) => (

@@ -230,3 +230,32 @@ export interface Resource {
   content: string;
   createdAt: string;
 }
+export interface Conversation {
+  bookingId: string;
+  other: { id: string; name: string };
+  lastMessage: { content: string; senderId: string; createdAt: string } | null;
+  updatedAt: string;
+}
+
+export type TransactionKind = 'ADVISOR_SESSION' | 'MARKETPLACE_SALE' | 'PLAN_ASSESSMENT';
+
+export interface Txn {
+  id: string;
+  kind: TransactionKind;
+  grossAmount: number;
+  commissionRate: number;
+  commissionAmount: number;
+  netAmount: number;
+  description: string;
+  createdAt: string;
+  payer: { id: string; name: string };
+  payee: { id: string; name: string } | null;
+}
+
+export interface RevenueSummary {
+  totalGross: number;
+  totalCommission: number;
+  byKind: { kind: TransactionKind; count: number; gross: number; commission: number }[];
+  recent: Txn[];
+  rates: { advisor: number; marketplace: number; assessmentFee: number };
+}

@@ -58,6 +58,8 @@ model User {
   products            Product[]
   messagesSent        Message[]
   notifications       Notification[]
+  transactionsPaid    Transaction[]   @relation("TransactionsPaid")
+  transactionsEarned  Transaction[]   @relation("TransactionsEarned")
 
   @@map("users")
 }
@@ -285,4 +287,43 @@ model Resource {
 
   @@index([category])
   @@map("resources")
+}
+
+
+// ---------------------------------------------------------------------------
+// Simulated payments & platform commission
+// ---------------------------------------------------------------------------
+
+enum TransactionKind {
+  ADVISOR_SESSION
+  MARKETPLACE_SALE
+  PLAN_ASSESSMENT
+}
+
+// SIMULATION ONLY: no money moves. Each row records what the platform WOULD
+// have collected, so the revenue model can be demonstrated before a real
+// mobile-money integration exists.
+model Transaction {
+  id               String          @id @default(cuid())
+  kind             TransactionKind
+  payerId          String
+  // Advisor or seller who earns the net amount. Null when FundPath is the
+  // only party paid (e.g. a plan assessment).
+  payeeId          String?
+  grossAmount      Float
+  commissionRate   Float
+  commissionAmount Float
+  netAmount        Float
+  // bookingId, productId or businessPlanId, depending on kind.
+  referenceId      String
+  description      String
+  createdAt        DateTime        @default(now())
+
+  payer User  @relation("TransactionsPaid", fields: [payerId], references: [id], onDelete: Cascade)
+  payee User? @relation("TransactionsEarned", fields: [payeeId], references: [id], onDelete: SetNull)
+
+  @@index([kind, createdAt])
+  @@index([payerId])
+  @@index([payeeId])
+  @@map("transactions")
 }

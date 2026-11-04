@@ -28,3 +28,6 @@ export function fmtTime(value: string | Date): string {
 export function fmtPct(value: number): string {
   return `${value.toFixed(1)}%`;
 }
+export function fmtMoney(amount: number): string {
+  return `K${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}

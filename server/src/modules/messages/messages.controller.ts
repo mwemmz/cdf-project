@@ -48,3 +48,28 @@ export async function sendMessage(req: Request, res: Response) {
 
   res.status(201).json({ success: true, data: message });
 }
+
+// Inbox: every PAID booking the user is part of, with the latest message.
+export async function listConversations(req: Request, res: Response) {
+  const userId = req.auth!.userId;
+  const bookings = await prisma.booking.findMany({
+    where: { status: 'PAID', OR: [{ applicantId: userId }, { advisorId: userId }] },
+    include: {
+      applicant: { select: { id: true, name: true } },
+      advisor: { select: { id: true, name: true } },
+      messages: { orderBy: { createdAt: 'desc' }, take: 1, include: messageInclude },
+    },
+  });
+  const rows = bookings
+    .map((b) => {
+      const last = b.messages[0] ?? null;
+      return {
+        bookingId: b.id,
+        other: b.applicantId === userId ? b.advisor : b.applicant,
+        lastMessage: last ? { content: last.content, senderId: last.senderId, createdAt: last.createdAt } : null,
+        updatedAt: last ? last.createdAt : b.createdAt,
+      };
+    })
+    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  res.json({ success: true, data: rows });
+}

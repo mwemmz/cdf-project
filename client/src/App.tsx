@@ -27,6 +27,8 @@ import AdminApplications from './pages/AdminApplications';
 import AdminApplicationReview from './pages/AdminApplicationReview';
 import AdminAdvisors from './pages/AdminAdvisors';
 import AdminOpportunities from './pages/AdminOpportunities';
+import AdminRevenue from './pages/AdminRevenue';
+import Messages from './pages/Messages';
 
 export default function App() {
   return (
@@ -43,6 +45,14 @@ export default function App() {
             <Route path="/opportunities" element={<Opportunities />} />
             <Route path="/advisors" element={<Advisors />} />
             <Route path="/advisors/:id" element={<AdvisorDetail />} />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute roles={['APPLICANT', 'ADVISOR']}>
+                  <Messages />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/advisors/me"
@@ -138,6 +148,7 @@ export default function App() {
               <Route path="applications/:applicationId" element={<AdminApplicationReview />} />
               <Route path="advisors" element={<AdminAdvisors />} />
               <Route path="opportunities" element={<AdminOpportunities />} />
+              <Route path="revenue" element={<AdminRevenue />} />
             </Route>
 
             <Route path="*" element={<Home />} />

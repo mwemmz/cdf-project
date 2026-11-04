@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import type { Product } from '../lib/types';
 import { fmtZmk } from '../lib/format';
+import { useAuth } from '../context/AuthContext';
 import { Card, ErrorNote, Loading, PageHeader, ProductImage } from '../components/UI';
 
 export default function Marketplace() {
@@ -11,6 +12,19 @@ export default function Marketplace() {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const { user } = useAuth();
+  const [bought, setBought] = useState<Record<string, string>>({});
+  const [buyError, setBuyError] = useState<string | null>(null);
+
+  const buy = async (productId: string) => {
+    setBuyError(null);
+    try {
+      await api('/payments/purchase', { method: 'POST', body: { productId, quantity: 1 } });
+      setBought((b) => ({ ...b, [productId]: 'Purchased (simulated)' }));
+    } catch (err) {
+      setBuyError((err as Error).message);
+    }
+  };
 
   useEffect(() => {
     api<Product[]>('/products')
@@ -44,6 +58,8 @@ export default function Marketplace() {
         </div>
       )}
 
+      {buyError && <div className="mb-4"><ErrorNote message={buyError} /></div>}
+
       {visible.length === 0 && (
         <Card><p className="text-slate-500">No products on the marketplace yet. Check back soon.</p></Card>
       )}
@@ -71,6 +87,20 @@ export default function Marketplace() {
                 )}
               </div>
             </div>
+            {user && user.id !== p.applicantId && (
+              <div className="mt-3">
+                {bought[p.id] ? (
+                  <span className="text-xs font-medium text-emerald-700">{bought[p.id]}</span>
+                ) : (
+                  <button
+                    onClick={() => buy(p.id)}
+                    className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
+                  >
+                    Buy now (simulated)
+                  </button>
+                )}
+              </div>
+            )}
             <div className="mt-2 text-xs text-slate-400">Seller: {p.applicant?.name}</div>
           </Card>
         ))}

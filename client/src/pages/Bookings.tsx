@@ -73,7 +73,7 @@ export default function Bookings() {
                   </span>
                   {b.status === 'PENDING' && (
                     <PrimaryButton onClick={() => markPaid(b.id)} loading={busyId === b.id} className="text-xs">
-                      Mark as paid
+                      Pay (simulated)
                     </PrimaryButton>
                   )}
                 </div>

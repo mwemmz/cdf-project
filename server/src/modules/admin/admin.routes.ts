@@ -16,6 +16,7 @@ import {
   createOpportunitySchema,
   updateOpportunitySchema,
 } from './admin-opportunities.controller';
+import { revenueSummary } from '../payments/payments.controller';
 import { idParamSchema } from '../businessPlans/businessPlans.validation';
 
 const router = Router();
@@ -41,6 +42,9 @@ router.get(
   validateQuery(z.object({ status: z.nativeEnum(ApplicationStatus).optional() })),
   asyncHandler(listApplications),
 );
+
+// Simulated platform revenue.
+router.get('/revenue', asyncHandler(revenueSummary));
 
 // Every advisor, unverified included, pending first.
 router.get('/advisors', asyncHandler(listAdminAdvisors));

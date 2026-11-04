@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import type { BusinessPlan, FeasibilityScore } from '../lib/types';
-import { fmtDate, fmtZmk } from '../lib/format';
+import { fmtDate, fmtMoney, fmtZmk } from '../lib/format';
 import { APPLICATION_LABELS, FEASIBILITY_COLORS } from '../lib/status';
 import { Card, ErrorNote, Loading, PageHeader, PrimaryButton } from '../components/UI';
 
@@ -13,6 +13,28 @@ export default function BusinessPlanDetail() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [assessmentPaid, setAssessmentPaid] = useState(false);
+  const ASSESSMENT_FEE = 150;
+
+  useEffect(() => {
+    api<string[]>('/payments/assessments')
+      .then((ids) => setAssessmentPaid(!!id && ids.includes(id)))
+      .catch(() => undefined);
+  }, [id]);
+
+  const payAssessment = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      await api('/payments/assessment', { method: 'POST', body: { businessPlanId: id } });
+      setAssessmentPaid(true);
+      setNotice('Assessment fee paid (simulated).');
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const load = () => {
     api<BusinessPlan>(`/business-plans/${id}`)
@@ -114,6 +136,23 @@ export default function BusinessPlanDetail() {
           </div>
         ) : (
           <p className="mt-3 text-sm text-slate-500">No score yet — click Rescore.</p>
+        )}
+      </Card>
+
+      <Card className="mt-4">
+        <h2 className="font-semibold text-slate-900">Plan, risk and market assessment</h2>
+        <p className="mt-2 text-sm text-slate-600">
+          A deeper review of your plan: risks, market size and competition, with advice on what to fix before you apply.
+        </p>
+        {assessmentPaid ? (
+          <p className="mt-3 text-sm font-medium text-emerald-700">Fee paid (simulated). Assessment unlocked.</p>
+        ) : (
+          <div className="mt-3 flex items-center gap-3">
+            <PrimaryButton onClick={payAssessment} loading={busy}>
+              Pay {fmtMoney(ASSESSMENT_FEE)} (simulated)
+            </PrimaryButton>
+            <span className="text-xs text-slate-400">No real money is charged in this prototype.</span>
+          </div>
         )}
       </Card>
 
