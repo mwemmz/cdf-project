@@ -68,7 +68,7 @@ export default function AdvisorDetail() {
           </div>
           <div className="text-right">
             <div className="text-lg font-bold text-slate-900">{fmtZmk(advisor.pricePerSession)}</div>
-            <div className="text-xs text-slate-500">per session</div>
+            <div className="text-xs text-slate-600">per session</div>
           </div>
         </div>
         <div className="mt-3 flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function AdvisorDetail() {
           </span>
         </div>
         <p className="mt-4 whitespace-pre-line text-slate-700">{advisor.bio}</p>
-        <p className="mt-3 text-sm text-slate-500">Contact: {advisor.user?.email}</p>
+        <p className="mt-3 text-sm text-slate-600">Contact: {advisor.user?.email}</p>
       </Card>
 
       {reviews && reviews.reviews.length > 0 && (
@@ -94,7 +94,7 @@ export default function AdvisorDetail() {
                   <Stars value={r.rating} />
                 </div>
                 {r.comment && <p className="mt-1 text-sm text-slate-600">{r.comment}</p>}
-                <p className="mt-1 text-xs text-slate-400">{fmtDate(r.createdAt)}</p>
+                <p className="mt-1 text-xs text-slate-500">{fmtDate(r.createdAt)}</p>
               </li>
             ))}
           </ul>
@@ -122,7 +122,7 @@ export default function AdvisorDetail() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-slate-600">
               Session price: <span className="font-semibold text-slate-900">{fmtZmk(advisor.pricePerSession)}</span>{' '}
               — marked as paid by the mock payment step after booking.
             </div>

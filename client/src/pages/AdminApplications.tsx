@@ -50,7 +50,7 @@ export default function AdminApplications() {
     return <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>;
   }
   if (!rows) {
-    return <div className="text-sm text-slate-500">Loading queue…</div>;
+    return <div className="text-sm text-slate-600">Loading queue…</div>;
   }
 
   return (
@@ -68,17 +68,17 @@ export default function AdminApplications() {
             <option key={stage} value={stage}>{stageLabels[stage]}</option>
           ))}
         </select>
-        <span className="text-sm text-slate-500">{rows.length} application{rows.length === 1 ? '' : 's'}</span>
+        <span className="text-sm text-slate-600">{rows.length} application{rows.length === 1 ? '' : 's'}</span>
       </div>
 
       {rows.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-600">
           No applications match this view.
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs font-medium uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-slate-200 bg-slate-50 text-xs font-medium uppercase tracking-wide text-slate-600">
               <tr>
                 <th className="px-4 py-3">Applicant</th>
                 <th className="px-4 py-3">Opportunity</th>
@@ -96,11 +96,11 @@ export default function AdminApplications() {
                 <tr key={row.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
                     <p className="font-medium text-slate-900">{row.applicant.name}</p>
-                    <p className="text-xs text-slate-500">{row.applicant.email}</p>
+                    <p className="text-xs text-slate-600">{row.applicant.email}</p>
                   </td>
                   <td className="px-4 py-3 text-slate-700">
                     {row.opportunity.constituencyName}
-                    <span className="text-slate-400"> · {row.opportunity.category}</span>
+                    <span className="text-slate-500"> · {row.opportunity.category}</span>
                   </td>
                   <td className="px-4 py-3 text-slate-700">{fmtZmk(row.businessPlan.amountRequested)}</td>
                   <td className="px-4 py-3 text-slate-700">
@@ -111,7 +111,7 @@ export default function AdminApplications() {
                       {stageLabels[row.status]}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-500">{fmtDate(row.createdAt)}</td>
+                  <td className="px-4 py-3 text-slate-600">{fmtDate(row.createdAt)}</td>
                   <td className="px-4 py-3 text-right">
                     <Link
                       to={`/admin/applications/${row.id}`}

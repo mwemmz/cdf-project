@@ -47,7 +47,7 @@ export default function AdminAdvisors() {
     return <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>;
   }
   if (!advisors) {
-    return <div className="text-sm text-slate-500">Loading advisors…</div>;
+    return <div className="text-sm text-slate-600">Loading advisors…</div>;
   }
 
   const pending = advisors.filter((a) => !a.verified);
@@ -59,10 +59,10 @@ export default function AdminAdvisors() {
 
       <section>
         <h2 className="font-display text-base font-semibold text-slate-900">
-          Awaiting verification <span className="text-slate-400">({pending.length})</span>
+          Awaiting verification <span className="text-slate-500">({pending.length})</span>
         </h2>
         {pending.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">No advisors are waiting. New sign-ups will appear here.</p>
+          <p className="mt-2 text-sm text-slate-600">No advisors are waiting. New sign-ups will appear here.</p>
         ) : (
           <div className="mt-3 space-y-3">
             {pending.map((advisor) => (
@@ -74,7 +74,7 @@ export default function AdminAdvisors() {
 
       <section>
         <h2 className="font-display text-base font-semibold text-slate-900">
-          Verified <span className="text-slate-400">({verified.length})</span>
+          Verified <span className="text-slate-500">({verified.length})</span>
         </h2>
         <div className="mt-3 space-y-3">
           {verified.map((advisor) => (
@@ -110,7 +110,7 @@ function AdvisorRow({
               {advisor.verified ? 'Verified' : 'Pending'}
             </span>
           </div>
-          <p className="text-sm text-slate-500">{advisor.user.email}</p>
+          <p className="text-sm text-slate-600">{advisor.user.email}</p>
           <p className="mt-1 text-sm text-slate-600">
             {advisor.specialty} · {fmtZmk(advisor.pricePerSession)} ZMW per session · member since{' '}
             {fmtDate(advisor.user.createdAt)}

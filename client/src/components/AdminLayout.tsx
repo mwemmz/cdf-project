@@ -14,7 +14,7 @@ export default function AdminLayout() {
     <div>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-semibold text-slate-900">Admin</h1>
-        <p className="text-sm text-slate-500">Platform administration</p>
+        <p className="text-sm text-slate-600">Platform administration</p>
       </div>
 
       <nav className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-3">

@@ -103,7 +103,7 @@ export default function BusinessPlanNew() {
               <div className="text-3xl font-bold text-brand-600">{result.feasibilityScore.score}/100</div>
               <div>
                 <div className="font-medium text-slate-900">Feasibility: {result.feasibilityScore.category}</div>
-                <div className="text-sm text-slate-500">Scored by FundPath's rules engine</div>
+                <div className="text-sm text-slate-600">Scored by FundPath's rules engine</div>
               </div>
             </div>
             <p className="mt-3 text-sm text-slate-600">{result.feasibilityScore.recommendations}</p>
@@ -135,7 +135,7 @@ export default function BusinessPlanNew() {
       />
 
       <div className="mb-5">
-        <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
+        <div className="mb-2 flex items-center justify-between text-xs text-slate-600">
           <span>
             Step {step + 1} of {STEPS.length}: <span className="font-medium text-slate-700">{STEPS[step]}</span>
           </span>
@@ -185,7 +185,7 @@ export default function BusinessPlanNew() {
                 placeholder="e.g. 60000"
                 required
               />
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-600">
                 Equipment, stock, licences, premises and other one-off setup costs.
               </p>
             </div>
@@ -204,7 +204,7 @@ export default function BusinessPlanNew() {
                 placeholder="e.g. 155000"
                 required
               />
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-600">
                 Your realistic estimate of what the business will earn in its first 12 months.
               </p>
             </div>

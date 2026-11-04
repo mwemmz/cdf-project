@@ -49,7 +49,7 @@ export default function MyPlans() {
 
       {plans.length === 0 && (
         <Card>
-          <p className="text-slate-500">
+          <p className="text-slate-600">
             You haven't built a plan yet.{' '}
             <button onClick={() => navigate('/opportunities')} className="font-medium text-brand-600 underline">
               Start one from an opportunity
@@ -64,7 +64,7 @@ export default function MyPlans() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="truncate font-semibold text-slate-900">{p.businessIdea}</h2>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-600">
                   {p.opportunity?.constituencyName} · created {fmtDate(p.createdAt)}
                 </p>
               </div>
@@ -81,15 +81,15 @@ export default function MyPlans() {
 
             <dl className="mt-3 grid grid-cols-3 gap-2 text-xs sm:text-sm">
               <div>
-                <dt className="text-xs text-slate-400">Requested</dt>
+                <dt className="text-xs text-slate-500">Requested</dt>
                 <dd className="font-medium">{fmtZmk(p.amountRequested)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-slate-400">Startup</dt>
+                <dt className="text-xs text-slate-500">Startup</dt>
                 <dd className="font-medium">{fmtZmk(p.startupCosts)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-slate-400">Revenue</dt>
+                <dt className="text-xs text-slate-500">Revenue</dt>
                 <dd className="font-medium">{fmtZmk(p.revenueProjection)}</dd>
               </div>
             </dl>
@@ -99,7 +99,7 @@ export default function MyPlans() {
                 View summary
               </Link>
               {p.application && (
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-slate-600">
                   Application: <span className="font-medium">{APPLICATION_LABELS[p.application.status]}</span>
                 </span>
               )}

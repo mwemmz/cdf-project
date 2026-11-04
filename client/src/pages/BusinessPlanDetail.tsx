@@ -109,12 +109,12 @@ export default function BusinessPlanDetail() {
             { label: 'Amount requested', value: fmtZmk(plan.amountRequested) },
           ].map((s) => (
             <div key={s.label} className="rounded-lg bg-slate-50 p-3 text-center">
-              <div className="text-xs text-slate-500">{s.label}</div>
+              <div className="text-xs text-slate-600">{s.label}</div>
               <div className="font-semibold text-slate-900">{s.value}</div>
             </div>
           ))}
         </div>
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-slate-600">
           Opportunity: <span className="font-medium">{plan.opportunity?.constituencyName}</span> ({plan.opportunity?.category})
         </p>
       </Card>
@@ -138,7 +138,7 @@ export default function BusinessPlanDetail() {
               </div>
               <div>
                 <div className="font-medium">{plan.feasibilityScore.category}</div>
-                <div className="text-xs text-slate-500">out of 100</div>
+                <div className="text-xs text-slate-600">out of 100</div>
               </div>
             </div>
             <p className="mt-3 text-sm text-slate-600 md:mt-0 md:flex-1">
@@ -146,7 +146,7 @@ export default function BusinessPlanDetail() {
             </p>
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-500">No score yet — click Rescore.</p>
+          <p className="mt-3 text-sm text-slate-600">No score yet — click Rescore.</p>
         )}
       </Card>
 
@@ -162,7 +162,7 @@ export default function BusinessPlanDetail() {
             <PrimaryButton onClick={payAssessment} loading={busy}>
               Pay {fmtMoney(ASSESSMENT_FEE)} (simulated)
             </PrimaryButton>
-            <span className="text-xs text-slate-400">No real money is charged in this prototype.</span>
+            <span className="text-xs text-slate-500">No real money is charged in this prototype.</span>
           </div>
         )}
       </Card>

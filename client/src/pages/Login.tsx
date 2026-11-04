@@ -39,7 +39,7 @@ export default function Login() {
     <AuthShell>
       <Card>
         <h1 className="text-xl font-bold text-slate-900">Log in</h1>
-        <p className="mt-1 text-sm text-slate-500">Access your FundPath account.</p>
+        <p className="mt-1 text-sm text-slate-600">Access your FundPath account.</p>
         <form onSubmit={onSubmit} className="mt-5 space-y-4">
           {error && <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</div>}
           <Field
@@ -63,13 +63,13 @@ export default function Login() {
           </PrimaryButton>
         </form>
         <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Test accounts — click to fill</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Test accounts — click to fill</p>
           <ul className="mt-2 space-y-2">
             {TEST_ACCOUNTS.map((acc) => (
               <li key={acc.role} className="flex items-center justify-between gap-2 text-sm">
                 <div className="min-w-0">
                   <p className="font-medium text-slate-700">{acc.role}</p>
-                  <p className="truncate text-xs text-slate-500">{acc.email}</p>
+                  <p className="truncate text-xs text-slate-600">{acc.email}</p>
                 </div>
                 <button
                   type="button"
@@ -86,7 +86,7 @@ export default function Login() {
             ))}
           </ul>
         </div>
-        <p className="mt-4 text-sm text-slate-500">
+        <p className="mt-4 text-sm text-slate-600">
           No account?{' '}
           <Link to="/register" className="text-brand-600 underline">
             Register

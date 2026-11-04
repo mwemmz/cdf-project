@@ -143,7 +143,7 @@ function AccountMenu({ onLogout }: { onLogout: () => void }) {
         <div role="menu" className={`${menuPanel} right-0 origin-top-right`}>
           <div className="border-b border-slate-100 px-4 py-3">
             <div className="max-w-56 truncate text-sm font-semibold text-slate-900">{user.name}</div>
-            <div className="text-xs capitalize text-slate-500">{user.role.toLowerCase()}</div>
+            <div className="text-xs capitalize text-slate-600">{user.role.toLowerCase()}</div>
           </div>
           <button
             role="menuitem"
@@ -172,6 +172,13 @@ export default function Layout() {
     closeMobile();
     navigate('/');
   };
+
+  // The picture is the scene: pages start below it so its subject stays visible above the content.
+  const scenePad =
+    pathname === '/' ? 'pt-8' : /^\/(login|register)/.test(pathname) ? 'pt-8 md:pt-12' : 'pt-[14vh] md:pt-[22vh]';
+
+  // Where the picture's subject sits on the left, content steps right so the subject is never covered.
+  const subjectLeft = /^\/(marketplace|storefront)/.test(pathname) ? 'md:pl-[34%]' : '';
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -299,14 +306,14 @@ export default function Layout() {
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      <main className={`mx-auto w-full max-w-6xl flex-1 px-4 pb-10 ${scenePad} ${subjectLeft}`}>
         {/* Keyed so each page eases in; the admin area keys on itself so its sub-nav stays put. */}
         <div key={pageKey} className="page-enter">
           <Outlet />
         </div>
       </main>
 
-      <footer className="print:hidden border-t border-slate-200/70 bg-white/50 py-6 text-center text-xs text-slate-400">
+      <footer className="print:hidden border-t-2 border-copper-500 bg-brand-950 py-6 text-center text-xs text-white/75">
         <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand-500" />
         FundPath — CDF loan-to-repayment platform for Zambia. School project build.
       </footer>

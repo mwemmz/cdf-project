@@ -105,7 +105,7 @@ export default function Storefront() {
 
       {products.length === 0 && (
         <Card>
-          <p className="text-slate-500">No products yet. Click "Add product" to create your first listing.</p>
+          <p className="text-slate-600">No products yet. Click "Add product" to create your first listing.</p>
         </Card>
       )}
 

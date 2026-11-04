@@ -48,7 +48,7 @@ export default function Bookings() {
         subtitle={isAdvisor ? 'Sessions booked with you.' : 'Your advisor sessions.'}
       />
 
-      {bookings.length === 0 && <Card><p className="text-slate-500">No bookings yet.</p></Card>}
+      {bookings.length === 0 && <Card><p className="text-slate-600">No bookings yet.</p></Card>}
 
       <div className="space-y-4">
         {bookings.map((b) => {
@@ -62,7 +62,7 @@ export default function Bookings() {
                     {other?.name}
                     {specialty ? ` — ${specialty.replace(/_/g, ' ')}` : ''}
                   </div>
-                  <div className="mt-1 text-sm text-slate-500">
+                  <div className="mt-1 text-sm text-slate-600">
                     {fmtZmk(b.price)} · booked {fmtDateTime(b.createdAt)}
                   </div>
                   {b.note && <div className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">{b.note}</div>}

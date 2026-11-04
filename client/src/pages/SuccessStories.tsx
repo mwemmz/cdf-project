@@ -28,7 +28,7 @@ export default function SuccessStories() {
 
       {stories.length === 0 && (
         <Card>
-          <p className="text-slate-500">
+          <p className="text-slate-600">
             No success stories yet — businesses appear here once they are repaying and at least 50% repaid.
           </p>
         </Card>
@@ -40,7 +40,7 @@ export default function SuccessStories() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2 className="font-semibold text-slate-900">{s.applicantName}</h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   {s.constituency} · {s.category}
                 </p>
               </div>
@@ -52,7 +52,7 @@ export default function SuccessStories() {
             <p className="mt-3 flex-1 text-sm text-slate-600">{s.blurb}</p>
 
             <div className="mt-4">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+              <div className="flex items-center justify-between text-xs text-slate-600">
                 <span>{fmtZmk(s.totalRepaid)} repaid of {fmtZmk(s.amountDisbursed)}</span>
                 <span className="font-semibold text-brand-700">{fmtPct(s.repaymentPercentage)}</span>
               </div>
@@ -72,7 +72,7 @@ export default function SuccessStories() {
                 Visit storefront ({s.productCount} product{s.productCount === 1 ? '' : 's'})
               </Link>
             ) : (
-              <p className="mt-4 text-xs text-slate-400">No storefront products listed yet.</p>
+              <p className="mt-4 text-xs text-slate-500">No storefront products listed yet.</p>
             )}
           </Card>
         ))}

@@ -27,8 +27,8 @@ export function backdropFor(pathname: string): string {
 }
 
 /**
- * Full-viewport picture behind the whole site. The page renders on top of it, so a light veil keeps text
- * readable. Keyed on the image: pages that share a picture don't flicker, others fade in (opacity only).
+ * The picture is the foundation of every page and is shown at full strength. Content sits on glass panels above it,
+ * so readability comes from the panels (checked for contrast), not from washing the picture out. Keyed on the image: pages that share a picture don't flicker, others fade in (opacity only).
  */
 export default function PageBackdrop() {
   const { pathname } = useLocation();
@@ -36,7 +36,7 @@ export default function PageBackdrop() {
   return (
     <div aria-hidden="true" className="print:hidden pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#ece9e4]">
       <img key={src} src={src} alt="" className="backdrop-in absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f3ebdc]/20 via-[#efe9e0]/10 to-[#e3e7ec]/30" />
+      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#14181c]/35 to-transparent" />
     </div>
   );
 }

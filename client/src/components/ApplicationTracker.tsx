@@ -37,16 +37,16 @@ export function ApplicationTracker({ status }: { status: ApplicationStatus }) {
           );
         })}
       </div>
-      <div className="mt-2 hidden justify-between text-xs text-slate-500 sm:flex">
+      <div className="mt-2 hidden justify-between text-xs text-slate-600 sm:flex">
         {PIPE.map((s, i) => (
           <span key={s} className={i === currentIndex ? 'font-semibold text-brand-700' : ''}>
             {APPLICATION_LABELS[s]}
           </span>
         ))}
       </div>
-      <div className="mt-2 text-xs text-slate-500 sm:hidden">
+      <div className="mt-2 text-xs text-slate-600 sm:hidden">
         <span className="font-semibold text-brand-700">{APPLICATION_LABELS[status]}</span>
-        <span className="text-slate-400">
+        <span className="text-slate-500">
           {' '}— Step {currentIndex + 1} of {PIPE.length}
         </span>
       </div>

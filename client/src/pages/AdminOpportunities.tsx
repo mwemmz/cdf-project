@@ -139,7 +139,7 @@ export default function AdminOpportunities() {
 
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+          <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-600">
             <tr>
               <th className="px-4 py-3">Constituency</th>
               <th className="px-4 py-3">Category</th>

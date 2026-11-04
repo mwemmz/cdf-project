@@ -90,7 +90,7 @@ export default function ApplicationDetail() {
 
       <Card>
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-600">
             Submitted {fmtDate(application.createdAt)} ·{' '}
             {application.amountDisbursed != null ? `Disbursed ${fmtZmk(application.amountDisbursed)}` : 'Not yet disbursed'}
           </div>
@@ -109,15 +109,15 @@ export default function ApplicationDetail() {
         </p>
         <div className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
           <div>
-            <div className="text-xs text-slate-400">Requested</div>
+            <div className="text-xs text-slate-500">Requested</div>
             <div className="font-medium">{fmtZmk(application.businessPlan?.amountRequested ?? 0)}</div>
           </div>
           <div>
-            <div className="text-xs text-slate-400">Startup</div>
+            <div className="text-xs text-slate-500">Startup</div>
             <div className="font-medium">{fmtZmk(application.businessPlan?.startupCosts ?? 0)}</div>
           </div>
           <div>
-            <div className="text-xs text-slate-400">Revenue</div>
+            <div className="text-xs text-slate-500">Revenue</div>
             <div className="font-medium">{fmtZmk(application.businessPlan?.revenueProjection ?? 0)}</div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function ApplicationDetail() {
               { label: 'Repaid %', value: fmtPct(summary.repaymentPercentage) },
             ].map((s) => (
               <div key={s.label} className="rounded-lg bg-slate-50 p-3 text-center">
-                <div className="text-xs text-slate-500">{s.label}</div>
+                <div className="text-xs text-slate-600">{s.label}</div>
                 <div className="font-semibold text-slate-900">{s.value}</div>
               </div>
             ))}
@@ -197,29 +197,29 @@ export default function ApplicationDetail() {
                 />
               )}
             </div>
-            <div className="mt-2 flex justify-between text-xs text-slate-500">
+            <div className="mt-2 flex justify-between text-xs text-slate-600">
               <span>Repaid {fmtPct(summary?.repaymentPercentage ?? 0)}</span>
               <span>Expected by now {fmtPct(repayments.schedule.expectedPercentage)}</span>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
               <div>
-                <div className="text-xs text-slate-400">Monthly payment</div>
+                <div className="text-xs text-slate-500">Monthly payment</div>
                 <div className="font-medium">{fmtZmk(repayments.schedule.monthlyPayment)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Term</div>
+                <div className="text-xs text-slate-500">Term</div>
                 <div className="font-medium">{repayments.schedule.termMonths} months</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Next instalment</div>
+                <div className="text-xs text-slate-500">Next instalment</div>
                 <div className="font-medium">{fmtDate(repayments.schedule.nextDueDate)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Final due date</div>
+                <div className="text-xs text-slate-500">Final due date</div>
                 <div className="font-medium">{fmtDate(repayments.schedule.dueDate)}</div>
               </div>
             </div>
-            <p className="mt-3 text-xs text-slate-500">
+            <p className="mt-3 text-xs text-slate-600">
               Terms follow the draft CDF guidelines: 5% simple interest, the first instalment 60 days after the
               loan, then monthly. A late instalment attracts a {Math.round(repayments.schedule.lateChargeRate * 100)}%
               charge, and three missed months ends the agreement.
@@ -261,7 +261,7 @@ export default function ApplicationDetail() {
         )}
 
         {!canRepay && application.status !== 'REJECTED' && (
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-3 text-sm text-slate-600">
             Repayments unlock once your loan has been disbursed.
           </p>
         )}
@@ -270,16 +270,16 @@ export default function ApplicationDetail() {
           <div className="mt-4">
             <div className="mb-2 text-sm font-medium text-slate-700">History (most recent first)</div>
             {repayments.repayments.length === 0 ? (
-              <p className="text-sm text-slate-500">No repayments logged yet.</p>
+              <p className="text-sm text-slate-600">No repayments logged yet.</p>
             ) : (
               <ul className="divide-y divide-slate-200 rounded-lg border border-slate-200">
                 {repayments.repayments.map((r) => (
                   <li key={r.id} className="flex items-center justify-between gap-3 px-4 py-2 text-sm">
                     <div>
                       <span className="font-medium text-slate-900">{fmtZmk(r.amount)}</span>
-                      {r.note && <span className="ml-2 text-slate-500">{r.note}</span>}
+                      {r.note && <span className="ml-2 text-slate-600">{r.note}</span>}
                     </div>
-                    <div className="text-slate-500">{fmtDate(r.date)}</div>
+                    <div className="text-slate-600">{fmtDate(r.date)}</div>
                   </li>
                 ))}
               </ul>

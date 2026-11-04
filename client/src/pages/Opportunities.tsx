@@ -50,7 +50,7 @@ export default function Opportunities() {
             </p>
             <div className="mt-4">
               {user?.role === 'ADVISOR' ? (
-                <span className="text-sm text-slate-500">Advisor accounts cannot apply for loans.</span>
+                <span className="text-sm text-slate-600">Advisor accounts cannot apply for loans.</span>
               ) : (
                 <Link
                   to={`/plans/new?opportunity=${o.id}`}
@@ -77,7 +77,7 @@ export default function Opportunities() {
             {closed.map((o) => (
               <Card key={o.id} className="opacity-70">
                 <h3 className="font-semibold text-slate-900">{o.constituencyName}</h3>
-                <span className="mt-1 inline-block rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                <span className="mt-1 inline-block rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
                   {o.category}
                 </span>
                 <p className="mt-2 text-sm text-slate-600">{fmtZmk(o.amountAvailable)} · closed {fmtDate(o.deadline)}</p>

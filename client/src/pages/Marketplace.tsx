@@ -61,7 +61,7 @@ export default function Marketplace() {
       {buyError && <div className="mb-4"><ErrorNote message={buyError} /></div>}
 
       {visible.length === 0 && (
-        <Card><p className="text-slate-500">No products on the marketplace yet. Check back soon.</p></Card>
+        <Card><p className="text-slate-600">No products on the marketplace yet. Check back soon.</p></Card>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -101,7 +101,7 @@ export default function Marketplace() {
                 )}
               </div>
             )}
-            <div className="mt-2 text-xs text-slate-400">Seller: {p.applicant?.name}</div>
+            <div className="mt-2 text-xs text-slate-500">Seller: {p.applicant?.name}</div>
           </Card>
         ))}
       </div>

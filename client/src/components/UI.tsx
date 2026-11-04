@@ -1,7 +1,7 @@
 import { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 const fieldBase =
-  'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400';
+  'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-500 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500';
 
 export function PageHeader({
   title,
@@ -13,10 +13,10 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex items-start justify-between gap-4 rounded-2xl bg-white/80 px-6 py-5 shadow-card ring-1 ring-white/60 backdrop-blur-md">
+    <div className="mb-6 flex w-fit max-w-full flex-wrap items-start justify-between gap-x-8 gap-y-3 rounded-[1.75rem] bg-white/85 px-7 py-5 shadow-pop ring-1 ring-white/70 backdrop-blur-md md:max-w-3xl">
       <div className="min-w-0">
         <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
+        {subtitle && <p className="mt-1 text-sm text-slate-700">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
@@ -30,7 +30,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl border border-white/60 bg-white/90 p-5 shadow-card backdrop-blur-md ${className}`}>{children}</div>
+    <div className={`rounded-[1.75rem] border border-white/70 bg-white/90 p-5 shadow-card backdrop-blur-md ${className}`}>{children}</div>
   );
 }
 
@@ -49,7 +49,7 @@ export function Alert({ kind, children }: { kind: 'error' | 'success' | 'info'; 
 
 export function Loading() {
   return (
-    <div className="flex items-center justify-center gap-3 py-12 text-sm text-slate-500">
+    <div className="flex items-center justify-center gap-3 py-12 text-sm text-slate-600">
       <span
         className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200"
         style={{ borderTopColor: '#178158' }}

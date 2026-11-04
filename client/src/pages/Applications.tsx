@@ -26,7 +26,7 @@ export default function Applications() {
 
       {applications.length === 0 && (
         <Card>
-          <p className="text-slate-500">
+          <p className="text-slate-600">
             No applications yet. Build a plan from an{' '}
             <Link to="/opportunities" className="font-medium text-brand-600 underline">
               opportunity
@@ -44,7 +44,7 @@ export default function Applications() {
                 <div className="font-semibold text-slate-900">
                   {app.opportunity?.constituencyName} · {app.opportunity?.category}
                 </div>
-                <div className="text-sm text-slate-500">
+                <div className="text-sm text-slate-600">
                   Submitted {fmtDate(app.createdAt)} · requested {fmtZmk(app.businessPlan?.amountRequested ?? 0)}
                 </div>
               </div>

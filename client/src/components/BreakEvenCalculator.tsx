@@ -31,12 +31,12 @@ export default function BreakEvenCalculator() {
   }, [fixed, variable, price]);
 
   const field =
-    'w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100';
+    'w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100';
 
   return (
     <Card>
       <h2 className="font-semibold text-slate-900">Break-even / ROI calculator</h2>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-slate-600">
         Quick check of how many units a client must sell to cover their fixed costs.
       </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -63,15 +63,15 @@ export default function BreakEvenCalculator() {
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div>
-                <div className="text-xs text-slate-400">Contribution / unit</div>
+                <div className="text-xs text-slate-500">Contribution / unit</div>
                 <div className="font-semibold text-slate-900">K{result.contribution.toFixed(2)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Break-even units</div>
+                <div className="text-xs text-slate-500">Break-even units</div>
                 <div className="font-semibold text-slate-900">{Math.ceil(result.breakEvenUnits).toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Break-even revenue</div>
+                <div className="text-xs text-slate-500">Break-even revenue</div>
                 <div className="font-semibold text-slate-900">K{Math.ceil(result.breakEvenRevenue).toLocaleString()}</div>
               </div>
             </div>

@@ -43,7 +43,7 @@ export default function Register() {
     <AuthShell>
       <Card>
         <h1 className="text-xl font-bold text-slate-900">Create an account</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-600">
           Advisors start unverified — your profile will be visible once verified.
         </p>
         <form onSubmit={onSubmit} className="mt-5 space-y-4">
@@ -66,7 +66,7 @@ export default function Register() {
             Register
           </PrimaryButton>
         </form>
-        <p className="mt-4 text-sm text-slate-500">
+        <p className="mt-4 text-sm text-slate-600">
           Already registered?{' '}
           <Link to="/login" className="text-brand-600 underline">
             Log in

@@ -37,7 +37,7 @@ export default function Advisors() {
 
       {advisors.length === 0 && (
         <Card>
-          <p className="text-slate-500">No verified advisors yet. Check back soon.</p>
+          <p className="text-slate-600">No verified advisors yet. Check back soon.</p>
         </Card>
       )}
 
@@ -59,7 +59,7 @@ export default function Advisors() {
               </div>
               <div className="shrink-0 text-right">
                 <div className="font-semibold tnum text-slate-900">{fmtZmk(a.pricePerSession)}</div>
-                <div className="text-xs text-slate-500">per session</div>
+                <div className="text-xs text-slate-600">per session</div>
               </div>
             </div>
 
@@ -69,12 +69,12 @@ export default function Advisors() {
               {a.rating && a.rating.count > 0 ? (
                 <div className="flex items-center gap-1.5">
                   <Stars value={a.rating.average} />
-                  <span className="whitespace-nowrap text-xs text-slate-500">
+                  <span className="whitespace-nowrap text-xs text-slate-600">
                     {a.rating.average.toFixed(1)} ({a.rating.count})
                   </span>
                 </div>
               ) : (
-                <span className="text-xs text-slate-400">No reviews yet</span>
+                <span className="text-xs text-slate-500">No reviews yet</span>
               )}
               <Link
                 to={`/advisors/${a.id}`}

@@ -90,7 +90,7 @@ export default function NotificationBell({ variant = 'desktop' }: { variant?: 'd
             )}
           </div>
           <div className="max-h-96 overflow-y-auto">
-            {items.length === 0 && <p className="px-4 py-6 text-center text-sm text-slate-400">Nothing here yet.</p>}
+            {items.length === 0 && <p className="px-4 py-6 text-center text-sm text-slate-500">Nothing here yet.</p>}
             {items.map((n) => (
               <button
                 key={n.id}
@@ -102,7 +102,7 @@ export default function NotificationBell({ variant = 'desktop' }: { variant?: 'd
                 <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${TYPE_DOT[n.type] ?? 'bg-slate-400'}`} />
                 <span className="min-w-0">
                   <span className="block text-sm text-slate-700">{n.message}</span>
-                  <span className="mt-0.5 block text-xs text-slate-400">{fmtDateTime(n.createdAt)}</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">{fmtDateTime(n.createdAt)}</span>
                 </span>
               </button>
             ))}

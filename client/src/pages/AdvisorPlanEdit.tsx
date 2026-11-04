@@ -88,7 +88,7 @@ export default function AdvisorPlanEdit() {
         <Card className="mb-4">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-slate-500">Current feasibility score</div>
+              <div className="text-sm text-slate-600">Current feasibility score</div>
               <div className="mt-1">
                 <span className={`rounded px-2 py-0.5 text-sm font-semibold ${FEASIBILITY_COLORS[score.category]}`}>
                   {score.score}/100 · {score.category}
@@ -146,7 +146,7 @@ export default function AdvisorPlanEdit() {
             />
           </div>
 
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-600">
             Requested {fmtZmk(Number(form.amountRequested) || 0)} · the feasibility score refreshes when you save.
           </div>
 

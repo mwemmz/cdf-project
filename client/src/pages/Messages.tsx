@@ -35,7 +35,7 @@ export default function Messages() {
       <PageHeader title="Messages" subtitle="Your conversations. A chat opens once a session is paid." />
       {convos.length === 0 ? (
         <Card>
-          <p className="text-slate-500">
+          <p className="text-slate-600">
             No conversations yet.{' '}
             {user?.role === 'APPLICANT'
               ? 'Book an advisor and mark the session as paid to start chatting.'
@@ -56,9 +56,9 @@ export default function Messages() {
                   >
                     <div className="flex items-baseline justify-between gap-2">
                       <span className="truncate text-sm font-semibold text-slate-900">{c.other.name}</span>
-                      <span className="shrink-0 text-[10px] text-slate-400">{fmtDateTime(c.updatedAt)}</span>
+                      <span className="shrink-0 text-[10px] text-slate-500">{fmtDateTime(c.updatedAt)}</span>
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-slate-500">
+                    <p className="mt-0.5 truncate text-xs text-slate-600">
                       {c.lastMessage
                         ? `${c.lastMessage.senderId === user?.id ? 'You: ' : ''}${c.lastMessage.content}`
                         : 'No messages yet'}

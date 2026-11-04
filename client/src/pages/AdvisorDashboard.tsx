@@ -95,7 +95,7 @@ export default function AdvisorDashboard() {
         {statCards.map((s) => (
           <Card key={s.label} className="text-center">
             <div className="text-2xl font-bold text-slate-900">{s.value}</div>
-            <div className="mt-1 text-xs text-slate-500">{s.label}</div>
+            <div className="mt-1 text-xs text-slate-600">{s.label}</div>
           </Card>
         ))}
       </div>
@@ -105,12 +105,12 @@ export default function AdvisorDashboard() {
       <Card className="mt-4">
         <h2 className="font-semibold text-slate-900">Clients ({stats.totalClients})</h2>
         {clients.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">No clients have booked you yet.</p>
+          <p className="mt-2 text-sm text-slate-600">No clients have booked you yet.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-400">
+                <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
                   <th className="py-2 pr-3 font-medium">Client</th>
                   <th className="py-2 pr-3 font-medium">Plan status</th>
                   <th className="py-2 pr-3 font-medium">Score</th>
@@ -123,7 +123,7 @@ export default function AdvisorDashboard() {
                   <tr key={c.applicant.id}>
                     <td className="py-3 pr-3">
                       <div className="font-medium text-slate-900">{c.applicant.name}</div>
-                      <div className="text-xs text-slate-400">{c.applicant.email}</div>
+                      <div className="text-xs text-slate-500">{c.applicant.email}</div>
                     </td>
                     <td className="py-3 pr-3">
                       <span
@@ -142,7 +142,7 @@ export default function AdvisorDashboard() {
                     </td>
                     <td className="py-3 pr-3">
                       {!c.planId ? (
-                        <span className="text-xs text-slate-400">No plan</span>
+                        <span className="text-xs text-slate-500">No plan</span>
                       ) : c.linkedToMe ? (
                         <span className="flex flex-wrap items-center gap-2">
                           <Link

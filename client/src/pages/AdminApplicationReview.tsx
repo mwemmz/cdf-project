@@ -95,7 +95,7 @@ export default function AdminApplicationReview() {
     return <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>;
   }
   if (!application) {
-    return <div className="text-sm text-slate-500">Loading application…</div>;
+    return <div className="text-sm text-slate-600">Loading application…</div>;
   }
 
   const repaid = application.repayments.reduce((sum, r) => sum + r.amount, 0);
@@ -115,7 +115,7 @@ export default function AdminApplicationReview() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="font-display text-lg font-semibold text-slate-900">{application.applicant.name}</h2>
-            <p className="text-sm text-slate-500">{application.applicant.email}</p>
+            <p className="text-sm text-slate-600">{application.applicant.email}</p>
           </div>
           <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">
             {stageLabels[application.status]}
@@ -123,23 +123,23 @@ export default function AdminApplicationReview() {
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
           <div>
-            <dt className="text-slate-500">Opportunity</dt>
+            <dt className="text-slate-600">Opportunity</dt>
             <dd className="font-medium text-slate-900">
               {application.opportunity.constituencyName} · {application.opportunity.category}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-500">Requested</dt>
+            <dt className="text-slate-600">Requested</dt>
             <dd className="font-medium text-slate-900">{fmtZmk(application.businessPlan.amountRequested)}</dd>
           </div>
           <div>
-            <dt className="text-slate-500">Disbursed</dt>
+            <dt className="text-slate-600">Disbursed</dt>
             <dd className="font-medium text-slate-900">
               {application.amountDisbursed ? fmtZmk(application.amountDisbursed) : '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-500">Submitted</dt>
+            <dt className="text-slate-600">Submitted</dt>
             <dd className="font-medium text-slate-900">{fmtDate(application.createdAt)}</dd>
           </div>
         </dl>
@@ -169,7 +169,7 @@ export default function AdminApplicationReview() {
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <h3 className="font-display text-base font-semibold text-slate-900">Repayments</h3>
         {application.repayments.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">No repayments recorded.</p>
+          <p className="mt-2 text-sm text-slate-600">No repayments recorded.</p>
         ) : (
           <ul className="mt-2 space-y-1 text-sm text-slate-700">
             {application.repayments.map((r) => (
@@ -192,7 +192,7 @@ export default function AdminApplicationReview() {
           <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{actionError}</p>
         )}
         {nextStages.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">This application has reached a terminal stage.</p>
+          <p className="mt-2 text-sm text-slate-600">This application has reached a terminal stage.</p>
         ) : (
           <div className="mt-3 flex flex-wrap items-center gap-3">
             {nextStages.includes('DISBURSED') && (

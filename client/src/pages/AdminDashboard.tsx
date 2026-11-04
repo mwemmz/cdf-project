@@ -47,7 +47,7 @@ export default function AdminDashboard() {
     return <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>;
   }
   if (!summary) {
-    return <div className="text-sm text-slate-500">Loading summary…</div>;
+    return <div className="text-sm text-slate-600">Loading summary…</div>;
   }
 
   const maxStage = Math.max(...stageOrder.map((s) => summary.applications.byStage[s] ?? 0), 1);
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
         {cards.map((card) => (
           <div key={card.label} className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{card.label}</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">{card.label}</p>
             <p className="mt-1 font-display text-lg font-semibold text-slate-900">{card.value}</p>
           </div>
         ))}
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="font-display text-base font-semibold text-slate-900">Feasibility distribution</h2>
-          <p className="mt-0.5 text-xs text-slate-500">Score categories across submitted plans.</p>
+          <p className="mt-0.5 text-xs text-slate-600">Score categories across submitted plans.</p>
           <div className="mt-4 space-y-2.5">
             {feasibilityRows.map((row) => (
               <div key={row.label} className="flex items-center gap-3">
@@ -128,9 +128,9 @@ export default function AdminDashboard() {
 
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="font-display text-base font-semibold text-slate-900">Demand by constituency</h2>
-          <p className="mt-0.5 text-xs text-slate-500">Applications per opportunity, most-demanded first.</p>
+          <p className="mt-0.5 text-xs text-slate-600">Applications per opportunity, most-demanded first.</p>
           {demandRows.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">No applications yet.</p>
+            <p className="mt-4 text-sm text-slate-600">No applications yet.</p>
           ) : (
             <div className="mt-4 space-y-2.5">
               {demandRows.map((row) => (
@@ -152,7 +152,7 @@ export default function AdminDashboard() {
 
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="font-display text-base font-semibold text-slate-900">Disbursed vs repaid</h2>
-        <p className="mt-0.5 text-xs text-slate-500">How much of the disbursed money has come back.</p>
+        <p className="mt-0.5 text-xs text-slate-600">How much of the disbursed money has come back.</p>
         <div className="mt-4 space-y-2.5">
           {moneyRows.map((row) => (
             <div key={row.label} className="flex items-center gap-3">
@@ -169,7 +169,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-600">
         Review applications in the{' '}
         <Link to="/admin/applications" className="font-medium text-brand-600 underline">
           application queue

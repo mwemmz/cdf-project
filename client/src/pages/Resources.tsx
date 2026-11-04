@@ -48,7 +48,7 @@ export default function Resources() {
         ))}
       </div>
 
-      {visible.length === 0 && <Card><p className="text-slate-500">No resources in this category.</p></Card>}
+      {visible.length === 0 && <Card><p className="text-slate-600">No resources in this category.</p></Card>}
 
       <div className="space-y-3">
         {visible.map((r) => {
@@ -65,7 +65,7 @@ export default function Resources() {
                     {r.category}
                   </span>
                 </div>
-                <span className="mt-1 shrink-0 text-slate-400">{open ? '−' : '+'}</span>
+                <span className="mt-1 shrink-0 text-slate-500">{open ? '−' : '+'}</span>
               </button>
               {open && <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-slate-700">{r.content}</p>}
             </Card>

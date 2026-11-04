@@ -72,7 +72,7 @@ export default function Home() {
 
   return (
     <div>
-      <section className="overflow-hidden rounded-3xl bg-brand-950 p-8 text-white shadow-pop md:p-12">
+      <section className="overflow-hidden rounded-[1.75rem] bg-brand-950/85 p-8 text-white shadow-pop ring-1 ring-white/10 backdrop-blur-md md:p-12">
         <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between">
         <div className="max-w-2xl flex-1">
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl">
@@ -132,7 +132,7 @@ export default function Home() {
         {FEATURES.map((f) => (
           <div
             key={f.key}
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-shadow hover:shadow-pop"
+            className="rounded-[1.75rem] border border-white/70 bg-white/90 p-6 shadow-card backdrop-blur-md transition-shadow hover:shadow-pop"
           >
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-700">
               {ICONS[f.key]}
