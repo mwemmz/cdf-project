@@ -44,6 +44,7 @@ export default function Marketplace() {
       <PageHeader
         title="Marketplace"
         subtitle="Products from CDF-funded businesses across Zambia. Browse freely — no account needed."
+        image={{ src: '/images/marketplace.webp', alt: 'A small market stall with a green striped awning', pos: '50% 55%' }}
       />
 
       {seller && (

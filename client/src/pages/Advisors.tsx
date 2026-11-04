@@ -33,6 +33,7 @@ export default function Advisors() {
       <PageHeader
         title="Advisors"
         subtitle="Verified advisors who help you shape a plan the CDF committee and bank can say yes to. Sessions are paid per booking."
+        image={{ src: '/images/advisors.webp', alt: 'Two speech bubbles facing each other with a checkmark between them', pos: '50% 55%' }}
       />
 
       {advisors.length === 0 && (

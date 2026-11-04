@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { requestLogin } from '../lib/auth';
-import { Card, Field, PrimaryButton } from '../components/UI';
+import { AuthShell, Card, Field, PrimaryButton } from '../components/UI';
 
 const TEST_ACCOUNTS = [
   { role: 'Admin', email: 'admin@fundpath.zm', password: 'Admin@123' },
@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   return (
-    <div className="mx-auto max-w-md">
+    <AuthShell>
       <Card>
         <h1 className="text-xl font-bold text-slate-900">Log in</h1>
         <p className="mt-1 text-sm text-slate-500">Access your FundPath account.</p>
@@ -93,6 +93,6 @@ export default function Login() {
           </Link>
         </p>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

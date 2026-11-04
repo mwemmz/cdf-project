@@ -28,6 +28,7 @@ export default function Opportunities() {
       <PageHeader
         title="CDF Opportunities"
         subtitle="Constituency Development Fund opportunities open for applications."
+        image={{ src: '/images/opportunities.webp', alt: '', mode: 'banner', pos: '70% 60%' }}
       />
 
       <div className="grid gap-4 md:grid-cols-2">

@@ -40,6 +40,7 @@ export default function MyPlans() {
       <PageHeader
         title="My Business Plans"
         subtitle="Plans you have built with their feasibility scores."
+        image={{ src: '/images/plans-list.webp', alt: 'A notebook, a pencil and rising green bars beside a progress bar', pos: '80% 50%' }}
         action={
           <Link to="/opportunities" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
             New plan

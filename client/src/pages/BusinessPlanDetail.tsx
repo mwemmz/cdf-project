@@ -79,6 +79,7 @@ export default function BusinessPlanDetail() {
       <PageHeader
         title="Business plan summary"
         subtitle={`Created ${fmtDate(plan.createdAt)}`}
+        image={{ src: '/images/score.webp', alt: 'A gauge with its needle in the green zone', pos: '50% 68%' }}
         action={
           <button
             onClick={() => window.print()}

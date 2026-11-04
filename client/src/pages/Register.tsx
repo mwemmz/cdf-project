@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { requestRegister } from '../lib/auth';
-import { Card, Field, FieldSelect, PrimaryButton } from '../components/UI';
+import { AuthShell, Card, Field, FieldSelect, PrimaryButton } from '../components/UI';
 
 export default function Register() {
   const { refresh } = useAuth();
@@ -40,7 +40,7 @@ export default function Register() {
   };
 
   return (
-    <div className="mx-auto max-w-md">
+    <AuthShell>
       <Card>
         <h1 className="text-xl font-bold text-slate-900">Create an account</h1>
         <p className="mt-1 text-sm text-slate-500">
@@ -73,6 +73,6 @@ export default function Register() {
           </Link>
         </p>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

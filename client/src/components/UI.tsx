@@ -3,14 +3,73 @@ import { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttri
 const fieldBase =
   'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400';
 
-export function PageHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
-  return (
-    <div className="mb-6 flex items-start justify-between gap-4">
-      <div className="min-w-0">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+export type HeaderImage = {
+  src: string;
+  alt: string;
+  /** banner: heading sits on the picture. strip: heading above, picture below. */
+  mode?: 'banner' | 'strip';
+  /** CSS object-position, e.g. "50% 60%" */
+  pos?: string;
+};
+
+export function PageHeader({
+  title,
+  subtitle,
+  action,
+  image,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: ReactNode;
+  image?: HeaderImage;
+}) {
+  if (image && image.mode === 'banner') {
+    return (
+      <div className="relative mb-6 overflow-hidden rounded-2xl border border-slate-200 shadow-card">
+        <img src={image.src} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: image.pos ?? 'right center' }} />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#f1e7d6] via-[#f1e7d6]/80 to-transparent md:via-[#f1e7d6]/50" />
+        <div className="relative flex min-h-[200px] items-center justify-between gap-4 p-6 md:min-h-[240px] md:p-10">
+          <div className="min-w-0 max-w-md">
+            <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">{title}</h1>
+            {subtitle && <p className="mt-2 text-sm leading-relaxed text-slate-700">{subtitle}</p>}
+          </div>
+          {action && <div className="shrink-0">{action}</div>}
+        </div>
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+    );
+  }
+  return (
+    <>
+      <div className={`${image ? 'mb-4' : 'mb-6'} flex items-start justify-between gap-4`}>
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
+          {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+        </div>
+        {action && <div className="shrink-0">{action}</div>}
+      </div>
+      {image && (
+        <img
+          src={image.src}
+          alt={image.alt}
+          className="mb-6 h-40 w-full rounded-2xl border border-slate-200 object-cover shadow-card md:h-56"
+          style={{ objectPosition: image.pos ?? 'center' }}
+        />
+      )}
+    </>
+  );
+}
+
+/** Two-column shell for Login and Register: picture on the left (large screens), form on the right. */
+export function AuthShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="mx-auto grid max-w-4xl items-stretch gap-6 lg:grid-cols-2">
+      <div
+        role="img"
+        aria-label="A locked safe with a green key on top"
+        className="hidden min-h-[420px] rounded-2xl bg-cover shadow-card lg:block"
+        style={{ backgroundImage: "url('/images/vault-key.webp')", backgroundPosition: '50% 50%' }}
+      />
+      <div className="mx-auto w-full max-w-md self-center">{children}</div>
     </div>
   );
 }

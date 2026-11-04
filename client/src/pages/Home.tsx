@@ -144,29 +144,31 @@ export default function Home() {
       </section>
 
       {!user && (
-        <section className="mt-8 rounded-2xl border border-brand-100 bg-brand-50 p-6 md:p-8">
-          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <h2 className="font-display text-xl font-bold tracking-tight text-brand-950">
+        <section className="relative mt-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-card">
+          <img src="/images/cta.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+          <div aria-hidden="true" className="absolute inset-0 bg-slate-900/70 md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-slate-900/55" />
+          <div className="relative flex min-h-[260px] items-center p-6 md:justify-end md:p-10">
+            <div className="max-w-md md:w-[48%]">
+              <h2 className="font-display text-xl font-bold tracking-tight text-white md:text-2xl">
                 Start your application today
               </h2>
-              <p className="mt-1 text-sm text-brand-800">
-                Free to register — build a plan, apply for funding, and track every step.
+              <p className="mt-2 text-sm leading-relaxed text-white/80">
+                Free to register: build a plan, apply for funding, and track every step.
               </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/register"
-                className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
-              >
-                Create an account
-              </Link>
-              <Link
-                to="/login"
-                className="rounded-lg border border-brand-200 bg-white px-5 py-2.5 text-sm font-semibold text-brand-700 transition hover:border-brand-300"
-              >
-                Log in
-              </Link>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link
+                  to="/register"
+                  className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-300"
+                >
+                  Create an account
+                </Link>
+                <Link
+                  to="/login"
+                  className="rounded-lg border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Log in
+                </Link>
+              </div>
             </div>
           </div>
         </section>
