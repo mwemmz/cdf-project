@@ -32,8 +32,7 @@ export default function Messages() {
 
   return (
     <div>
-      <PageHeader
-        image={{ src: '/images/advisors.webp', pos: '50% 65%' }} title="Messages" subtitle="Your conversations. A chat opens once a session is paid." />
+      <PageHeader title="Messages" subtitle="Your conversations. A chat opens once a session is paid." />
       {convos.length === 0 ? (
         <Card>
           <p className="text-slate-500">

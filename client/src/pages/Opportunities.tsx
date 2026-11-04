@@ -26,7 +26,6 @@ export default function Opportunities() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/opportunities.webp', pos: '70% 60%', tone: 'light' }}
         title="CDF Opportunities"
         subtitle="Constituency Development Fund opportunities open for applications."
       />

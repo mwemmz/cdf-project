@@ -28,7 +28,6 @@ export default function Resources() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/still-life.webp', pos: '50% 68%' }}
         title="Resource library"
         subtitle="Short, practical guides for CDF applicants and funded businesses."
       />

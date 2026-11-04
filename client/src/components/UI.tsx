@@ -1,113 +1,36 @@
-import { ReactNode, useState, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 const fieldBase =
   'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400';
-
-export type HeaderImage = {
-  src: string;
-  /** CSS object-position for the crop, e.g. "70% 55%" */
-  pos?: string;
-  /** light: dark text on a warm scrim (picture has empty light space on the left). dark: white text on a charcoal scrim. */
-  tone?: 'light' | 'dark';
-  /** mirror the picture so its subject sits on the right */
-  flip?: boolean;
-  /** tall picture: shown whole as a framed panel on the right instead of a faded backdrop */
-  portrait?: boolean;
-};
-
-function HeaderBackdrop({ image }: { image: HeaderImage }) {
-  const [loaded, setLoaded] = useState(false);
-  const light = image.tone !== 'dark';
-  const fade = 'linear-gradient(to right, transparent 0%, black 55%)';
-  const img = (
-    <img
-      src={image.src}
-      alt=""
-      aria-hidden="true"
-      onLoad={() => setLoaded(true)}
-      ref={(el) => {
-        if (el?.complete && !loaded) setLoaded(true);
-      }}
-      className={`h-full w-full object-cover transition-opacity duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'} ${image.flip ? '-scale-x-100' : ''}`}
-    />
-  );
-  return (
-    <>
-      {image.portrait ? (
-        <div className="print:hidden absolute inset-y-4 right-4 aspect-[9/16] overflow-hidden rounded-xl shadow-pop ring-1 ring-white/20">{img}</div>
-      ) : (
-        <div
-          className="print:hidden absolute inset-y-0 right-0 aspect-video"
-          style={{ maskImage: fade, WebkitMaskImage: fade }}
-        >
-          {img}
-        </div>
-      )}
-      <div
-        aria-hidden="true"
-        className={`print:hidden absolute inset-0 md:hidden ${light ? 'bg-[#f1e7d6]/70' : 'bg-slate-950/60'}`}
-      />
-    </>
-  );
-}
 
 export function PageHeader({
   title,
   subtitle,
   action,
-  image,
 }: {
   title: string;
   subtitle?: string;
   action?: ReactNode;
-  image?: HeaderImage;
 }) {
-  if (image) {
-    const light = image.tone !== 'dark';
-    return (
-      <div className={`relative mb-6 overflow-hidden rounded-2xl shadow-card print:bg-white print:shadow-none ${image.tone !== 'dark' ? 'bg-[#f1e7d6]' : 'bg-[#14181c]'}`}>
-        <HeaderBackdrop image={image} />
-        <div className="relative flex min-h-[220px] items-center justify-between gap-4 p-6 md:min-h-[300px] md:p-10">
-          <div className="min-w-0 max-w-xl">
-            <h1 className={`font-display text-2xl font-bold tracking-tight md:text-3xl ${light ? 'text-slate-900' : 'text-white print:text-slate-900'}`}>{title}</h1>
-            {subtitle && (
-              <p className={`mt-2 text-sm leading-relaxed ${light ? 'text-slate-700' : 'text-white/80 print:text-slate-600'}`}>{subtitle}</p>
-            )}
-          </div>
-          {action && <div className="shrink-0">{action}</div>}
-        </div>
-      </div>
-    );
-  }
   return (
-    <div className="mb-6 flex items-start justify-between gap-4">
+    <div className="mb-6 flex items-start justify-between gap-4 rounded-2xl bg-white/80 px-6 py-5 shadow-card ring-1 ring-white/60 backdrop-blur-md">
       <div className="min-w-0">
         <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+        {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }
 
-/** Two-column shell for Login and Register: picture on the left (large screens), form on the right. */
+/** Login and Register: one centred card; the safe picture is the page backdrop behind it. */
 export function AuthShell({ children }: { children: ReactNode }) {
-  return (
-    <div className="mx-auto grid max-w-4xl items-stretch gap-6 lg:grid-cols-2">
-      <div
-        role="img"
-        aria-label="A locked safe with a green key on top"
-        className="hidden min-h-[420px] rounded-2xl bg-cover shadow-card lg:block"
-        style={{ backgroundImage: "url('/images/vault-key.webp')", backgroundPosition: '50% 50%' }}
-      />
-      <div className="mx-auto w-full max-w-md self-center">{children}</div>
-    </div>
-  );
+  return <div className="mx-auto w-full max-w-md py-6">{children}</div>;
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-card ${className}`}>{children}</div>
+    <div className={`rounded-2xl border border-white/60 bg-white/90 p-5 shadow-card backdrop-blur-md ${className}`}>{children}</div>
   );
 }
 

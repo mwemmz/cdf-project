@@ -38,7 +38,6 @@ export default function MyPlans() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/plans-list.webp', pos: '70% 82%' }}
         title="My Business Plans"
         subtitle="Plans you have built with their feasibility scores."
         action={

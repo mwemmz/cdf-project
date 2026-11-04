@@ -90,7 +90,6 @@ export default function Storefront() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/marketplace.webp', pos: '50% 52%', flip: true }}
         title="My storefront"
         subtitle="Sell products once your loan has been disbursed. Listings appear on the public marketplace."
         action={

@@ -22,7 +22,6 @@ export default function SuccessStories() {
   return (
     <div>
       <PageHeader
-        image={{ src: '/images/cta.webp', pos: '50% 75%' }}
         title="Success stories"
         subtitle="Funded CDF businesses making their repayments. Loan → business → storefront → repayment."
       />

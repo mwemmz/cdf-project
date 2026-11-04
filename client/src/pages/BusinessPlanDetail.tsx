@@ -77,7 +77,6 @@ export default function BusinessPlanDetail() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        image={{ src: '/images/score.webp', portrait: true }}
         title="Business plan summary"
         subtitle={`Created ${fmtDate(plan.createdAt)}`}
         action={

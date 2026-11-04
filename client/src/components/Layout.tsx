@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
+import PageBackdrop from './PageBackdrop';
 
 type NavItem = { to: string; label: string };
 
@@ -174,6 +175,7 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <PageBackdrop />
       <header className="print:hidden sticky top-0 z-40 border-t-2 border-copper-500 bg-brand-950 text-white shadow">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
           <Link to="/" className="group flex shrink-0 items-center gap-2.5">
