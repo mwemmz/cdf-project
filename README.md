@@ -16,6 +16,12 @@ Delivered as one cohesive full-stack slice covering two developers' scope:
 An **ecosystem layer** connects the two sides so the platform feels like one product:
 
 - **Chat** — once a booking is paid, the applicant and advisor get a private thread.
+- **Messages inbox** — a dedicated `/messages` page listing every conversation with its latest
+  message, with the chat open beside it (applicants and advisors).
+- **Simulated payments & commissions** — a ledger of what FundPath *would* collect: 15% of paid
+  advisor sessions, 8% of marketplace sales, and a flat K150 plan, risk and market assessment
+  fee paid by the business owner. No real money moves; see
+  [Simulated payments](#simulated-payments-and-commission) below.
 - **Notifications** — an in-app bell with unread counts (feasibility ready, status changes, new
   messages, new reviews, repayment reminders).
 - **Repayment reminders & progress bar** — a 12-month straight-line schedule, an on-track/behind
@@ -32,7 +38,7 @@ An **ecosystem layer** connects the two sides so the platform feels like one pro
 - **Admin & analytics** — an `/admin` area (ADMIN role only): dashboard with pipeline, money and
   feasibility charts (inline SVG, no chart library), a cross-applicant review queue with legal
   status transitions, advisor verification (unverified advisors included), and opportunity
-  create/edit. Spec: [`docs/specs/dev3-admin-dashboard.md`](./docs/specs/dev3-admin-dashboard.md).
+  create/edit, and a **Revenue** tab showing simulated commission by stream. Spec: [`docs/specs/dev3-admin-dashboard.md`](./docs/specs/dev3-admin-dashboard.md).
 
 ## Tech stack
 
@@ -66,7 +72,8 @@ An **ecosystem layer** connects the two sides so the platform feels like one pro
 │       ├── lib/            # prisma client, jwt helpers
 │       └── modules/        # auth, opportunities, businessPlans, feasibility,
 │                           # advisors, bookings, applications, repayments, products,
-│                           # messages, notifications, reviews, showcase, resources
+│                           # messages, notifications, reviews, showcase, resources,
+│                           # payments (simulated commission ledger)
 └── README.md
 ```
 
@@ -97,6 +104,9 @@ pnpm prisma:generate        # prisma generate
 pnpm prisma:deploy          # prisma migrate deploy — applies migrations/ to your DB
 pnpm seed                   # inserts opportunities, accounts, demo data
 ```
+
+> The `transactions` table comes from migration `20261104000000_add_transactions`. On Render the
+> build step applies it automatically; locally, run `pnpm prisma:deploy`.
 
 > Applying migrations against a fresh DB requires that the initial migration files exist —
 > they do (`server/prisma/migrations/`). If you're starting from a different environment you
@@ -138,7 +148,7 @@ Visit http://localhost:5173.
 | --------------- | -------------------------------------------------------- |
 | `VITE_API_BASE` | API base URL. Defaults to `/api` (uses the Vite proxy)   |
 
-The ecosystem features add **no new environment variables** — chat, notifications, reminders,
+The ecosystem features and the simulated payments add **no new environment variables** — chat, notifications, reminders,
 reviews, the advisor dashboard/tools, success stories and the resource library all run on the
 existing database and config.
 
@@ -184,7 +194,7 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 | `POST /api/advisors/profile`         | advisor     | Create/update my profile                   |
 | `POST /api/bookings`                 | applicant   | Book a verified advisor (status PENDING)  |
 | `GET /api/bookings/mine`             | applicant/advisor | My bookings                         |
-| `POST /api/bookings/:id/pay`         | owner       | Mock payment -> status PAID               |
+| `POST /api/bookings/:id/pay`         | owner       | Simulated payment -> status PAID, records 15% commission |
 | `POST /api/applications`             | applicant   | Submit scored plan as application          |
 | `GET /api/applications/mine`         | applicant   | My applications (pipeline, repayments)    |
 | `GET /api/applications/:id`          | owner/admin | Application detail                         |
@@ -196,6 +206,7 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 | `POST /api/products`                 | applicant*  | Create listing *(needs Disbursed+)        |
 | `PATCH /api/products/:id`            | owner*      | Edit listing                              |
 | `DELETE /api/products/:id`           | owner*      | Delete listing                            |
+| `GET /api/messages`                  | applicant/advisor | Inbox: my paid conversations + latest message |
 | `GET /api/messages/:bookingId`       | participants| Booking chat thread *(needs PAID)*        |
 | `POST /api/messages/:bookingId`      | participants| Send a chat message *(needs PAID)*        |
 | `GET /api/notifications`             | any auth    | My notifications (newest first)           |
@@ -211,12 +222,42 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 | `GET /api/showcase`                  | public      | Success stories (funded, ≥50% repaid)     |
 | `GET /api/resources`                 | public      | Resource library (`?category=`)           |
 | `GET /api/resources/:id`             | public      | Resource detail                           |
+| `GET /api/payments/mine`             | any auth    | Payments I made or earned (simulated)     |
+| `GET /api/payments/assessments`      | any auth    | IDs of my plans with a paid assessment    |
+| `POST /api/payments/purchase`        | any auth    | Simulated marketplace purchase (8% commission) |
+| `POST /api/payments/assessment`      | plan owner  | Simulated K150 plan, risk and market assessment fee |
+| `GET /api/admin/revenue`             | **admin**   | Simulated revenue by stream + recent payments |
 | `GET /api/admin/summary`             | **admin**   | Dashboard totals, money, stage and category counts |
 | `GET /api/admin/applications`        | **admin**   | All applications (`?status=`), newest first |
 | `GET /api/admin/advisors`            | **admin**   | All advisors incl. unverified, pending first |
 | `PATCH /api/admin/advisors/:id/verify`| **admin**  | Verify / unverify (idempotent)            |
 | `POST /api/admin/opportunities`      | **admin**   | Create an opportunity                     |
 | `PATCH /api/admin/opportunities/:id` | **admin**   | Edit an opportunity                       |
+
+## Simulated payments and commission
+
+FundPath has no payment gateway yet. To demonstrate the business model, payments are
+**simulated**: every "paid" action writes a row to the `transactions` table recording the gross
+amount, the commission rate, FundPath's commission and the net amount to the payee.
+
+| Stream                         | Trigger                                   | Paid by        | FundPath commission |
+| ------------------------------ | ----------------------------------------- | -------------- | ------------------- |
+| Advisor session                | "Pay (simulated)" on a booking            | Applicant      | 15%                 |
+| Marketplace sale               | "Buy now (simulated)" on a product        | Any signed-in user | 8%              |
+| Plan, risk & market assessment | "Pay K150 (simulated)" on a business plan | Business owner | 100% (flat K150)    |
+
+The rates live in `server/src/modules/payments/fees.ts` and are **illustrative assumptions**,
+not agreed commercial terms. Admins see totals and recent payments under **Admin → Revenue**.
+Applying through FundPath is free, and FundPath never handles loan money.
+
+> Moving to real revenue means replacing the simulated "pay" actions with a mobile-money
+> integration; the ledger and revenue view stay the same.
+
+## Advisor onboarding
+
+New advisors register, then land on the profile form. Until an admin verifies the profile
+(**Admin → Advisors**), the advisor is hidden from the public advisor list and sees a
+"waiting for verification" banner on their dashboard.
 
 ## Feasibility scoring rules (0–100)
 
