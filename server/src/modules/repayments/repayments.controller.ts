@@ -4,6 +4,7 @@ import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
 import { computeRepaymentSummary, isRepaymentEligible } from './repaymentSummary';
 import { computeRepaymentSchedule } from './repaymentSchedule';
+import { totalDueFor } from './loanTerms';
 import { notify } from '../notifications/notificationsLib';
 
 export async function addRepayment(req: Request, res: Response) {
@@ -46,7 +47,7 @@ export async function addRepayment(req: Request, res: Response) {
 
   // Fully repaid -> mark Closed.
   const { totalDisbursed, totalRepaid } = await loadTotals(application.id);
-  if (totalDisbursed > 0 && totalRepaid >= totalDisbursed && updatedApplication.status !== ApplicationStatus.CLOSED) {
+  if (totalDisbursed > 0 && totalRepaid >= totalDueFor(totalDisbursed) && updatedApplication.status !== ApplicationStatus.CLOSED) {
     updatedApplication = await prisma.application.update({
       where: { id: application.id },
       data: { status: ApplicationStatus.CLOSED },
@@ -95,7 +96,6 @@ export async function getRepaymentsForApplication(req: Request, res: Response) {
         totals.totalDisbursed,
         totals.totalRepaid,
         application.disbursedAt,
-        application.repaymentDueDate,
       ),
     },
   });

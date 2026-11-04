@@ -84,7 +84,7 @@ describe('admin summary endpoint', () => {
     assert.equal(data.money.requested, 50_000); // 10k + 25k + 15k
     assert.equal(data.money.disbursed, 10_000);
     assert.equal(data.money.repaid, 2_000);
-    assert.equal(data.money.outstanding, 8_000); // 10k disbursed - 2k repaid
+    assert.equal(data.money.outstanding, 8_500); // 10k + 5% interest (10.5k) - 2k repaid
 
     await createOpportunity(); // second opportunity
     const res2 = await request(app).get('/api/admin/summary').set(auth(token));

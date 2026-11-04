@@ -22,6 +22,9 @@ import resourceRoutes from './modules/resources/resources.routes';
 
 export function createApp(): Application {
   const app = express();
+  // Render (and most hosts) sit behind a proxy; trust the first hop so the rate
+  // limiter sees each visitor's real address instead of the proxy's.
+  app.set('trust proxy', 1);
 
   app.use(
     cors({

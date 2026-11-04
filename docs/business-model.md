@@ -3,8 +3,9 @@
 ## What FundPath is, and is not
 
 FundPath helps people apply for a Constituency Development Fund (CDF) loan and plan how they
-will repay it if it is granted. It is **not the lender**. The council and the CDF Committee
-decide and disburse. FundPath adds the stage the published application route does not cover:
+will repay it if it is granted. It is **not the lender**. The CDF committee shortlists, a bank
+appraises, the Provincial Local Government Officer approves and the bank disburses (draft CDF
+Guidelines, April 2025). FundPath adds the stage the published application route does not cover:
 repayment support (schedule, balance, reminders) and one clear view for the council.
 
 ## Why it matters (figures as reported, see sources)

@@ -91,7 +91,7 @@ export default function Storefront() {
     <div>
       <PageHeader
         title="My storefront"
-        subtitle="Sell products once the council has disbursed your loan. Listings appear on the public marketplace."
+        subtitle="Sell products once your loan has been disbursed. Listings appear on the public marketplace."
         action={
           <PrimaryButton onClick={openNew}>Add product</PrimaryButton>
         }

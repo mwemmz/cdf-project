@@ -2,8 +2,9 @@
 
 FundPath helps Zambian applicants apply for Constituency Development Fund (CDF) opportunities:
 build and score a business plan, book sessions with verified advisors, track an application
-through the council's decision, and plan and log repayment if a loan is granted. FundPath is
-**not the lender**: the council and CDF Committee decide and disburse. See
+through the CDF decision process, and plan and log repayment if a loan is granted. FundPath is
+**not the lender**: the CDF committee shortlists, a bank appraises, the Provincial Local Government
+Officer approves and the bank disburses (see "How CDF works in real life" below). See
 [`docs/business-model.md`](./docs/business-model.md).
 
 Delivered as one cohesive full-stack slice covering two developers' scope:
@@ -24,7 +25,7 @@ An **ecosystem layer** connects the two sides so the platform feels like one pro
   [Simulated payments](#simulated-payments-and-commission) below.
 - **Notifications** — an in-app bell with unread counts (feasibility ready, status changes, new
   messages, new reviews, repayment reminders).
-- **Repayment reminders & progress bar** — a 12-month straight-line schedule, an on-track/behind
+- **Repayment reminders & progress bar** — a schedule from the CDF guideline terms (5% simple interest, 12 to 36 months by loan size, first instalment at 60 days), an on-track/behind
   progress bar, and reminders when a payment is due within 7 days or overdue.
 - **Advisor ratings** — applicants review a paid session; public 1–5 star averages on the
   marketplace and advisor pages.
@@ -239,15 +240,16 @@ businesses (one repaying, one closed) qualify for the public **Success stories**
 How a business owner moves through the platform, and where each party earns or pays.
 
 ```
-Applicant                     FundPath                          Council / CDF Committee
----------                     --------                          -----------------------
+Applicant                     FundPath                          CDF committee, bank, PLGO
+---------                     --------                          -------------------------
 1. Discover opportunities
 2. Build plan + feasibility score
 3. (optional) pay K150  ----->  keeps 100% of the fee
 4. Book + pay advisor   ----->  keeps 15%, advisor gets 85%
 5. Chat with advisor (Messages)
-6. Submit application (free) -------------------------------->  7. Review and decide
-                                                                8. Disburse the loan (FundPath
+6. Submit application (free) -------------------------------->  7. Ward, CDFC and bank review;
+                                                                   PLGO approves
+                                                                8. The bank disburses (FundPath
                                                                    never touches this money)
 9. Log repayments, see schedule,
    progress bar and reminders
@@ -256,8 +258,35 @@ Applicant                     FundPath                          Council / CDF Co
 ```
 
 Roles: the **applicant** plans, applies and repays; the **advisor** coaches (hidden until an
-admin verifies them); the **admin** verifies advisors, records the council's decisions and
-watches revenue; the **council and CDF Committee** are the only decision makers and lenders.
+admin verifies them); the **admin** verifies advisors, records the CDF decisions on their behalf
+and watches revenue; the **CDF committee, bank and PLGO** are the only decision makers and lenders.
+
+## How CDF works in real life
+
+Source: the draft Constituency Development Fund Guidelines (Ministry of Local Government and Rural
+Development, 10 April 2025), issued under the CDF Act No. 1 of 2024. These are draft rules; check
+for a final version before quoting exact figures.
+
+1. The applicant gets the loan form (Appendix F) free from the local authority, constituency
+   office, council website or a financial institution, and submits it to the **Ward Development
+   Committee (WDC)**, signed by the WDC chairperson.
+2. The WDC sends its list to the local authority; a **Technical Appraisal Committee** does a desk
+   appraisal.
+3. The **CDF Committee (CDFC)** verifies applications within 3 working days and shortlists them.
+4. A **bank** appraises the shortlist and recommends applicants within the allocated amount.
+5. The local authority sends the list to the **Provincial Local Government Officer (PLGO)**, who
+   approves or rejects within 7 to 14 working days.
+6. The bank gives financial literacy training and **disburses** to the applicants' bank accounts.
+
+Loan terms: 5% simple interest on the total sum; repayment period by loan size (K5,000 to K10,000:
+12 months; to K25,000: 18; to K50,000: 24; to K100,000: 30; to K200,000: 36); first instalment 60
+days after the loan, then monthly; 10% charge on a late instalment; three missed months ends the
+agreement and bars the borrower from the CDF list for 5 years. Equipment bought with the loan is
+registered in the local authority's name until the loan is repaid. About 20% of each constituency's
+fund goes to youth, women and community empowerment (grants and loans).
+
+The app implements the repayment terms above. It does not model the WDC, CDFC, bank or PLGO as
+separate users: the admin records their decisions.
 
 ## The business side
 
@@ -333,8 +362,8 @@ Submitted -> Under Review -> Approved -> Disbursed -> Repaying -> Closed
 ```
 
 - Transition validation lives in `server/src/modules/applications/applicationFlow.ts`.
-- The council and CDF Committee make the decisions; an administrator records them here.
-- Setting an application to **Disbursed** records the amount the council paid out (`amountDisbursed`, admin endpoint).
+- The CDF committee, a bank and the PLGO make the decisions; an administrator records them here (there is no committee, bank or PLGO login yet).
+- Setting an application to **Disbursed** records the amount that was paid out (`amountDisbursed`, admin endpoint).
 - Logging a repayment auto-advances Disbursed → Repaying, and closes the loan when fully repaid.
 
 ## Deploying to Render (backend + frontend)

@@ -5,13 +5,7 @@ import { badRequest, forbidden, notFound } from '../../utils/errors';
 import { assertTransition } from './applicationFlow';
 import { notify } from '../notifications/notificationsLib';
 
-const REPAYMENT_TERM_MONTHS = 12;
-
-function addMonths(date: Date, months: number): Date {
-  const next = new Date(date);
-  next.setMonth(next.getMonth() + months);
-  return next;
-}
+import { finalDueDate } from '../repayments/loanTerms';
 
 const applicationInclude = {
   applicant: { select: { id: true, name: true, email: true } },
@@ -93,7 +87,7 @@ export async function updateApplicationStatus(req: Request, res: Response) {
     if (!application.disbursedAt) {
       const now = new Date();
       data.disbursedAt = now;
-      data.repaymentDueDate = addMonths(now, REPAYMENT_TERM_MONTHS);
+      data.repaymentDueDate = finalDueDate(now, disbursed);
     }
   }
   if (status === ApplicationStatus.REPAYING && !application.amountDisbursed) {

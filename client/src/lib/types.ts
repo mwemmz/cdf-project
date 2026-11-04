@@ -97,6 +97,8 @@ export interface Repayment {
 
 export interface RepaymentSummary {
   totalDisbursed: number;
+  interest: number;
+  totalDue: number;
   totalRepaid: number;
   remainingBalance: number;
   repaymentPercentage: number;
@@ -104,8 +106,13 @@ export interface RepaymentSummary {
 
 export interface RepaymentSchedule {
   termMonths: number;
+  interestRate: number;
+  interest: number;
+  totalDue: number;
   monthlyPayment: number;
-  monthsElapsed: number;
+  lateChargeRate: number;
+  installmentsDue: number;
+  nextDueDate: string | null;
   expectedToDate: number;
   expectedPercentage: number;
   onTrack: boolean;

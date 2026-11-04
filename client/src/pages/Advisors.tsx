@@ -32,7 +32,7 @@ export default function Advisors() {
     <div>
       <PageHeader
         title="Advisors"
-        subtitle="Verified advisors who help you shape a plan the council can say yes to. Sessions are paid per booking."
+        subtitle="Verified advisors who help you shape a plan the CDF committee and bank can say yes to. Sessions are paid per booking."
       />
 
       {advisors.length === 0 && (

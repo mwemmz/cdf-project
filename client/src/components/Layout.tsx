@@ -174,7 +174,7 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-40 border-t-2 border-copper-500 bg-brand-950 text-white shadow">
+      <header className="print:hidden sticky top-0 z-40 border-t-2 border-copper-500 bg-brand-950 text-white shadow">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
           <Link to="/" className="group flex shrink-0 items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-500 text-xs font-bold text-white transition-transform group-hover:scale-105">
@@ -304,7 +304,7 @@ export default function Layout() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400">
+      <footer className="print:hidden border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400">
         <span className="mr-2 inline-block h-2 w-2 rounded-full bg-brand-500" />
         FundPath — CDF loan-to-repayment platform for Zambia. School project build.
       </footer>

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { PrismaClient, Role, ApplicationStatus, BookingStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { scoreFeasibility } from '../src/modules/feasibility/feasibilityEngine';
+import { finalDueDate } from '../src/modules/repayments/loanTerms';
 
 const prisma = new PrismaClient();
 
@@ -269,7 +270,8 @@ async function main() {
       linkedAdvisorEmail: 'advisor2@fundpath.zm',
       repayments: [
         { amount: 30000, date: '2026-05-01', note: 'First half repaid' },
-        { amount: 30000, date: '2026-06-01', note: 'Loan fully repaid' },
+        { amount: 30000, date: '2026-06-01', note: 'Principal repaid' },
+        { amount: 3000, date: '2026-06-15', note: 'Interest (5%) paid; loan fully repaid' },
       ],
     },
     {
@@ -335,12 +337,6 @@ async function main() {
     ['advisor3@fundpath.zm', advisor3],
   ]);
 
-  const addMonths = (date: Date, months: number) => {
-    const next = new Date(date);
-    next.setMonth(next.getMonth() + months);
-    return next;
-  };
-
   for (const item of pipeline) {
     const applicant = applicantByEmail.get(item.email);
     if (!applicant) throw new Error(`Missing seeded applicant for ${item.email}`);
@@ -386,7 +382,10 @@ async function main() {
         status: item.status,
         amountDisbursed: item.amountDisbursed ?? null,
         disbursedAt: item.disbursedAt ? new Date(item.disbursedAt) : null,
-        repaymentDueDate: item.disbursedAt ? addMonths(new Date(item.disbursedAt), 12) : null,
+        repaymentDueDate:
+          item.disbursedAt && item.amountDisbursed
+            ? finalDueDate(new Date(item.disbursedAt), item.amountDisbursed)
+            : null,
       },
     });
 

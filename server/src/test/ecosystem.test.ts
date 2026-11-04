@@ -170,7 +170,7 @@ describe('ecosystem: messages, notifications, reviews, showcase, resources', () 
     const res = await request(app).get('/api/showcase');
     assert.equal(res.status, 200);
     assert.equal(res.body.data.length, 1);
-    assert.equal(res.body.data[0].repaymentPercentage, 60);
+    assert.equal(res.body.data[0].repaymentPercentage, 57.14); // 600 of 1,050 due (1,000 + 5% interest)
     assert.ok(res.body.data[0].blurb.length > 0);
   });
 

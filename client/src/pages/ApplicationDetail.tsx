@@ -91,7 +91,7 @@ export default function ApplicationDetail() {
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm text-slate-500">
             Submitted {fmtDate(application.createdAt)} ·{' '}
-            {application.amountDisbursed != null ? `Disbursed ${fmtZmk(application.amountDisbursed)}` : 'Not yet disbursed by the council'}
+            {application.amountDisbursed != null ? `Disbursed ${fmtZmk(application.amountDisbursed)}` : 'Not yet disbursed'}
           </div>
           <span className={`rounded px-2 py-1 text-xs font-semibold ${APPLICATION_COLORS[application.status]}`}>
             {APPLICATION_LABELS[application.status]}
@@ -136,7 +136,7 @@ export default function ApplicationDetail() {
             <div>
               <div className="font-semibold text-slate-900">Storefront unlocked</div>
               <div className="text-sm text-slate-600">
-                The council has disbursed your loan — you can now sell your products on the public marketplace.
+                Your loan has been disbursed — you can now sell your products on the public marketplace.
               </div>
             </div>
             <Link to="/storefront" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
@@ -154,9 +154,11 @@ export default function ApplicationDetail() {
         )}
 
         {summary && (
-          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {[
               { label: 'Disbursed', value: fmtZmk(summary.totalDisbursed) },
+              { label: 'Interest (5%)', value: fmtZmk(summary.interest) },
+              { label: 'Total due', value: fmtZmk(summary.totalDue) },
               { label: 'Repaid', value: fmtZmk(summary.totalRepaid) },
               { label: 'Remaining', value: fmtZmk(summary.remainingBalance) },
               { label: 'Repaid %', value: fmtPct(summary.repaymentPercentage) },
@@ -198,7 +200,7 @@ export default function ApplicationDetail() {
               <span>Repaid {fmtPct(summary?.repaymentPercentage ?? 0)}</span>
               <span>Expected by now {fmtPct(repayments.schedule.expectedPercentage)}</span>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+            <div className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
               <div>
                 <div className="text-xs text-slate-400">Monthly payment</div>
                 <div className="font-medium">{fmtZmk(repayments.schedule.monthlyPayment)}</div>
@@ -208,10 +210,19 @@ export default function ApplicationDetail() {
                 <div className="font-medium">{repayments.schedule.termMonths} months</div>
               </div>
               <div>
+                <div className="text-xs text-slate-400">Next instalment</div>
+                <div className="font-medium">{fmtDate(repayments.schedule.nextDueDate)}</div>
+              </div>
+              <div>
                 <div className="text-xs text-slate-400">Final due date</div>
                 <div className="font-medium">{fmtDate(repayments.schedule.dueDate)}</div>
               </div>
             </div>
+            <p className="mt-3 text-xs text-slate-500">
+              Terms follow the draft CDF guidelines: 5% simple interest, the first instalment 60 days after the
+              loan, then monthly. A late instalment attracts a {Math.round(repayments.schedule.lateChargeRate * 100)}%
+              charge, and three missed months ends the agreement.
+            </p>
           </div>
         )}
 
@@ -250,7 +261,7 @@ export default function ApplicationDetail() {
 
         {!canRepay && application.status !== 'REJECTED' && (
           <p className="mt-3 text-sm text-slate-500">
-            Repayments unlock once the council has disbursed your loan.
+            Repayments unlock once your loan has been disbursed.
           </p>
         )}
 

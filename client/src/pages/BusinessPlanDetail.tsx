@@ -76,7 +76,18 @@ export default function BusinessPlanDetail() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Business plan summary" subtitle={`Created ${fmtDate(plan.createdAt)}`} />
+      <PageHeader
+        title="Business plan summary"
+        subtitle={`Created ${fmtDate(plan.createdAt)}`}
+        action={
+          <button
+            onClick={() => window.print()}
+            className="print:hidden rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            Download as PDF
+          </button>
+        }
+      />
 
       {notice && (
         <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
@@ -111,7 +122,7 @@ export default function BusinessPlanDetail() {
       <Card className="mt-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-semibold text-slate-900">Feasibility score</h2>
-          <PrimaryButton onClick={rescore} loading={busy} className="bg-slate-700 hover:bg-slate-800">
+          <PrimaryButton onClick={rescore} loading={busy} className="print:hidden bg-slate-700 hover:bg-slate-800">
             Rescore
           </PrimaryButton>
         </div>
@@ -139,7 +150,7 @@ export default function BusinessPlanDetail() {
         )}
       </Card>
 
-      <Card className="mt-4">
+      <Card className="mt-4 print:hidden">
         <h2 className="font-semibold text-slate-900">Plan, risk and market assessment</h2>
         <p className="mt-2 text-sm text-slate-600">
           A deeper review of your plan: risks, market size and competition, with advice on what to fix before you apply.
@@ -156,7 +167,7 @@ export default function BusinessPlanDetail() {
         )}
       </Card>
 
-      <Card className="mt-4">
+      <Card className="mt-4 print:hidden">
         <h2 className="font-semibold text-slate-900">Formal application</h2>
         {plan.application ? (
           <div className="mt-2 flex items-center justify-between">

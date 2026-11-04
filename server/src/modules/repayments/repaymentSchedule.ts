@@ -1,10 +1,22 @@
-const TERM_MONTHS = 12;
-const DAYS_PER_MONTH = 30.44;
+import {
+  INTEREST_RATE,
+  LATE_CHARGE_RATE,
+  finalDueDate,
+  instalmentDueDate,
+  interestFor,
+  termMonthsFor,
+  totalDueFor,
+} from './loanTerms';
 
 export interface RepaymentSchedule {
   termMonths: number;
+  interestRate: number;
+  interest: number;
+  totalDue: number;
   monthlyPayment: number;
-  monthsElapsed: number;
+  lateChargeRate: number;
+  installmentsDue: number;
+  nextDueDate: string | null;
   expectedToDate: number;
   expectedPercentage: number;
   onTrack: boolean;
@@ -15,29 +27,41 @@ function round2(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
-// Simple straight-line schedule: total disbursed / 12 months.
+// Schedule from the CDF guideline terms: term by loan size, 5% simple interest,
+// first instalment 60 days after disbursement, then monthly.
 export function computeRepaymentSchedule(
   totalDisbursed: number,
   totalRepaid: number,
   disbursedAt: Date | null,
-  repaymentDueDate: Date | null,
   now: Date = new Date(),
 ): RepaymentSchedule | null {
   if (!disbursedAt || totalDisbursed <= 0) return null;
 
-  const monthlyPayment = totalDisbursed / TERM_MONTHS;
-  const elapsedMs = Math.max(0, now.getTime() - disbursedAt.getTime());
-  const rawMonths = elapsedMs / (DAYS_PER_MONTH * 24 * 60 * 60 * 1000);
-  const monthsElapsed = Math.min(TERM_MONTHS, Math.round(rawMonths * 100) / 100);
-  const expectedToDate = Math.min(totalDisbursed, monthlyPayment * monthsElapsed);
+  const termMonths = termMonthsFor(totalDisbursed);
+  const totalDue = totalDueFor(totalDisbursed);
+  const monthlyPayment = totalDue / termMonths;
+
+  let installmentsDue = 0;
+  while (installmentsDue < termMonths && instalmentDueDate(disbursedAt, installmentsDue + 1) <= now) {
+    installmentsDue += 1;
+  }
+
+  const expectedToDate = Math.min(totalDue, monthlyPayment * installmentsDue);
+  const next =
+    installmentsDue < termMonths ? instalmentDueDate(disbursedAt, installmentsDue + 1).toISOString() : null;
 
   return {
-    termMonths: TERM_MONTHS,
+    termMonths,
+    interestRate: INTEREST_RATE,
+    interest: interestFor(totalDisbursed),
+    totalDue,
     monthlyPayment: round2(monthlyPayment),
-    monthsElapsed,
+    lateChargeRate: LATE_CHARGE_RATE,
+    installmentsDue,
+    nextDueDate: next,
     expectedToDate: round2(expectedToDate),
-    expectedPercentage: round2((expectedToDate / totalDisbursed) * 100),
+    expectedPercentage: round2((expectedToDate / totalDue) * 100),
     onTrack: totalRepaid + 1 >= expectedToDate,
-    dueDate: repaymentDueDate ? repaymentDueDate.toISOString() : null,
+    dueDate: finalDueDate(disbursedAt, totalDisbursed).toISOString(),
   };
 }
