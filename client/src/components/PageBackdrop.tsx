@@ -1,5 +1,4 @@
 import { useLocation } from 'react-router-dom';
-import { sceneFor } from './SceneAside';
 
 const IMG = {
   vault: '/images/vault-key.webp',
@@ -28,16 +27,15 @@ export function backdropFor(pathname: string): string {
 }
 
 /**
- * The picture is the foundation of every page and is shown at full strength. Content sits on glass panels above it,
+ * The picture is the foundation of every page, softened so the framed copy and the glass panels read as the focus. Content sits on glass panels above it,
  * so readability comes from the panels (checked for contrast), not from washing the picture out. Keyed on the image: pages that share a picture don't flicker, others fade in (opacity only).
  */
 export default function PageBackdrop() {
   const { pathname } = useLocation();
   const src = backdropFor(pathname);
-  const soft = sceneFor(pathname)?.ambient ?? false;
   return (
     <div aria-hidden="true" className="print:hidden pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#ece9e4]">
-      <img key={src} src={src} alt="" className={`backdrop-in absolute inset-0 h-full w-full object-cover ${soft ? 'scale-105 blur-[6px]' : ''}`} />
+      <img key={src} src={src} alt="" className={`backdrop-in absolute inset-0 h-full w-full object-cover scale-105 blur-[6px]`} />
       <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#14181c]/35 to-transparent" />
     </div>
   );

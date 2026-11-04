@@ -176,11 +176,7 @@ export default function Layout() {
 
   // Pages with a framed picture flow their content around it; the rest start below the full-strength backdrop.
   const scene = sceneFor(pathname);
-  const scenePad = scene || pathname === '/'
-    ? 'pt-8'
-    : /^\/(login|register)/.test(pathname)
-      ? 'pt-8 md:pt-12'
-      : 'pt-[14vh] md:pt-[22vh]';
+  const scenePad = /^\/(login|register)/.test(pathname) ? 'pt-8 md:pt-12' : 'pt-8';
 
   return (
     <div className="flex min-h-screen flex-col">

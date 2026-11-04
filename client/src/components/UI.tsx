@@ -13,7 +13,7 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex w-fit max-w-full flex-wrap items-start justify-between gap-x-8 gap-y-3 rounded-[1.75rem] bg-white/85 px-7 py-5 shadow-pop ring-1 ring-white/70 backdrop-blur-md md:max-w-3xl">
+    <div className="mb-6 flex w-fit max-w-full flex-wrap items-start justify-between gap-x-8 gap-y-3 glass rounded-[1.75rem] px-7 py-5 shadow-pop md:max-w-3xl">
       <div className="min-w-0">
         <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-slate-700">{subtitle}</p>}
@@ -30,7 +30,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-[1.75rem] border border-white/70 bg-white/90 p-5 shadow-card backdrop-blur-md ${className}`}>{children}</div>
+    <div className={`glass rounded-[1.75rem] p-5 shadow-card ${className}`}>{children}</div>
   );
 }
 

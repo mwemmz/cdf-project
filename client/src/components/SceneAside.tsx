@@ -1,12 +1,11 @@
 import { useLocation } from 'react-router-dom';
 
 type Card = { label: string; value: string; note: string };
-type Scene = { src: string; alt: string; pos: string; top: Card; bottom: Card; ambient: boolean };
+type Scene = { src: string; alt: string; pos: string; top: Card; bottom: Card };
 
 /**
  * A framed picture with two glass cards laid over it, the same composition as the home hero.
- * Pages that have one flow their content around it. `ambient` means the frame shows a crop of the page's
- * backdrop picture, so the backdrop is softened to avoid showing the same crisp picture twice.
+ * Pages that have one flow their content around it.
  */
 const SCENES: Array<[RegExp, Scene]> = [
   [
@@ -15,7 +14,6 @@ const SCENES: Array<[RegExp, Scene]> = [
       src: '/images/opportunities.webp',
       alt: 'A large charcoal map pin among smaller green pins',
       pos: '66% 50%',
-      ambient: true,
       top: { label: 'Applying', value: 'Free', note: 'through FundPath' },
       bottom: { label: 'Decision', value: 'Bank and PLGO', note: 'after the CDF committee shortlist' },
     },
@@ -26,7 +24,6 @@ const SCENES: Array<[RegExp, Scene]> = [
       src: '/images/score.webp',
       alt: 'A gauge with its needle in the green zone',
       pos: '50% 50%',
-      ambient: false,
       top: { label: 'Feasibility', value: '0 to 100', note: 'scored from your numbers' },
       bottom: { label: 'Assessment', value: 'K150 once', note: 'demo payment, no real money' },
     },
@@ -37,7 +34,6 @@ const SCENES: Array<[RegExp, Scene]> = [
       src: '/images/advisors.webp',
       alt: 'A green speech bubble with a checkmark badge',
       pos: '76% 50%',
-      ambient: true,
       top: { label: 'Advisors', value: 'Verified', note: 'checked by an admin' },
       bottom: { label: 'Sessions', value: 'Paid per booking', note: 'chat opens after payment' },
     },
@@ -48,7 +44,6 @@ const SCENES: Array<[RegExp, Scene]> = [
       src: '/images/marketplace.webp',
       alt: 'A small market stall with a green striped awning',
       pos: '24% 50%',
-      ambient: true,
       top: { label: 'Marketplace', value: 'Funded shops', note: 'browse without an account' },
       bottom: { label: 'Checkout', value: 'Demo only', note: 'no real money moves' },
     },
@@ -59,7 +54,6 @@ const SCENES: Array<[RegExp, Scene]> = [
       src: '/images/repayment.webp',
       alt: 'A calendar with completed repayments ticked and a stack of coins',
       pos: '50% 50%',
-      ambient: false,
       top: { label: 'Interest', value: '5% simple', note: 'draft CDF Guidelines' },
       bottom: { label: 'Repayment', value: 'Monthly', note: 'first one 60 days after the loan' },
     },

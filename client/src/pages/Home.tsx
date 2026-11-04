@@ -132,7 +132,7 @@ export default function Home() {
         {FEATURES.map((f) => (
           <div
             key={f.key}
-            className="rounded-[1.75rem] border border-white/70 bg-white/90 p-6 shadow-card backdrop-blur-md transition-shadow hover:shadow-pop"
+            className="glass rounded-[1.75rem] p-6 shadow-card transition-shadow hover:shadow-pop"
           >
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-700">
               {ICONS[f.key]}
