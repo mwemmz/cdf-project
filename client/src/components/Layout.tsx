@@ -3,7 +3,6 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 import PageBackdrop from './PageBackdrop';
-import SceneAside, { sceneFor } from './SceneAside';
 
 type NavItem = { to: string; label: string };
 
@@ -174,8 +173,6 @@ export default function Layout() {
     navigate('/');
   };
 
-  // Pages with a framed picture flow their content around it; the rest start below the full-strength backdrop.
-  const scene = sceneFor(pathname);
   const scenePad = /^\/(login|register)/.test(pathname) ? 'pt-8 md:pt-12' : 'pt-8';
 
   return (
@@ -306,11 +303,8 @@ export default function Layout() {
 
       <main className={`mx-auto w-full max-w-6xl flex-1 px-4 pb-10 ${scenePad}`}>
         {/* Keyed so each page eases in; the admin area keys on itself so its sub-nav stays put. */}
-        <div className={scene ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-8' : undefined}>
-          <div key={pageKey} className="page-enter min-w-0">
-            <Outlet />
-          </div>
-          {scene && <SceneAside scene={scene} />}
+        <div key={pageKey} className="page-enter">
+          <Outlet />
         </div>
       </main>
 
