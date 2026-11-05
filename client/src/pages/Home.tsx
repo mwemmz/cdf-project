@@ -76,12 +76,12 @@ export default function Home() {
         <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between">
         <div className="max-w-2xl flex-1">
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl">
-            CDF loans, guided from idea to repayment
+            Clear information for every CDF applicant
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
-            FundPath connects applicants to Constituency Development Fund opportunities, helps
-            them build business plans, pairs them with verified advisors, and helps them plan
-            repayment. We are not the lender: the CDF committee, a bank and the Provincial Local Government Officer decide and disburse.
+            FundPath is an information service: open Constituency Development Fund opportunities, the
+            real loan terms, a feasibility score for your plan, verified advisors, a repayment
+            schedule, and a marketplace for your products. We are not the lender: the CDF committee, a bank and the Provincial Local Government Officer decide and disburse.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link

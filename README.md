@@ -295,28 +295,36 @@ FundPath is a service platform, not a lender. Full detail:
 
 **The problem.** CDF per constituency rose from K1.6m (2021) to K40m (2026), but by Sept 2026
 only about 35% of loans made since 2021 had been repaid and the 2026 loan component was
-suspended. Applicants prepare alone, and nobody tracks repayment as one number.
+suspended. Many applicants decide with poor information: funding windows are hard to find,
+they cannot tell whether a plan is viable or how much to ask for, and loan terms (interest,
+late charges, the 5-year bar) are often understood only after disbursement. The Ministry
+itself has asked councils to explain loan terms to borrowers before disbursement. Small
+sellers have the same gap on the market side: little information on who buys what, and at
+what price.
 
-**What FundPath adds.** Better applications before the decision (plan, score, advice) and
-repayment support after it (schedule, balance, reminders), with one view for the council.
+**Value proposition: information as a service.** FundPath sells clear, usable information to
+two groups. *Applicants* get funding opportunities by constituency, the real loan terms, a
+transparent 0-100 feasibility score, advisor guidance and a repayment schedule, so they
+apply well and know what repaying will cost. *Marketplace* sellers and buyers get verified
+listings and a place to trade, with market assessment on a business plan as a paid report.
+FundPath is an information and matching service, not a lender, and it never handles loan
+money.
 
 **Who pays (revenue streams).**
 
 | Stream | Model | Payer | Status in this prototype |
 | --- | --- | --- | --- |
-| Advisors | 15% commission per paid session (B2B2C) | Applicant, via the advisor's price | Simulated |
-| Marketplace | 8% fee on product sales (B2C) | Buyer, taken from the seller's sale | Simulated |
-| Plan, risk and market assessment | Flat K150 per plan | Business owner | Simulated |
-| Councils | Annual licence for the dashboard and repayment tracking (B2G) | Council, Ministry or donor | Proposal only, not built |
+| Plan, risk and market assessment | Flat K150 per plan (information report) | Business owner | Simulated |
+| Advisors | 15% commission per paid session | Applicant, via the advisor's price | Simulated |
+| Marketplace | 8% fee on product sales | Buyer, taken from the seller's sale | Simulated |
 
-Applying through FundPath is free, and FundPath never handles loan money. The council licence
-is the hardest sale: councils buy under the Public Procurement Act and CDF money is meant for
-approved projects, so the plan is to pilot in one constituency first, then look at a
-Ministry-level or donor-funded deal.
+Applying through FundPath is free. Councils, the Ministry or donors could later license the
+admin dashboard, but that is a possible extension, not part of the value proposition and not
+built.
 
 **Honest limits.** The rates (15%, 8%, K150) are assumptions, not agreed terms. Scoring rules
 are prototype rules and not validated. There are no real users or real payments yet, and
-FundPath cannot force repayment.
+better information does not guarantee repayment.
 
 ## Simulated payments and commission
 
