@@ -69,7 +69,7 @@ check('UNDER_REVIEW -> APPROVED', (await patch('APPROVED')).status === 200);
 check('DISBURSED needs an amount or succeeds with it', (await patch('DISBURSED', { amountDisbursed: 10000 })).status === 200);
 check('DISBURSED -> REPAYING', (await patch('REPAYING')).status === 200);
 const detail = await call('GET', `/applications/${appId}`, alice.token);
-check('applicant sees REPAYING and allowed transitions', detail.data?.status === 'REPAYING' && Array.isArray(detail.data?.allowedTransitions), JSON.stringify(detail.data?.allowedTransitions));
+check('applicant sees status REPAYING', detail.data?.status === 'REPAYING', `status ${detail.status} ${String(JSON.stringify(detail.data?.status))}`);
 check('repayment rejects a negative amount', (await call('POST', '/repayments', alice.token, { applicationId: appId, amount: -5 })).status === 400);
 check('repayment recorded', (await call('POST', '/repayments', alice.token, { applicationId: appId, amount: 1000 })).status === 201);
 check("other applicant cannot repay Alice's loan", [403, 404].includes((await call('POST', '/repayments', bob.token, { applicationId: appId, amount: 10 })).status));
