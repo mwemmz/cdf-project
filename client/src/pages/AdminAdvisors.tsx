@@ -73,7 +73,7 @@ export default function AdminAdvisors() {
       </section>
 
       <section>
-        <h2 className="font-display text-base font-semibold text-slate-900">
+        <h2 className="glass mb-2 inline-block rounded-full px-4 py-1.5 font-display text-base font-semibold text-slate-900">
           Verified <span className="text-slate-500">({verified.length})</span>
         </h2>
         <div className="mt-3 space-y-3">
