@@ -16,7 +16,7 @@ async function call(method, path, token, body, headers = {}) {
 const login = async (email, password) => (await call('POST', '/auth/login', null, { email, password })).data?.token;
 const stamp = Date.now();
 const mk = async (name, role = 'APPLICANT') => {
-  const email = `${name.toLowerCase()}.${stamp}@walk.zm`;
+  const email = `${name.toLowerCase().replace(/\s+/g, '.')}.${stamp}@walk.zm`;
   const r = await call('POST', '/auth/register', null, { name, email, password: 'Walkthrough1!', role });
   if (!r.data?.token) console.log(`register ${name} -> ${r.status} ${JSON.stringify(r.body)}`);
   return { email, token: r.data?.token, id: r.data?.user?.id, status: r.status };
