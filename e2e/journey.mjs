@@ -45,10 +45,10 @@ const plan = await call('POST', '/business-plans', alice.token, {
   targetMarket: 'Local shops, schools and households in the constituency',
   startupCosts: 8000, revenueProjection: 24000, amountRequested: 10000,
 });
-check('valid plan created', plan.status === 201 && plan.data?.id, `status ${plan.status}`);
-const planId = plan.data?.id;
+check('valid plan created', plan.status === 201 && plan.data?.plan?.id, `status ${plan.status}`);
+const planId = plan.data?.plan?.id;
 const fullPlan = await call('GET', `/business-plans/${planId}`, alice.token);
-const score = fullPlan.data?.feasibilityScore;
+const score = plan.data?.feasibilityScore ?? fullPlan.data?.feasibilityScore;
 check('plan has a 0-100 feasibility score', score && score.score >= 0 && score.score <= 100, JSON.stringify(score));
 const bob = await mk('Bob Stranger');
 check("another applicant cannot read Alice's plan", [403, 404].includes((await call('GET', `/business-plans/${planId}`, bob.token)).status));

@@ -25,6 +25,8 @@ export function createApp(): Application {
   // Render (and most hosts) sit behind a proxy; trust the first hop so the rate
   // limiter sees each visitor's real address instead of the proxy's.
   app.set('trust proxy', 1);
+  // Do not advertise the framework in every response.
+  app.disable('x-powered-by');
 
   app.use(
     cors({
