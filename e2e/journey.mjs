@@ -18,6 +18,7 @@ const stamp = Date.now();
 const mk = async (name, role = 'APPLICANT') => {
   const email = `${name.toLowerCase()}.${stamp}@walk.zm`;
   const r = await call('POST', '/auth/register', null, { name, email, password: 'Walkthrough1!', role });
+  if (!r.data?.token) console.log(`register ${name} -> ${r.status} ${JSON.stringify(r.body)}`);
   return { email, token: r.data?.token, id: r.data?.user?.id, status: r.status };
 };
 
@@ -29,7 +30,7 @@ check('weak password rejected', (await call('POST', '/auth/register', null, { na
 check('cannot self-register as admin', (await call('POST', '/auth/register', null, { name: 'Sneaky Admin', email: `a.${stamp}@walk.zm`, password: 'Walkthrough1!', role: 'ADMIN' })).status === 400);
 check('wrong password rejected', (await call('POST', '/auth/login', null, { email: alice.email, password: 'nope-nope' })).status === 401);
 check('/auth/me returns the user', (await call('GET', '/auth/me', alice.token)).data?.email === alice.email);
-check('tampered token rejected', (await call('GET', '/auth/me', alice.token.slice(0, -3) + 'abc')).status === 401);
+check('tampered token rejected', (await call('GET', '/auth/me', (alice.token ?? 'x.y.z').slice(0, -3) + 'abc')).status === 401);
 check('no token rejected', (await call('GET', '/business-plans/mine')).status === 401);
 
 // ---- Plan, score, application ----

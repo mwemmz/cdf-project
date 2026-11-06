@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import { fmtZmk } from '../lib/format';
-import { ApplicationStatus } from '../lib/types';
+import { fmtMoney, fmtZmk } from '../lib/format';
+import { ApplicationStatus, RevenueSummary, TransactionKind } from '../lib/types';
+
+const STREAM_LABELS: Record<TransactionKind, string> = {
+  ADVISOR_SESSION: 'Advisor sessions',
+  MARKETPLACE_SALE: 'Marketplace sales',
+  PLAN_ASSESSMENT: 'Plan assessments',
+};
 
 interface Summary {
   applications: { total: number; byStage: Record<ApplicationStatus, number> };
@@ -36,8 +42,12 @@ const stageLabels: Record<ApplicationStatus, string> = {
 export default function AdminDashboard() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [revenue, setRevenue] = useState<RevenueSummary | null>(null);
 
   useEffect(() => {
+    api<RevenueSummary>('/admin/revenue')
+      .then(setRevenue)
+      .catch(() => setRevenue(null));
     api<Summary>('/admin/summary')
       .then(setSummary)
       .catch((e: Error) => setError(e.message));
@@ -76,6 +86,42 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
+      {revenue && (
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="font-display text-base font-semibold text-slate-900">What FundPath earns</h2>
+              <p className="mt-0.5 text-xs text-slate-600">
+                Commission and fees collected from advisor sessions, marketplace sales and plan assessments. Simulated:
+                no real money moves.
+              </p>
+            </div>
+            <Link to="/admin/revenue" className="text-sm font-medium text-brand-600 underline">
+              Full revenue breakdown
+            </Link>
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-4">
+            <div className="rounded-lg border border-slate-200 p-4 sm:col-span-1">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Total earned</p>
+              <p className="mt-1 font-display text-2xl font-bold text-slate-900">{fmtMoney(revenue.totalCommission)}</p>
+              <p className="mt-1 text-xs text-slate-600">on {fmtMoney(revenue.totalGross)} of payments</p>
+            </div>
+            {(Object.keys(STREAM_LABELS) as TransactionKind[]).map((k) => {
+              const row = revenue.byKind.find((b) => b.kind === k);
+              return (
+                <div key={k} className="rounded-lg border border-slate-200 p-4">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-600">{STREAM_LABELS[k]}</p>
+                  <p className="mt-1 font-display text-lg font-semibold text-slate-900">{fmtMoney(row?.commission ?? 0)}</p>
+                  <p className="mt-1 text-xs text-slate-600">
+                    {row?.count ?? 0} payment{(row?.count ?? 0) === 1 ? '' : 's'}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
         {cards.map((card) => (
           <div key={card.label} className="rounded-xl border border-slate-200 bg-white p-4">

@@ -40,6 +40,7 @@ async function visit(ctx, role, path, sizeName) {
   }));
   if (info.over > 1) problems.push(`${tag} horizontal overflow ${info.over}px`);
   if (/Request failed|Something went wrong|Cannot read|undefined/i.test(info.text)) problems.push(`${tag} error text on page`);
+  if (role === 'admin' && path === '/admin' && !info.text.includes('What FundPath earns')) problems.push(`${tag} missing earnings panel`);
   if (info.text.trim().length < 40) problems.push(`${tag} page looks empty`);
   await page.screenshot({ path: `${OUT}/${role}-${sizeName}-${path.replace(/\W+/g, '_') || 'home'}.png` });
   visited++;
