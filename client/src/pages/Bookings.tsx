@@ -10,6 +10,9 @@ import MobileMoneyForm, { MomoPayment } from '../components/MobileMoneyForm';
 import ReviewForm from '../components/ReviewForm';
 import { Stars } from '../components/Stars';
 
+const STATUS_ORDER: Record<string, number> = { PENDING: 0, PAID: 1, CANCELLED: 2 };
+const GROUP_TITLES: Record<string, string> = { PENDING: 'Awaiting payment', PAID: 'Paid', CANCELLED: 'Cancelled' };
+
 export default function Bookings() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[] | null>(null);
@@ -34,6 +37,12 @@ export default function Bookings() {
   if (!bookings) return <Loading />;
 
   const isAdvisor = user?.role === 'ADVISOR';
+  // Needs action first (pending), then paid, then cancelled; newest first inside each group.
+  const sorted = [...bookings].sort(
+    (a, b) =>
+      (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9) ||
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
 
   return (
     <div>
@@ -45,11 +54,18 @@ export default function Bookings() {
       {bookings.length === 0 && <Card><p className="text-slate-600">No bookings yet.</p></Card>}
 
       <div className="space-y-4">
-        {bookings.map((b) => {
+        {sorted.map((b, i) => {
           const other = isAdvisor ? b.applicant : b.advisor;
           const specialty = isAdvisor ? null : b.advisor?.advisorProfile?.specialty ?? null;
+          const startsGroup = i === 0 || sorted[i - 1].status !== b.status;
           return (
-            <Card key={b.id}>
+            <div key={b.id} className="space-y-4">
+              {startsGroup && (
+                <h2 className="pt-2 font-display text-sm font-semibold uppercase tracking-wide text-slate-600">
+                  {GROUP_TITLES[b.status] ?? b.status} · {sorted.filter((x) => x.status === b.status).length}
+                </h2>
+              )}
+            <Card>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="font-semibold text-slate-900">
@@ -90,6 +106,7 @@ export default function Bookings() {
                 <ReviewForm bookingId={b.id} onDone={load} />
               )}
             </Card>
+            </div>
           );
         })}
       </div>
