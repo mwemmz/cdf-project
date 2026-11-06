@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Prisma, TransactionKind } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { badRequest, forbidden, notFound } from '../../utils/errors';
+import { MomoDetails, momoSchema, newReceiptNo, simulateMomo } from './momo';
 import {
   ADVISOR_COMMISSION_RATE,
   ASSESSMENT_FEE_ZMW,
@@ -19,6 +20,7 @@ const txInclude = {
 export async function recordAdvisorSession(
   tx: Prisma.TransactionClient,
   booking: { id: string; applicantId: string; advisorId: string; price: number },
+  momo: MomoDetails = simulateMomo(null),
 ) {
   const { commissionAmount, netAmount } = splitAmount(booking.price, ADVISOR_COMMISSION_RATE);
   return tx.transaction.create({
@@ -32,6 +34,8 @@ export async function recordAdvisorSession(
       netAmount,
       referenceId: booking.id,
       description: 'Advisor session',
+      receiptNo: newReceiptNo(),
+      ...momo,
     },
   });
 }
@@ -39,10 +43,12 @@ export async function recordAdvisorSession(
 export const buyProductSchema = z.object({
   productId: z.string().min(1),
   quantity: z.number().int().min(1).max(100).default(1),
+  payment: momoSchema.optional(),
 });
 
 export async function buyProduct(req: Request, res: Response) {
-  const { productId, quantity } = buyProductSchema.parse(req.body);
+  const { productId, quantity, payment } = buyProductSchema.parse(req.body);
+  const momo = simulateMomo(payment);
   const buyerId = req.auth!.userId;
   const product = await prisma.product.findUnique({ where: { id: productId } });
   if (!product) throw notFound('Product not found');
@@ -61,17 +67,19 @@ export async function buyProduct(req: Request, res: Response) {
       netAmount,
       referenceId: product.id,
       description: `${quantity} × ${product.name}`,
+      receiptNo: newReceiptNo(),
+      ...momo,
     },
     include: txInclude,
   });
   res.status(201).json({ success: true, data: txn });
 }
 
-export const assessmentSchema = z.object({ businessPlanId: z.string().min(1) });
+export const assessmentSchema = z.object({ businessPlanId: z.string().min(1), payment: momoSchema.optional() });
 
 // The business owner pays FundPath for a plan + risk and market assessment.
 export async function payForAssessment(req: Request, res: Response) {
-  const { businessPlanId } = assessmentSchema.parse(req.body);
+  const { businessPlanId, payment } = assessmentSchema.parse(req.body);
   const userId = req.auth!.userId;
   const plan = await prisma.businessPlan.findUnique({ where: { id: businessPlanId } });
   if (!plan) throw notFound('Business plan not found');
@@ -83,6 +91,7 @@ export async function payForAssessment(req: Request, res: Response) {
   });
   if (existing) return res.json({ success: true, data: existing });
 
+  const momo = simulateMomo(payment);
   const txn = await prisma.transaction.create({
     data: {
       kind: TransactionKind.PLAN_ASSESSMENT,
@@ -94,6 +103,8 @@ export async function payForAssessment(req: Request, res: Response) {
       netAmount: 0,
       referenceId: plan.id,
       description: 'Plan, risk and market assessment',
+      receiptNo: newReceiptNo(),
+      ...momo,
     },
     include: txInclude,
   });
@@ -110,6 +121,17 @@ export async function listMyTransactions(req: Request, res: Response) {
     take: 100,
   });
   res.json({ success: true, data: rows });
+}
+
+// One receipt: visible to the payer, the payee and admins.
+export async function getReceipt(req: Request, res: Response) {
+  const txn = await prisma.transaction.findUnique({ where: { id: req.params.id }, include: txInclude });
+  if (!txn) throw notFound('Receipt not found');
+  const { userId, role } = req.auth!;
+  if (role !== 'ADMIN' && txn.payerId !== userId && txn.payeeId !== userId) {
+    throw forbidden('This receipt is not yours');
+  }
+  res.json({ success: true, data: txn });
 }
 
 // Which of the user's plans already have a paid assessment.

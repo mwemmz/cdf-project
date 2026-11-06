@@ -74,7 +74,7 @@ check('repayment rejects a negative amount', (await call('POST', '/repayments', 
 check('repayment recorded', (await call('POST', '/repayments', alice.token, { applicationId: appId, amount: 1000 })).status === 201);
 check("other applicant cannot repay Alice's loan", [403, 404].includes((await call('POST', '/repayments', bob.token, { applicationId: appId, amount: 10 })).status));
 const reps = await call('GET', `/repayments/application/${appId}`, alice.token);
-check('repayment history and balance returned', reps.status === 200 && JSON.stringify(reps.data).includes('1000'), JSON.stringify(reps.data).slice(0, 160));
+check('repayment history and balance returned', reps.status === 200 && String(JSON.stringify(reps.data)).includes('1000'), `status ${reps.status} ${String(JSON.stringify(reps.body)).slice(0, 200)}`);
 const sum = await call('GET', '/admin/summary', admin);
 check('admin summary loads', sum.status === 200 && sum.data);
 
@@ -84,10 +84,17 @@ check('advisor list is public and non-empty', advisors.length > 0);
 const adv = advisors[0];
 const advToken = await login('advisor1@fundpath.zm', 'Advisor@123');
 const booking = await call('POST', '/bookings', alice.token, { advisorId: adv.userId, note: 'Help me with my plan' });
-check('booking created', booking.status === 201, `status ${booking.status} ${JSON.stringify(booking.body).slice(0, 120)}`);
+check('booking created', booking.status === 201, `status ${booking.status} ${String(JSON.stringify(booking.body)).slice(0, 120)}`);
 const bid = booking.data?.id;
 check('chat locked before payment', (await call('GET', `/messages/${bid}`, alice.token)).status === 400);
-check('booking marked paid', (await call('POST', `/bookings/${bid}/pay`, alice.token)).status < 300);
+const badPay = await call('POST', `/bookings/${bid}/pay`, alice.token, { payment: { phone: '123' } });
+check('mobile money rejects a bad number', badPay.status === 400, `status ${badPay.status}`);
+const paid = await call('POST', `/bookings/${bid}/pay`, alice.token, { payment: { phone: '+260 97 123 4567', provider: 'AIRTEL' } });
+check('booking marked paid by mobile money', paid.status < 300, `status ${paid.status} ${String(JSON.stringify(paid.body)).slice(0, 160)}`);
+const rc = await call('GET', `/payments/${paid.data?.receiptId}/receipt`, alice.token);
+check('receipt has number, network and masked phone', rc.status === 200 && /^FP-/.test(rc.data?.receiptNo ?? '') && rc.data?.provider === 'AIRTEL' && !String(JSON.stringify(rc.data)).includes('971234567'), `status ${rc.status} ${String(JSON.stringify(rc.body)).slice(0, 200)}`);
+check('a stranger cannot read the receipt', (await call('GET', `/payments/${paid.data?.receiptId}/receipt`, bob.token)).status === 403);
+check('receipt appears in my payments', String(JSON.stringify((await call('GET', '/payments/mine', alice.token)).data)).includes(paid.data?.receiptId ?? 'none'));
 check('applicant can chat after payment', (await call('POST', `/messages/${bid}`, alice.token, { content: 'Hello advisor' })).status === 201);
 const advToken1 = advToken;
 const advisorOwnsIt = adv.user?.name && (await call('GET', '/auth/me', advToken1)).data?.id === adv.userId;

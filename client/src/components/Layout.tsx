@@ -22,6 +22,7 @@ const ROLE_LINKS: Record<string, NavItem[]> = {
     { to: '/advisors', label: 'Advisors' },
     { to: '/bookings', label: 'Bookings' },
     { to: '/messages', label: 'Messages' },
+    { to: '/receipts', label: 'Receipts' },
     { to: '/storefront', label: 'Storefront' },
   ],
   ADVISOR: [
@@ -29,6 +30,7 @@ const ROLE_LINKS: Record<string, NavItem[]> = {
     { to: '/advisors/me', label: 'My profile' },
     { to: '/bookings', label: 'Bookings' },
     { to: '/messages', label: 'Messages' },
+    { to: '/receipts', label: 'Receipts' },
   ],
   ADMIN: [{ to: '/admin', label: 'Admin' }],
 };

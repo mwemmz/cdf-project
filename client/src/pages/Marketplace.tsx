@@ -4,6 +4,7 @@ import { api } from '../lib/api';
 import type { Product } from '../lib/types';
 import { fmtZmk } from '../lib/format';
 import { useAuth } from '../context/AuthContext';
+import MobileMoneyForm, { MomoPayment } from '../components/MobileMoneyForm';
 import { Card, ErrorNote, Loading, PageHeader, ProductImage } from '../components/UI';
 
 export default function Marketplace() {
@@ -15,6 +16,7 @@ export default function Marketplace() {
   const { user } = useAuth();
   const [bought, setBought] = useState<Record<string, string>>({});
   const [buyError, setBuyError] = useState<string | null>(null);
+  const [payFor, setPayFor] = useState<Product | null>(null);
 
   const message = async (productId: string) => {
     setBuyError(null);
@@ -26,14 +28,13 @@ export default function Marketplace() {
     }
   };
 
-  const buy = async (productId: string) => {
-    setBuyError(null);
-    try {
-      await api('/payments/purchase', { method: 'POST', body: { productId, quantity: 1 } });
-      setBought((b) => ({ ...b, [productId]: 'Purchased (simulated)' }));
-    } catch (err) {
-      setBuyError((err as Error).message);
-    }
+  const buy = async (product: Product, payment: MomoPayment) => {
+    const txn = await api<{ id: string }>('/payments/purchase', {
+      method: 'POST',
+      body: { productId: product.id, quantity: 1, payment },
+    });
+    setBought((b) => ({ ...b, [product.id]: 'Purchased (simulated)' }));
+    return txn.id;
   };
 
   useEffect(() => {
@@ -101,10 +102,10 @@ export default function Marketplace() {
                   <span className="text-xs font-medium text-emerald-700">{bought[p.id]}</span>
                 ) : (
                   <button
-                    onClick={() => buy(p.id)}
+                    onClick={() => setPayFor(p)}
                     className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
                   >
-                    Buy now (simulated)
+                    Buy with mobile money
                   </button>
                 )}
               </div>
@@ -113,6 +114,14 @@ export default function Marketplace() {
           </Card>
         ))}
       </div>
+      {payFor && (
+        <MobileMoneyForm
+          title={payFor.name}
+          amount={payFor.price}
+          onPay={(payment) => buy(payFor, payment)}
+          onClose={() => setPayFor(null)}
+        />
+      )}
     </div>
   );
 }

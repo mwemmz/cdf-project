@@ -29,6 +29,8 @@ import AdminAdvisors from './pages/AdminAdvisors';
 import AdminOpportunities from './pages/AdminOpportunities';
 import AdminRevenue from './pages/AdminRevenue';
 import Messages from './pages/Messages';
+import Receipts from './pages/Receipts';
+import Receipt from './pages/Receipt';
 
 export default function App() {
   return (
@@ -75,6 +77,22 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['ADVISOR']}>
                   <AdvisorPlanEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/receipts"
+              element={
+                <ProtectedRoute>
+                  <Receipts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/receipts/:id"
+              element={
+                <ProtectedRoute>
+                  <Receipt />
                 </ProtectedRoute>
               }
             />

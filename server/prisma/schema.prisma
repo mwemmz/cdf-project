@@ -321,6 +321,12 @@ model Transaction {
   // bookingId, productId or businessPlanId, depending on kind.
   referenceId      String
   description      String
+  // Receipt and (simulated) mobile money details.
+  receiptNo        String?         @unique
+  method           String          @default("SIMULATED")
+  provider         String?
+  phoneMasked      String?
+  providerRef      String?
   createdAt        DateTime        @default(now())
 
   payer User  @relation("TransactionsPaid", fields: [payerId], references: [id], onDelete: Cascade)

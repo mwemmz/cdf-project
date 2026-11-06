@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import type { RevenueSummary, TransactionKind } from '../lib/types';
 import { fmtDateTime, fmtMoney } from '../lib/format';
+import { Link } from 'react-router-dom';
 import { Card, ErrorNote, Loading } from '../components/UI';
 
 const KIND_LABELS: Record<TransactionKind, string> = {
@@ -93,7 +94,8 @@ export default function AdminRevenue() {
                 {data.recent.map((t) => (
                   <tr key={t.id}>
                     <td className="py-2.5 text-xs text-slate-600">{fmtDateTime(t.createdAt)}</td>
-                    <td className="py-2.5">{KIND_LABELS[t.kind]} <span className="text-xs text-slate-500">· {t.description}</span></td>
+                    <td className="py-2.5">{KIND_LABELS[t.kind]} <span className="text-xs text-slate-500">· {t.description}</span>{' '}
+                      <Link to={`/receipts/${t.id}`} className="text-xs font-medium text-brand-700 underline">receipt</Link></td>
                     <td className="py-2.5">{t.payer.name}</td>
                     <td className="py-2.5">{fmtMoney(t.grossAmount)}</td>
                     <td className="py-2.5 font-semibold text-emerald-700">{fmtMoney(t.commissionAmount)}</td>

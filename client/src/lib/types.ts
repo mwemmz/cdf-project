@@ -258,6 +258,11 @@ export interface Txn {
   commissionAmount: number;
   netAmount: number;
   description: string;
+  receiptNo?: string | null;
+  method?: string;
+  provider?: string | null;
+  phoneMasked?: string | null;
+  providerRef?: string | null;
   createdAt: string;
   payer: { id: string; name: string };
   payee: { id: string; name: string } | null;

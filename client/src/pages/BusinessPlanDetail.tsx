@@ -4,6 +4,7 @@ import { api } from '../lib/api';
 import type { BusinessPlan, FeasibilityScore } from '../lib/types';
 import { fmtDate, fmtMoney, fmtZmk } from '../lib/format';
 import { APPLICATION_LABELS, FEASIBILITY_COLORS } from '../lib/status';
+import MobileMoneyForm, { MomoPayment } from '../components/MobileMoneyForm';
 import { Card, ErrorNote, Loading, PageHeader, PrimaryButton } from '../components/UI';
 
 export default function BusinessPlanDetail() {
@@ -14,6 +15,7 @@ export default function BusinessPlanDetail() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [assessmentPaid, setAssessmentPaid] = useState(false);
+  const [payOpen, setPayOpen] = useState(false);
   const ASSESSMENT_FEE = 150;
 
   useEffect(() => {
@@ -22,18 +24,14 @@ export default function BusinessPlanDetail() {
       .catch(() => undefined);
   }, [id]);
 
-  const payAssessment = async () => {
-    setBusy(true);
-    setError(null);
-    try {
-      await api('/payments/assessment', { method: 'POST', body: { businessPlanId: id } });
-      setAssessmentPaid(true);
-      setNotice('Assessment fee paid (simulated).');
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setBusy(false);
-    }
+  const payAssessment = async (payment: MomoPayment) => {
+    const txn = await api<{ id: string }>('/payments/assessment', {
+      method: 'POST',
+      body: { businessPlanId: id, payment },
+    });
+    setAssessmentPaid(true);
+    setNotice('Assessment fee paid (simulated).');
+    return txn.id;
   };
 
   const load = () => {
@@ -148,6 +146,14 @@ export default function BusinessPlanDetail() {
         ) : (
           <p className="mt-3 text-sm text-slate-600">No score yet — click Rescore.</p>
         )}
+        {payOpen && (
+          <MobileMoneyForm
+            title="Plan, risk and market assessment"
+            amount={ASSESSMENT_FEE}
+            onPay={payAssessment}
+            onClose={() => setPayOpen(false)}
+          />
+        )}
       </Card>
 
       <Card className="mt-4 print:hidden">
@@ -159,8 +165,8 @@ export default function BusinessPlanDetail() {
           <p className="mt-3 text-sm font-medium text-emerald-700">Fee paid (simulated). Assessment unlocked.</p>
         ) : (
           <div className="mt-3 flex items-center gap-3">
-            <PrimaryButton onClick={payAssessment} loading={busy}>
-              Pay {fmtMoney(ASSESSMENT_FEE)} (simulated)
+            <PrimaryButton onClick={() => setPayOpen(true)}>
+              Pay {fmtMoney(ASSESSMENT_FEE)} with mobile money
             </PrimaryButton>
             <span className="text-xs text-slate-500">No real money is charged in this prototype.</span>
           </div>

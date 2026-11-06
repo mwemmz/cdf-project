@@ -13,8 +13,8 @@ const accounts = {
 };
 const pages = {
   public: ['/', '/login', '/register', '/opportunities', '/advisors', '/marketplace', '/success-stories', '/resources'],
-  applicant: ['/plans', '/plans/new', '/applications', '/bookings', '/messages', '/storefront'],
-  advisor: ['/advisor/dashboard', '/advisors/me', '/messages', '/bookings'],
+  applicant: ['/plans', '/plans/new', '/applications', '/bookings', '/messages', '/receipts', '/storefront'],
+  advisor: ['/advisor/dashboard', '/advisors/me', '/messages', '/bookings', '/receipts'],
   admin: ['/admin', '/admin/applications', '/admin/advisors', '/admin/opportunities', '/admin/revenue'],
 };
 const sizes = { desktop: { width: 1280, height: 800 }, phone: { width: 390, height: 844 } };

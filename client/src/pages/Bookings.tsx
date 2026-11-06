@@ -6,6 +6,7 @@ import { BOOKING_COLORS, BOOKING_LABELS } from '../lib/status';
 import { useAuth } from '../context/AuthContext';
 import { Card, ErrorNote, Loading, PageHeader, PrimaryButton } from '../components/UI';
 import ChatThread from '../components/ChatThread';
+import MobileMoneyForm, { MomoPayment } from '../components/MobileMoneyForm';
 import ReviewForm from '../components/ReviewForm';
 import { Stars } from '../components/Stars';
 
@@ -13,7 +14,7 @@ export default function Bookings() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [payFor, setPayFor] = useState<Booking | null>(null);
 
   const load = () => {
     api<Booking[]>('/bookings/mine')
@@ -23,17 +24,10 @@ export default function Bookings() {
 
   useEffect(load, []);
 
-  const markPaid = async (id: string) => {
-    setBusyId(id);
-    setError(null);
-    try {
-      await api(`/bookings/${id}/pay`, { method: 'POST' });
-      load();
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setBusyId(null);
-    }
+  const payBooking = async (booking: Booking, payment: MomoPayment) => {
+    const res = await api<{ receiptId?: string }>(`/bookings/${booking.id}/pay`, { method: 'POST', body: { payment } });
+    load();
+    return res.receiptId;
   };
 
   if (error) return <ErrorNote message={error} />;
@@ -72,8 +66,8 @@ export default function Bookings() {
                     {BOOKING_LABELS[b.status]}
                   </span>
                   {b.status === 'PENDING' && (
-                    <PrimaryButton onClick={() => markPaid(b.id)} loading={busyId === b.id} className="text-xs">
-                      Pay (simulated)
+                    <PrimaryButton onClick={() => setPayFor(b)} className="text-xs">
+                      Pay with mobile money
                     </PrimaryButton>
                   )}
                 </div>
@@ -99,6 +93,14 @@ export default function Bookings() {
           );
         })}
       </div>
+      {payFor && (
+        <MobileMoneyForm
+          title={`Advisor session with ${payFor.advisor?.name ?? 'your advisor'}`}
+          amount={payFor.price}
+          onPay={(payment) => payBooking(payFor, payment)}
+          onClose={() => setPayFor(null)}
+        />
+      )}
     </div>
   );
 }
