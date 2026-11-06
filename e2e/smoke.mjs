@@ -137,6 +137,53 @@ for (const sizeName of Object.keys(sizes)) {
       visited++;
     } catch (e) { problems.push(`chat-flow failed: ${String(e.message).split('\n')[0]}`); }
   }
+
+  // ---- Mobile money purchase and receipt ----
+  try {
+    await page.goto(BASE + '/marketplace', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Buy with mobile money' }).first().click();
+    await page.getByRole('dialog').waitFor({ timeout: 5000 });
+    await auditContrast(page, 'applicant:desktop:payment-popup');
+    await page.getByRole('button', { name: /^Pay / }).click();
+    if (!(await page.getByText(/valid mobile money number|10-digit/i).count())) problems.push('payment: empty number was not rejected');
+    await page.getByPlaceholder('97 123 4567').fill('0971234567');
+    await page.getByRole('button', { name: /^Pay / }).click();
+    await page.getByText('Check your phone').waitFor({ timeout: 5000 });
+    await page.getByRole('link', { name: 'View receipt' }).waitFor({ timeout: 10000 });
+    await page.getByRole('link', { name: 'View receipt' }).click();
+    await page.getByText('Receipt no.').waitFor({ timeout: 8000 });
+    const rtext = await page.locator('main').innerText();
+    if (!/FP-\d{8}-[0-9A-F]{6}/.test(rtext)) problems.push('receipt: missing receipt number');
+    if (!/FundPath fee \(8%\)/.test(rtext)) problems.push('receipt: missing 8% service fee line');
+    if (!/Airtel Money/.test(rtext)) problems.push('receipt: network not shown');
+    if (rtext.includes('971234567') || rtext.includes('0971234567')) problems.push('receipt: full phone number leaked');
+    await auditContrast(page, 'applicant:desktop:receipt');
+    await page.screenshot({ path: `${OUT}/receipt.png` });
+    await page.goto(BASE + '/receipts', { waitUntil: 'networkidle' });
+    if (!(await page.getByText(/FP-\d{8}/).count())) problems.push('receipts list: new receipt not listed');
+    visited += 2;
+  } catch (e) { problems.push(`payment-flow failed: ${String(e.message).split('\n')[0]}`); }
+
+  // ---- Bookings are grouped: awaiting payment, then paid ----
+  try {
+    const login = await (await fetch(BASE + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: accounts.applicant[0], password: accounts.applicant[1] }) })).json();
+    const H = { 'Content-Type': 'application/json', Authorization: `Bearer ${login.data.token}` };
+    const advs = (await (await fetch(BASE + '/api/advisors')).json()).data;
+    const mkb = async (note) => (await (await fetch(BASE + '/api/bookings', { method: 'POST', headers: H, body: JSON.stringify({ advisorId: advs[0].userId, note }) })).json()).data;
+    const older = await mkb('smoke older, stays pending');
+    const newer = await mkb('smoke newer, gets paid');
+    await fetch(`${BASE}/api/bookings/${newer.id}/pay`, { method: 'POST', headers: H, body: JSON.stringify({ payment: { phone: '0961234567' } }) });
+    await page.goto(BASE + '/bookings', { waitUntil: 'networkidle' });
+    const heads = await page.locator('main h2').allInnerTexts();
+    const iPending = heads.findIndex((t) => /awaiting payment/i.test(t));
+    const iPaid = heads.findIndex((t) => /^paid/i.test(t));
+    if (iPending < 0 || iPaid < 0 || iPending > iPaid) problems.push(`bookings: not grouped pending-first (${heads.join(' | ')})`);
+    const body = await page.locator('main').innerText();
+    if (body.indexOf('smoke older') > body.indexOf('smoke newer')) problems.push('bookings: pending booking should come before the newer paid one');
+    await auditContrast(page, 'applicant:desktop:bookings-grouped');
+    await page.screenshot({ path: `${OUT}/bookings-grouped.png` });
+    visited++;
+  } catch (e) { problems.push(`bookings-order failed: ${String(e.message).split('\n')[0]}`); }
   await ctx.close();
 }
 await browser.close();
