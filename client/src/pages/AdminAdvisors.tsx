@@ -58,7 +58,7 @@ export default function AdminAdvisors() {
       {actionError && <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{actionError}</div>}
 
       <section>
-        <h2 className="font-display text-base font-semibold text-slate-900">
+        <h2 className="glass mb-2 inline-block rounded-full px-4 py-1.5 font-display text-base font-semibold text-slate-900">
           Awaiting verification <span className="text-slate-500">({pending.length})</span>
         </h2>
         {pending.length === 0 ? (

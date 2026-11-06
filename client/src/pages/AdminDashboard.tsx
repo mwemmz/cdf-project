@@ -215,7 +215,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <p className="text-sm text-slate-600">
+      <p className="glass w-fit max-w-full rounded-2xl px-4 py-3 text-sm text-slate-600">
         Review applications in the{' '}
         <Link to="/admin/applications" className="font-medium text-brand-600 underline">
           application queue

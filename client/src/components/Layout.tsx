@@ -37,12 +37,12 @@ const ROLE_LINKS: Record<string, NavItem[]> = {
 
 const desktopLink = ({ isActive }: { isActive: boolean }) =>
   `whitespace-nowrap rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors ${
-    isActive ? 'bg-white/[0.12] text-white' : 'text-white/60 hover:bg-white/[0.07] hover:text-white'
+    isActive ? 'bg-white/[0.12] text-white' : 'text-white/80 hover:bg-white/[0.07] hover:text-white'
   }`;
 
 const drawerLink = ({ isActive }: { isActive: boolean }) =>
   `block rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
-    isActive ? 'bg-white/10 text-white' : 'text-white/55 hover:bg-white/[0.06] hover:text-white'
+    isActive ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/[0.06] hover:text-white'
   }`;
 
 function useDismiss(open: boolean, close: () => void) {
@@ -94,7 +94,7 @@ function ExploreMenu() {
         aria-expanded={open}
         aria-haspopup="menu"
         className={`flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors ${
-          active || open ? 'bg-white/[0.12] text-white' : 'text-white/60 hover:bg-white/[0.07] hover:text-white'
+          active || open ? 'bg-white/[0.12] text-white' : 'text-white/80 hover:bg-white/[0.07] hover:text-white'
         }`}
       >
         Explore <Chevron open={open} />
@@ -255,7 +255,7 @@ export default function Layout() {
         <div className="flex h-full flex-col overflow-y-auto p-4">
           <div className="mb-4 flex items-center justify-between px-2">
             <span className="font-display text-lg font-semibold tracking-tight text-white">Menu</span>
-            <button onClick={closeMobile} className="rounded-lg p-2 text-white/50 transition hover:text-white" aria-label="Close menu">
+            <button onClick={closeMobile} className="rounded-lg p-2 text-white/80 transition hover:text-white" aria-label="Close menu">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -269,7 +269,7 @@ export default function Layout() {
               </NavLink>
             ))}
             {roleLinks.length > 0 && <div className="my-2 border-t border-white/10" />}
-            <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/35">Explore</div>
+            <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/80">Explore</div>
             {EXPLORE.map((i) => (
               <NavLink key={i.to} to={i.to} className={drawerLink} onClick={closeMobile}>
                 {i.label}
@@ -281,7 +281,7 @@ export default function Layout() {
             {user ? (
               <div className="px-2">
                 <div className="text-sm font-medium text-white">{user.name}</div>
-                <div className="mb-3 text-xs capitalize text-white/40">{user.role.toLowerCase()}</div>
+                <div className="mb-3 text-xs capitalize text-white/80">{user.role.toLowerCase()}</div>
                 <button
                   onClick={handleLogout}
                   className="w-full rounded-lg border border-white/20 px-3 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
@@ -291,10 +291,10 @@ export default function Layout() {
               </div>
             ) : (
               <div className="flex flex-col gap-2 px-2">
-                <Link to="/login" onClick={closeMobile} className="rounded-lg border border-white/20 px-3 py-2 text-center text-sm hover:bg-white/10">
+                <Link to="/login" onClick={closeMobile} className="rounded-lg border border-white/20 px-3 py-2 text-center text-sm text-white hover:bg-white/10">
                   Log in
                 </Link>
-                <Link to="/register" onClick={closeMobile} className="rounded-lg bg-copper-600 px-3 py-2 text-center text-sm font-semibold hover:bg-copper-700">
+                <Link to="/register" onClick={closeMobile} className="rounded-lg bg-copper-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-copper-700">
                   Register
                 </Link>
               </div>

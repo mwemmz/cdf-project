@@ -61,7 +61,7 @@ export default function Bookings() {
           return (
             <div key={b.id} className="space-y-4">
               {startsGroup && (
-                <h2 className="pt-2 font-display text-sm font-semibold uppercase tracking-wide text-slate-600">
+                <h2 className="glass inline-block rounded-full px-4 py-1.5 font-display text-sm font-semibold uppercase tracking-wide text-slate-700">
                   {GROUP_TITLES[b.status] ?? b.status} · {sorted.filter((x) => x.status === b.status).length}
                 </h2>
               )}

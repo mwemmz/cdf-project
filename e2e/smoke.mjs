@@ -40,7 +40,7 @@ async function auditContrast(page, tag) {
       const el = n.parentElement; if (!el || seen.has(el)) continue; seen.add(el);
       const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
       if (cs.visibility === 'hidden' || cs.display === 'none' || r.width < 2 || r.height < 2 || +cs.opacity === 0) continue;
-      if (['SCRIPT', 'STYLE', 'OPTION'].includes(el.tagName)) continue;
+      if (['SCRIPT', 'STYLE', 'OPTION'].includes(el.tagName) || el.closest('button:disabled, [aria-disabled="true"]')) continue;
       const fg0 = parse(cs.color); if (!fg0) continue;
       const layers = []; let hasImage = false;
       for (let e = el; e; e = e.parentElement) {

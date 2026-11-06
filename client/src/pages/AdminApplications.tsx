@@ -55,7 +55,7 @@ export default function AdminApplications() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
+      <div className="glass flex w-fit max-w-full flex-wrap items-center gap-3 rounded-2xl px-4 py-3">
         <label htmlFor="stage-filter" className="text-sm font-medium text-slate-700">Filter by stage</label>
         <select
           id="stage-filter"

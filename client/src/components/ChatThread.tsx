@@ -48,7 +48,7 @@ export default function ChatThread({ path, otherName, topic }: { path: string; o
   };
 
   return (
-    <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50">
+    <div className="glass mt-4 rounded-xl">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2.5">
         <p className="text-sm font-semibold text-slate-800">Chat with {otherName}{topic ? ` about ${topic}` : ''}</p>
         <p className="text-xs text-slate-500">Live chat refreshes automatically</p>
@@ -68,7 +68,7 @@ export default function ChatThread({ path, otherName, topic }: { path: string; o
               >
                 {!mine && <div className="mb-0.5 text-xs font-medium text-brand-700">{m.sender?.name}</div>}
                 <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                <div className={`mt-1 text-right text-[10px] ${mine ? 'text-white/60' : 'text-slate-500'}`}>
+                <div className={`mt-1 text-right text-[10px] ${mine ? 'text-white/80' : 'text-slate-500'}`}>
                   {fmtTime(m.createdAt)}
                 </div>
               </div>

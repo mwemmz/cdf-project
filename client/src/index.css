@@ -197,17 +197,22 @@
   main .bg-slate-50 { background-color: rgba(255, 255, 255, 0.06); }
   main .bg-slate-100 { background-color: rgba(255, 255, 255, 0.09); }
   main .bg-slate-200 { background-color: rgba(255, 255, 255, 0.15); }
+  /* Tinted boxes and badges: a tint over a solid dark base, so they stay readable on any backdrop. */
   main .bg-brand-50,
   main .bg-brand-100,
   main .bg-emerald-50,
   main .bg-emerald-100,
-  main .bg-green-100 { background-color: rgba(14, 143, 94, 0.24); }
+  main .bg-green-100 { background-color: rgba(18, 22, 26, 0.9); background-image: linear-gradient(rgba(14, 143, 94, 0.28), rgba(14, 143, 94, 0.28)); }
   main .bg-red-50,
   main .bg-rose-50,
-  main .bg-rose-100 { background-color: rgba(244, 63, 94, 0.2); }
+  main .bg-rose-100 { background-color: rgba(18, 22, 26, 0.9); background-image: linear-gradient(rgba(244, 63, 94, 0.22), rgba(244, 63, 94, 0.22)); }
   main .bg-amber-50,
-  main .bg-amber-100 { background-color: rgba(242, 163, 58, 0.2); }
-  main .bg-sky-50 { background-color: rgba(56, 189, 248, 0.18); }
+  main .bg-amber-100,
+  main .bg-copper-100 { background-color: rgba(18, 22, 26, 0.9); background-image: linear-gradient(rgba(242, 163, 58, 0.22), rgba(242, 163, 58, 0.22)); }
+  main .bg-sky-50,
+  main .bg-sky-100 { background-color: rgba(18, 22, 26, 0.9); background-image: linear-gradient(rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.2)); }
+  main .text-copper-700,
+  main .text-copper-800 { color: #f7c068; }
 
   main .border-slate-50,
   main .border-slate-100,

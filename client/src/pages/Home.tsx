@@ -97,7 +97,7 @@ export default function Home() {
               Shop the marketplace
             </Link>
           </div>
-          <p className="mt-6 max-w-xl text-xs leading-relaxed text-white/50">
+          <p className="mt-6 max-w-xl text-xs leading-relaxed text-white/80">
             Rate and terms follow the draft CDF Guidelines (2025). Confirm the final terms with your CDF committee.
           </p>
         </div>

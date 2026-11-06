@@ -12,12 +12,12 @@ export default function AdminLayout() {
   const { pathname } = useLocation();
   return (
     <div>
-      <div className="mb-6">
+      <div className="glass mb-4 w-fit max-w-full rounded-[1.75rem] px-6 py-4">
         <h1 className="font-display text-2xl font-semibold text-slate-900">Admin</h1>
         <p className="text-sm text-slate-600">Platform administration</p>
       </div>
 
-      <nav className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+      <nav className="glass mb-6 flex w-fit max-w-full flex-wrap gap-2 rounded-2xl p-2">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
