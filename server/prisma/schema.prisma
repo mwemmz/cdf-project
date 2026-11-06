@@ -57,6 +57,9 @@ model User {
   bookingsAsAdvisor   Booking[]       @relation("BookingsAsAdvisor")
   products            Product[]
   messagesSent        Message[]
+  threadsAsBuyer      ProductThread[]  @relation("ThreadsAsBuyer")
+  threadsAsSeller     ProductThread[]  @relation("ThreadsAsSeller")
+  productMessagesSent ProductMessage[]
   notifications       Notification[]
   transactionsPaid    Transaction[]   @relation("TransactionsPaid")
   transactionsEarned  Transaction[]   @relation("TransactionsEarned")
@@ -215,6 +218,7 @@ model Product {
   imageUrl    String?
 
   applicant User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  threads   ProductThread[]
 
   @@index([applicantId])
   @@map("products")
@@ -326,4 +330,40 @@ model Transaction {
   @@index([payerId])
   @@index([payeeId])
   @@map("transactions")
+}
+
+
+// ---------------------------------------------------------------------------
+// Marketplace chat: a buyer messages a seller about one product
+// ---------------------------------------------------------------------------
+
+model ProductThread {
+  id        String   @id @default(cuid())
+  productId String
+  buyerId   String
+  sellerId  String
+  createdAt DateTime @default(now())
+
+  product  Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyer    User             @relation("ThreadsAsBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller   User             @relation("ThreadsAsSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  messages ProductMessage[]
+
+  @@unique([productId, buyerId])
+  @@index([sellerId])
+  @@map("product_threads")
+}
+
+model ProductMessage {
+  id        String   @id @default(cuid())
+  threadId  String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  thread ProductThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sender User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("product_messages")
 }

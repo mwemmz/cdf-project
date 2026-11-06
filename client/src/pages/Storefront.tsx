@@ -109,7 +109,7 @@ export default function Storefront() {
         </Card>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => (
           <Card key={p.id}>
             <ProductImage name={p.name} src={p.imageUrl} className="mb-3 h-40 w-full rounded-lg object-cover" />
@@ -145,7 +145,7 @@ export default function Storefront() {
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 required
               />
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field
                   label="Price (K)"
                   type="number"

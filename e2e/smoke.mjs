@@ -65,6 +65,33 @@ for (const sizeName of Object.keys(sizes)) {
     await ctx.close();
   }
 }
+// Flow: a buyer messages a seller from the marketplace, in the app.
+{
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  page.on('response', (r) => { if (r.url().includes('/api/') && r.status() >= 400) problems.push(`chat-flow api ${r.status()} ${new URL(r.url()).pathname}`); });
+  await page.goto(BASE + '/login');
+  await page.getByLabel('Email').fill(accounts.applicant[0]);
+  await page.getByLabel('Password').fill(accounts.applicant[1]);
+  await page.getByRole('button', { name: /log in|sign in/i }).click();
+  await page.waitForURL((u) => !u.pathname.startsWith('/login'), { timeout: 8000 });
+  await page.goto(BASE + '/marketplace', { waitUntil: 'networkidle' });
+  const btn = page.getByRole('button', { name: 'Message seller' }).first();
+  if (!(await btn.count())) problems.push('chat-flow: no "Message seller" button on marketplace');
+  else {
+    await btn.click();
+    try {
+      await page.waitForURL(/\/messages\?thread=/, { timeout: 8000 });
+      const text = `Hello from the smoke test ${Date.now()}`;
+      await page.getByPlaceholder(/message|type/i).first().fill(text);
+      await page.getByRole('button', { name: /send/i }).click();
+      await page.getByText(text).first().waitFor({ timeout: 8000 });
+      await page.screenshot({ path: `${OUT}/chat-flow.png` });
+      visited++;
+    } catch (e) { problems.push(`chat-flow failed: ${String(e.message).split('\n')[0]}`); }
+  }
+  await ctx.close();
+}
 await browser.close();
 
 fs.writeFileSync(`${OUT}/report.txt`, `visited ${visited} pages\n${problems.join('\n')}\n`);

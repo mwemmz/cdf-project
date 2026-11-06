@@ -116,7 +116,7 @@ export default function AdvisorPlanEdit() {
             onChange={(e) => setForm((f) => ({ ...f, targetMarket: e.target.value }))}
             required
           />
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Field
               label="Startup costs (K)"
               type="number"

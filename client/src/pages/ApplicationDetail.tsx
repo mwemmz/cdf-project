@@ -230,7 +230,7 @@ export default function ApplicationDetail() {
         {canRepay && (
           <form onSubmit={logRepayment} className="mt-4 rounded-lg border border-slate-200 p-4">
             <div className="mb-3 text-sm font-medium text-slate-700">Log a repayment</div>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Field
                 label="Amount (K)"
                 type="number"

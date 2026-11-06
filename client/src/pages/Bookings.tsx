@@ -78,7 +78,7 @@ export default function Bookings() {
                   )}
                 </div>
               </div>
-              {b.status === 'PAID' && <ChatThread bookingId={b.id} otherName={other?.name ?? 'their account'} />}
+              {b.status === 'PAID' && <ChatThread path={`/messages/${b.id}`} otherName={other?.name ?? 'their account'} />}
 
               {b.status === 'PAID' && b.review && (
                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">

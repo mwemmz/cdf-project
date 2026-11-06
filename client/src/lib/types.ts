@@ -151,7 +151,8 @@ export interface AuthResponse {
 
 export interface Message {
   id: string;
-  bookingId: string;
+  bookingId?: string;
+  threadId?: string;
   senderId: string;
   content: string;
   createdAt: string;
@@ -238,7 +239,10 @@ export interface Resource {
   createdAt: string;
 }
 export interface Conversation {
-  bookingId: string;
+  kind: 'booking' | 'product';
+  bookingId?: string;
+  threadId?: string;
+  productName?: string;
   other: { id: string; name: string };
   lastMessage: { content: string; senderId: string; createdAt: string } | null;
   updatedAt: string;

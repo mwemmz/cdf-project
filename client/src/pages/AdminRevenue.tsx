@@ -33,7 +33,7 @@ export default function AdminRevenue() {
         assessment fee {fmtMoney(data.rates.assessmentFee)} per plan.
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Card className="text-center">
           <div className="text-2xl font-bold text-slate-900">{fmtMoney(data.totalCommission)}</div>
           <div className="mt-1 text-xs text-slate-600">FundPath commission collected (simulated)</div>

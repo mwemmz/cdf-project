@@ -12,6 +12,8 @@ export { request };
 
 // Delete children before parents (FK order).
 export async function resetDb(): Promise<void> {
+  await prisma.productMessage.deleteMany();
+  await prisma.productThread.deleteMany();
   await prisma.message.deleteMany();
   await prisma.review.deleteMany();
   await prisma.notification.deleteMany();

@@ -41,7 +41,7 @@ export default function Advisors() {
         </Card>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {advisors.map((a) => (
           <Card key={a.id} className="flex flex-col transition-shadow duration-200 hover:shadow-pop">
             <div className="flex items-start gap-3">

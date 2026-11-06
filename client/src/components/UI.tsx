@@ -30,7 +30,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`glass rounded-[1.75rem] p-5 shadow-card ${className}`}>{children}</div>
+    <div className={`glass min-w-0 rounded-[1.75rem] p-5 shadow-card ${className}`}>{children}</div>
   );
 }
 

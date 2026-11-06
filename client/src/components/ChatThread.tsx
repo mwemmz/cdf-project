@@ -7,7 +7,7 @@ import { PrimaryButton } from './UI';
 
 const POLL_MS = 4000;
 
-export default function ChatThread({ bookingId, otherName }: { bookingId: string; otherName: string }) {
+export default function ChatThread({ path, otherName, topic }: { path: string; otherName: string; topic?: string }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [draft, setDraft] = useState('');
@@ -16,7 +16,7 @@ export default function ChatThread({ bookingId, otherName }: { bookingId: string
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const load = () => {
-    api<Message[]>(`/messages/${bookingId}`)
+    api<Message[]>(path)
       .then(setMessages)
       .catch((err) => setError((err as Error).message));
   };
@@ -25,7 +25,7 @@ export default function ChatThread({ bookingId, otherName }: { bookingId: string
     load();
     const t = setInterval(load, POLL_MS);
     return () => clearInterval(t);
-  }, [bookingId]);
+  }, [path]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -37,7 +37,7 @@ export default function ChatThread({ bookingId, otherName }: { bookingId: string
     setSending(true);
     setError(null);
     try {
-      await api(`/messages/${bookingId}`, { method: 'POST', body: { content: draft.trim() } });
+      await api(path, { method: 'POST', body: { content: draft.trim() } });
       setDraft('');
       load();
     } catch (err) {
@@ -50,7 +50,7 @@ export default function ChatThread({ bookingId, otherName }: { bookingId: string
   return (
     <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-2.5">
-        <p className="text-sm font-semibold text-slate-800">Chat with {otherName}</p>
+        <p className="text-sm font-semibold text-slate-800">Chat with {otherName}{topic ? ` about ${topic}` : ''}</p>
         <p className="text-xs text-slate-500">Live chat refreshes automatically</p>
       </div>
 

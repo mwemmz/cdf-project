@@ -106,7 +106,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="font-display text-base font-semibold text-slate-900">Feasibility distribution</h2>
           <p className="mt-0.5 text-xs text-slate-600">Score categories across submitted plans.</p>

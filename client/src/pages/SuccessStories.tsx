@@ -34,7 +34,7 @@ export default function SuccessStories() {
         </Card>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {stories.map((s) => (
           <Card key={s.id} className="flex flex-col">
             <div className="flex items-start justify-between gap-3">

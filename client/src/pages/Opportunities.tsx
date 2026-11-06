@@ -30,7 +30,7 @@ export default function Opportunities() {
         subtitle="Constituency Development Fund opportunities open for applications."
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {open.map((o) => (
           <Card key={o.id}>
             <div className="flex items-start justify-between gap-3">
@@ -73,7 +73,7 @@ export default function Opportunities() {
       {closed.length > 0 && (
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold text-slate-700">Closed opportunities</h2>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {closed.map((o) => (
               <Card key={o.id} className="opacity-70">
                 <h3 className="font-semibold text-slate-900">{o.constituencyName}</h3>
