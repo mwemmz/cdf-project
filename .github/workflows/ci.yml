@@ -75,6 +75,9 @@ jobs:
           curl -sf http://localhost:4000/health && curl -sf http://localhost:4173/ > /dev/null
       - run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
         working-directory: e2e
+      - name: API lifecycle walkthrough
+        run: node journey.mjs
+        working-directory: e2e
       - name: Browser smoke test
         run: node smoke.mjs
         working-directory: e2e

@@ -22,7 +22,6 @@ export async function listProductsForPublic(_req: Request, res: Response) {
         select: {
           id: true,
           name: true,
-          email: true,
         },
       },
     },

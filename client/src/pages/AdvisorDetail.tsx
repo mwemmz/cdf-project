@@ -80,7 +80,6 @@ export default function AdvisorDetail() {
           </span>
         </div>
         <p className="mt-4 whitespace-pre-line text-slate-700">{advisor.bio}</p>
-        <p className="mt-3 text-sm text-slate-600">Contact: {advisor.user?.email}</p>
       </Card>
 
       {reviews && reviews.reviews.length > 0 && (

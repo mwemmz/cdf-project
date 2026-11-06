@@ -123,7 +123,7 @@ export async function getMyClients(req: Request, res: Response) {
 export async function listAdvisors(_req: Request, res: Response) {
   const advisors = await prisma.advisorProfile.findMany({
     where: { verified: true },
-    include: { user: { select: { id: true, name: true, email: true, createdAt: true } } },
+    include: { user: { select: { id: true, name: true, createdAt: true } } },
     orderBy: { id: 'asc' },
   });
 
@@ -145,7 +145,7 @@ export async function listAdvisors(_req: Request, res: Response) {
 export async function getAdvisor(req: Request, res: Response) {
   const profile = await prisma.advisorProfile.findUnique({
     where: { id: req.params.id },
-    include: { user: { select: { id: true, name: true, email: true, createdAt: true } } },
+    include: { user: { select: { id: true, name: true, createdAt: true } } },
   });
   if (!profile) throw notFound('Advisor profile not found');
 
