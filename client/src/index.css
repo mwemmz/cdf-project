@@ -157,12 +157,16 @@
    above 9:1; mint #7bd3a8 and amber #f7c068 are above 9:1.
    ------------------------------------------------------------------ */
 @media screen {
+  /* Default text colour for the page area: anything without an explicit colour class (table cells, labels) was inheriting dark text onto dark glass. */
+  main { color: #f5f7f6; }
+  main th { color: #c7d0cc; }
+  main a:not([class]) { color: #7bd3a8; }
   .glass,
   main .bg-white {
-    background-color: rgba(20, 24, 28, 0.76);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    background-color: rgba(18, 22, 26, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    -webkit-backdrop-filter: blur(20px) saturate(0.85);
+    backdrop-filter: blur(20px) saturate(0.85);
   }
   main .bg-white { border-color: transparent; }
   main .hover\:bg-white:hover,
