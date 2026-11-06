@@ -9,3 +9,5 @@ npm-debug.log*
 client/dist/
 server/dist/
 .scratch/
+e2e/node_modules
+e2e/e2e-out
