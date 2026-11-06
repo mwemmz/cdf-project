@@ -81,7 +81,7 @@ export default function Receipt() {
         >
           Print or save as PDF
         </button>
-        <Link to="/receipts" className="rounded-lg border border-white/30 bg-white/90 px-4 py-2.5 text-sm font-semibold text-slate-800">
+        <Link to="/receipts" className="glass rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-800">
           All receipts
         </Link>
       </div>
